@@ -82,7 +82,6 @@ void test3(void)
 /*Pointers to all the test cases*/
 void (*tests[])(void) = {test10, test2, test3};
 
-
 int main(void)
 {
 	char c = 0;
