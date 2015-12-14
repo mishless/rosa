@@ -38,62 +38,89 @@
 //Include configuration
 #include "rosa_config.h"
 
-//Data blocks for the tasks
-#define T1_STACK_SIZE 0x40
-static int t1_stack[T1_STACK_SIZE];
-static tcb t1_tcb;
+#include "util/helper_functions.h"
+#include "drivers/my_wdt.h"
 
-#define T2_STACK_SIZE 0x40
-static int t2_stack[T2_STACK_SIZE];
-static tcb t2_tcb;
+#define TASK_NUM_CHAR 255
+#define MAX_STR_LEN 30
 
+#define SUCCESS_CHAR '^'
+#define FAILURE_CHAR '_'
 
-/*************************************************************
- * Task1
- * LED0 lights up
- * LED1 goes dark
- ************************************************************/
-void task1(void)
+#define WAIT for(global_i = 0; global_i<800000;global_i++);
+
+unsigned int global_i;
+
+void test1(void)
 {
-	while(1) {
-		ledOn(LED0_GPIO);
-		ledOff(LED1_GPIO);
-		delay_ms(350);
-		ROSA_yield();
-	}
+	usartWriteLine(&AVR32_USART0, "TEST-STUFF-01");
+	usartWriteChar(&AVR32_USART0, 0);
+	gpioClear(LED0_GPIO);
+	WAIT
+	usartWriteChar(&AVR32_USART0, FAILURE_CHAR);
+	BLOCK
 }
 
-/*************************************************************
- * Task2
- * LED0 goes dark
- * LED1 lights up
- ************************************************************/
-void task2(void)
+void test2(void)
 {
-	while(1) {
-		ledOff(LED0_GPIO);
-		ledOn(LED1_GPIO);
-		delay_ms(150);
-		ROSA_yield();
-	}
+	usartWriteLine(&AVR32_USART0, "THIS-IS-TEST-ID-02");
+	usartWriteChar(&AVR32_USART0, 0);
+	gpioClear(LED1_GPIO);
+	BLOCK
 }
 
-/*************************************************************
- * Main function
- ************************************************************/
+void test3(void)
+{
+	usartWriteLine(&AVR32_USART0, "HI-MIHAELA-03");
+	usartWriteChar(&AVR32_USART0, 0);
+	gpioClear(LED2_GPIO);
+	WAIT
+	usartWriteChar(&AVR32_USART0, SUCCESS_CHAR);
+	BLOCK
+}
+
+/*Pointers to all the test cases*/
+void (*tests[])(void) = {test1, test2, test3};
+
+
 int main(void)
 {
-	//Initialize the ROSA kernel
+	char c = 0;
+	char str[MAX_STR_LEN];
+	unsigned int test_to_run = -1;
+	unsigned int task_num = sizeof(tests)/sizeof(int*);
+	
+	/*Set up the system*/
+	disable_wdt();
 	ROSA_init();
+	set_wdt(17);
+	
+	/*Start the communication*/
+	while(1)
+	{
+		usartWriteChar(&AVR32_USART0, '?');
 
-	//Create tasks and install them into the ROSA kernel
-	ROSA_tcbCreate(&t1_tcb, "tsk1", task1, t1_stack, T1_STACK_SIZE);
-	ROSA_tcbInstall(&t1_tcb);
-	ROSA_tcbCreate(&t2_tcb, "tsk2", task2, t2_stack, T2_STACK_SIZE);
-	ROSA_tcbInstall(&t2_tcb);
+		while((c = usartGetChar(&AVR32_USART0)) == 0);
+			
+		/*Does PC want the number of tests?*/
+		if(c == '#')
+		{
+			/*Tell the PC the number of tests*/
+			num2str(task_num, str);
+			usartWriteLine(&AVR32_USART0, str);
+			usartWriteChar(&AVR32_USART0, 0);
+		}
+			
+		/*The PC sent a test number to run*/
+		else if(c == '%')
+		{
+			/*Get the desired test from the PC*/
+			usartGetLine(&AVR32_USART0, str);		
+			test_to_run = atoi(str);
+			
+			/*Run the selected test*/
+			tests[test_to_run]();
+		}
+	}
 
-	//Start the ROSA kernel
-	ROSA_start();
-	/* Execution will never return here */
-	while(1);
 }
