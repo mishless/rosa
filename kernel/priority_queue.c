@@ -4,6 +4,8 @@
 #define RIGHT(x) (2 * (x) + 2)
 #define PARENT(x) ((x)/2)
 
+unsigned int counter = 0;
+
 /* Create priority queue by specifying: maximum size of the queue, comparator function and callbackOnQueueChange function. */
 PriorityQueue *createPriorityQueue(unsigned int maximumSize, int (*comparator)(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement), void (*callbackOnChange)()) {
     PriorityQueue *queue = NULL;
@@ -29,6 +31,7 @@ void deletePriorityQueue(PriorityQueue *queue) {
 void enqueue(PriorityQueue *queue, PriorityQueueElement *element) {
     if (queue->size < queue->maximumSize) {
         int lastIndex = queue->size;
+		element->id = counter++;
         queue->data[lastIndex] = element;
         queue->size++;
         PriorityQueueElement* temporaryElement = NULL;

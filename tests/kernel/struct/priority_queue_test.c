@@ -2,8 +2,10 @@
 
 int intComparator(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement) {
 	if (firstElement->priority == secondElement->priority) {
-		return 0;
-		} else if (firstElement->priority > secondElement->priority) {
+		if (firstElement->id < secondElement->id) {
+			return 1;
+		}
+	} else if (firstElement->priority > secondElement->priority) {
 		return 1;
 	}
 	return -1;

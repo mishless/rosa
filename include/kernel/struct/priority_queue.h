@@ -2,9 +2,13 @@
 #define PRIORITY_QUEUE_H_INCLUDED
 
 #include <stdlib.h>
+
+extern unsigned int counter;
+
 /* PriorityQueueElement contains priority and task information */
 typedef struct PriorityQueueElement {
     unsigned int priority;
+	unsigned int id;
 } PriorityQueueElement;
 
 /* PriorityQueue contains size, maximumSize, array of pointers to elements of type PriorityQueueElement, comparator function and callbackOnChange function. */
