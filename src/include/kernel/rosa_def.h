@@ -46,7 +46,7 @@ typedef struct tcb_record_t {
 	char id[NAMESIZE];		//The task id/name
 	void (*staddr) (void);	//Start address
 	int *dataarea;			//The stack data area
-	int datasize;			//The stack size
+	unsigned int datasize;			//The stack size
 	int *saveusp;			//The current stack position
 	int SAVER0;				//Temporary work register
 	int SAVER1;				//Temporary work register

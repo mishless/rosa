@@ -87,7 +87,7 @@ void ROSA_init(void)
  * 	Create the TCB with correct values.
  *
  **********************************************************/
-void ROSA_tcbCreate(tcb * tcbTask, char tcbName[NAMESIZE], void *tcbFunction, int * tcbStack, int tcbStackSize)
+void ROSA_tcbCreate(tcb * tcbTask, char tcbName[NAMESIZE], void *tcbFunction, int * tcbStack, unsigned int tcbStackSize)
 {
 	int i;
 
@@ -97,7 +97,7 @@ void ROSA_tcbCreate(tcb * tcbTask, char tcbName[NAMESIZE], void *tcbFunction, in
 		tcbTask->id[i] = tcbName[i];
 	}
 
-	//Dont link this TCB anywhere yet.
+	//Don't link this TCB anywhere yet.
 	tcbTask->nexttcb = NULL;
 
 	//Set the task function start and return address.

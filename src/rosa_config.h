@@ -46,6 +46,13 @@
 #define USART_TX_PIN		AVR32_USART0_TXD_0_0_PIN
 #define USART_TX_FUNCTION	AVR32_USART0_TXD_0_0_FUNCTION
 
-#define FOSC0 12000000		//CPU clock frequencey
+#define FOSC0				12000000		//CPU clock frequency
 
-#endif /* _ROSA_CONFIG_H_ */
+//System configures
+#define MAX_NUMBER_TASKS		42
+#define MAX_NUMBER_SEMAPHORES	42
+#define TICK					1
+#define ROUND_ROBIN_PERIOD		8
+
+
+#endif 

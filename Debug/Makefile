@@ -55,6 +55,7 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../src/include/util/helper_functions.c \
+../src/kernel/rosa_task_manager.c \
 ../src/tests/kernel/struct/priority_queue_test.c \
 ../src/kernel/priority_queue.c \
 ../src/main.c \
@@ -74,6 +75,7 @@ ASM_SRCS +=
 
 OBJS +=  \
 src/include/util/helper_functions.o \
+src/kernel/rosa_task_manager.o \
 src/tests/kernel/struct/priority_queue_test.o \
 src/kernel/priority_queue.o \
 src/main.o \
@@ -86,6 +88,7 @@ src/kernel/rosa_tim.o
 
 OBJS_AS_ARGS +=  \
 src/include/util/helper_functions.o \
+src/kernel/rosa_task_manager.o \
 src/tests/kernel/struct/priority_queue_test.o \
 src/kernel/priority_queue.o \
 src/main.o \
@@ -98,6 +101,7 @@ src/kernel/rosa_tim.o
 
 C_DEPS +=  \
 src/include/util/helper_functions.d \
+src/kernel/rosa_task_manager.d \
 src/tests/kernel/struct/priority_queue_test.d \
 src/kernel/priority_queue.d \
 src/main.d \
@@ -110,6 +114,7 @@ src/kernel/rosa_tim.d
 
 C_DEPS_AS_ARGS +=  \
 src/include/util/helper_functions.d \
+src/kernel/rosa_task_manager.d \
 src/tests/kernel/struct/priority_queue_test.d \
 src/kernel/priority_queue.d \
 src/main.d \
@@ -152,6 +157,8 @@ LINKER_SCRIPT_DEP+=  \
 
 
 
+
+
 src/include/util/%.o: ../src/include/util/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
@@ -159,14 +166,14 @@ src/include/util/%.o: ../src/include/util/%.c
 	@echo Finished building: $<
 	
 
-src/tests/kernel/struct/%.o: ../src/tests/kernel/struct/%.c
+src/kernel/%.o: ../src/kernel/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
-src/kernel/%.o: ../src/kernel/%.c
+src/tests/kernel/struct/%.o: ../src/tests/kernel/struct/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
