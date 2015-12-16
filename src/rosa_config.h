@@ -53,6 +53,6 @@
 #define MAX_NUMBER_SEMAPHORES	42
 #define TICK					1
 #define ROUND_ROBIN_PERIOD		8
-
+#define MINIMAL_STACK_SIZE      70
 
 #endif 

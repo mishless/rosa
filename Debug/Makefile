@@ -55,6 +55,8 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../src/include/util/helper_functions.c \
+../src/kernel/rosa_queue_manager.c \
+../src/kernel/rosa_scheduler_manager.c \
 ../src/kernel/rosa_task_manager.c \
 ../src/tests/kernel/struct/priority_queue_test.c \
 ../src/kernel/priority_queue.c \
@@ -75,6 +77,8 @@ ASM_SRCS +=
 
 OBJS +=  \
 src/include/util/helper_functions.o \
+src/kernel/rosa_queue_manager.o \
+src/kernel/rosa_scheduler_manager.o \
 src/kernel/rosa_task_manager.o \
 src/tests/kernel/struct/priority_queue_test.o \
 src/kernel/priority_queue.o \
@@ -88,6 +92,8 @@ src/kernel/rosa_tim.o
 
 OBJS_AS_ARGS +=  \
 src/include/util/helper_functions.o \
+src/kernel/rosa_queue_manager.o \
+src/kernel/rosa_scheduler_manager.o \
 src/kernel/rosa_task_manager.o \
 src/tests/kernel/struct/priority_queue_test.o \
 src/kernel/priority_queue.o \
@@ -101,6 +107,8 @@ src/kernel/rosa_tim.o
 
 C_DEPS +=  \
 src/include/util/helper_functions.d \
+src/kernel/rosa_queue_manager.d \
+src/kernel/rosa_scheduler_manager.d \
 src/kernel/rosa_task_manager.d \
 src/tests/kernel/struct/priority_queue_test.d \
 src/kernel/priority_queue.d \
@@ -114,6 +122,8 @@ src/kernel/rosa_tim.d
 
 C_DEPS_AS_ARGS +=  \
 src/include/util/helper_functions.d \
+src/kernel/rosa_queue_manager.d \
+src/kernel/rosa_scheduler_manager.d \
 src/kernel/rosa_task_manager.d \
 src/tests/kernel/struct/priority_queue_test.d \
 src/kernel/priority_queue.d \
@@ -140,6 +150,10 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

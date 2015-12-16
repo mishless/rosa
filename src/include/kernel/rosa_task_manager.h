@@ -14,7 +14,7 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 								unsigned int taskPriority,
 								TaskHandle* taskHandle);
 							
-unsigned int ROSA_CreateTask (void (*functionBody) (void),
+unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 								char * functionNameChArr,
 								unsigned int maxStackSize,
 								unsigned int taskPriority,

@@ -7,13 +7,14 @@
 #define ROSA_TASK_PRIVATE_H_
 
 #include "rosa_api_call.h"
+#include "kernel/rosa_def.h"
 
-struct{
+typedef struct{
 	unsigned int data[MAX_NUMBER_SEMAPHORES];
 	unsigned int size;
 } Stack;
 
-struct{
+typedef struct{
 	TaskHandle* prev;
 	TaskHandle* next;
 	tcb* t;

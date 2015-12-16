@@ -4,6 +4,10 @@
 
 src\include\util\helper_functions.c
 
+src\kernel\rosa_queue_manager.c
+
+src\kernel\rosa_scheduler_manager.c
+
 src\kernel\rosa_task_manager.c
 
 src\tests\kernel\struct\priority_queue_test.c
