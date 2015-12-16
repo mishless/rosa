@@ -1,9 +1,9 @@
 #include "priority_queue.h"
 
 int intComparator(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement) {
-	if (firstElement->priority == secondElement->priority) {
+	if (firstElement->task->originalPriority == secondElement->task->originalPriority) {
 		return 0;
-		} else if (firstElement->priority > secondElement->priority) {
+		} else if (firstElement->task->originalPriority > secondElement->task->originalPriority )  {
 		return 1;
 	}
 	return -1;
@@ -17,17 +17,17 @@ int test1()
 {
 	PriorityQueue *queue = createPriorityQueue(10, (&intComparator), (&callbackOnChange));
 	PriorityQueueElement *element1 = malloc(sizeof(PriorityQueueElement));
-	element1->priority = 1;
+	element1->task->originalPriority = 1;
 	PriorityQueueElement *element2 = malloc(sizeof(PriorityQueueElement));
-	element2->priority = 2;
+	element2->task->originalPriority = 2;
 	PriorityQueueElement *element3 = malloc(sizeof(PriorityQueueElement));
-	element3->priority = 3;
+	element3->task->originalPriority = 3;
 	PriorityQueueElement *element4 = malloc(sizeof(PriorityQueueElement));
-	element4->priority = 4;
+	element4->task->originalPriority = 4;
 	PriorityQueueElement *element5 = malloc(sizeof(PriorityQueueElement));
-	element5->priority = 5;
+	element5->task->originalPriority = 5;
 	PriorityQueueElement *element6 = malloc(sizeof(PriorityQueueElement));
-	element6->priority = 5;
+	element6->task->originalPriority = 5;
 	enqueue(queue, element1);
 	enqueue(queue, element2);
 	enqueue(queue, element3);

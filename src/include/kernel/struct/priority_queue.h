@@ -2,9 +2,10 @@
 #define PRIORITY_QUEUE_H_INCLUDED
 
 #include <stdlib.h>
+#include "kernel/rosa_task_private.h"
 /* PriorityQueueElement contains priority and task information */
 typedef struct PriorityQueueElement {
-    unsigned int priority;
+    Task* task;
 } PriorityQueueElement;
 
 /* PriorityQueue contains size, maximumSize, array of pointers to elements of type PriorityQueueElement, comparator function and callbackOnChange function. */

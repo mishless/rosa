@@ -148,10 +148,16 @@
     <Compile Include="src\include\kernel\rosa_clock_manager.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\include\kernel\rosa_queue_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\kernel\rosa_scheduler_manager.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\include\kernel\rosa_semaphore_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\include\kernel\rosa_semaphore_private.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\include\kernel\rosa_task_manager.h">
@@ -170,6 +176,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\include\util\helper_functions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\kernel\rosa_queue_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\kernel\rosa_scheduler_manager.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\rosa_task_manager.c">
