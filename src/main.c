@@ -41,46 +41,17 @@
 #include "util/helper_functions.h"
 #include "drivers/my_wdt.h"
 
+#include "tests.h"
+
 #define TASK_NUM_CHAR 255
 #define MAX_STR_LEN 30
 
-#define SUCCESS_CHAR '^'
-#define FAILURE_CHAR '_'
-
-#define WAIT for(global_i = 0; global_i<800000;global_i++);
 
 unsigned int global_i;
 
-void test10(void)
-{
-	usartWriteLine(&AVR32_USART0, "TEST-STUFF-01");
-	usartWriteChar(&AVR32_USART0, 0);
-	gpioClear(LED0_GPIO);
-	WAIT
-	usartWriteChar(&AVR32_USART0, FAILURE_CHAR);
-	BLOCK
-}
-
-void test2(void)
-{
-	usartWriteLine(&AVR32_USART0, "THIS-IS-TEST-ID-02");
-	usartWriteChar(&AVR32_USART0, 0);
-	gpioClear(LED1_GPIO);
-	BLOCK
-}
-
-void test3(void)
-{
-	usartWriteLine(&AVR32_USART0, "HI-MIHAELA-03");
-	usartWriteChar(&AVR32_USART0, 0);
-	gpioClear(LED2_GPIO);
-	WAIT
-	usartWriteChar(&AVR32_USART0, SUCCESS_CHAR);
-	BLOCK
-}
 
 /*Pointers to all the test cases*/
-void (*tests[])(void) = {test10, test2, test3};
+void (*tests[])(void) = {tm_create_01, tm_create_02};
 
 int main(void)
 {

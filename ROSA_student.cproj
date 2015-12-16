@@ -26,16 +26,16 @@
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>1</eraseonlaunchrule>
     <AsfFrameworkConfig>
-      <framework-data xmlns="">
-        <options />
-        <configurations />
-        <files />
-        <documentation help="" />
-        <offline-documentation help="" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.11.0" />
-        </dependencies>
-      </framework-data>
+      <framework-data>
+  <options />
+  <configurations />
+  <files />
+  <documentation help="" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.18.1" />
+  </dependencies>
+</framework-data>
     </AsfFrameworkConfig>
     <avrtoolinterface>JTAG</avrtoolinterface>
     <com_atmel_avrdbg_tool_avrdragon>
@@ -160,6 +160,12 @@
     <Compile Include="src\include\kernel\rosa_task_private.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\include\tests\task_manager_tests.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\include\tests\tests.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\util\helper_functions.c">
       <SubType>compile</SubType>
     </Compile>
@@ -172,11 +178,16 @@
     <Compile Include="src\tests\kernel\struct\priority_queue_test.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\tests\task_manager\task_manager_tests.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Folder Include="src\include\tests" />
     <Folder Include="src\include\util\" />
     <Folder Include="src\kernel\struct" />
     <Folder Include="src\tests" />
     <Folder Include="src\tests\kernel" />
     <Folder Include="src\tests\kernel\struct" />
+    <Folder Include="src\tests\task_manager" />
     <None Include="AUTHOR">
       <SubType>compile</SubType>
     </None>

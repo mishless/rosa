@@ -6,6 +6,8 @@
  */ 
 
 #include "helper_functions.h"
+#include <avr32/io.h>
+#include "drivers/usart.h"
 
 #define CYCLES_PER_MS 12000000/11
 
@@ -39,4 +41,23 @@ void num2str(unsigned int num, char*str)
 		exp/=10;
 	} while (exp != 0);
 	*str = 0;
+}
+
+
+void send_id(char* id)
+{
+	usartWriteLine(&AVR32_USART0, id);
+	usartWriteChar(&AVR32_USART0, 0);
+}
+
+int compare_strings(char* str1, char* str2, unsigned int n)
+{
+	unsigned int i;
+	
+	for(i = 0; i < n; i++)
+	{
+		if(*str1++ != *str2++) return -1;
+	}
+	
+	return 0;
 }

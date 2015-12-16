@@ -8,6 +8,8 @@ src\kernel\rosa_task_manager.c
 
 src\tests\kernel\struct\priority_queue_test.c
 
+src\tests\task_manager\task_manager_tests.c
+
 src\kernel\priority_queue.c
 
 src\main.c

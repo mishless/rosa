@@ -18,4 +18,10 @@ void num2str(unsigned int num, char*str);
 /*A function that performs a busy wait. It is not very precise*/
 void busy_wait(int milliseconds);
 
+/*Sending test ID via USART0*/
+void send_id(char* id);
+
+/*Compare first n bytes of two character arrays*/
+int compare_strings(char* str1, char* str2, unsigned int n);
+
 #endif /* INCFILE1_H_ */

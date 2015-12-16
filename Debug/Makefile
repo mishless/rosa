@@ -33,11 +33,13 @@ LINKER_SCRIPT_DEP:=
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
+../src/include/tests \
 ../src/include/util/ \
 ../src/kernel/struct \
 ../src/tests \
 ../src/tests/kernel \
 ../src/tests/kernel/struct \
+../src/tests/task_manager \
 ../doc \
 ../doc/order \
 ../src \
@@ -57,6 +59,7 @@ C_SRCS +=  \
 ../src/include/util/helper_functions.c \
 ../src/kernel/rosa_task_manager.c \
 ../src/tests/kernel/struct/priority_queue_test.c \
+../src/tests/task_manager/task_manager_tests.c \
 ../src/kernel/priority_queue.c \
 ../src/main.c \
 ../src/kernel/rosa_int.c \
@@ -77,6 +80,7 @@ OBJS +=  \
 src/include/util/helper_functions.o \
 src/kernel/rosa_task_manager.o \
 src/tests/kernel/struct/priority_queue_test.o \
+src/tests/task_manager/task_manager_tests.o \
 src/kernel/priority_queue.o \
 src/main.o \
 src/kernel/rosa_int.o \
@@ -90,6 +94,7 @@ OBJS_AS_ARGS +=  \
 src/include/util/helper_functions.o \
 src/kernel/rosa_task_manager.o \
 src/tests/kernel/struct/priority_queue_test.o \
+src/tests/task_manager/task_manager_tests.o \
 src/kernel/priority_queue.o \
 src/main.o \
 src/kernel/rosa_int.o \
@@ -103,6 +108,7 @@ C_DEPS +=  \
 src/include/util/helper_functions.d \
 src/kernel/rosa_task_manager.d \
 src/tests/kernel/struct/priority_queue_test.d \
+src/tests/task_manager/task_manager_tests.d \
 src/kernel/priority_queue.d \
 src/main.d \
 src/kernel/rosa_int.d \
@@ -116,6 +122,7 @@ C_DEPS_AS_ARGS +=  \
 src/include/util/helper_functions.d \
 src/kernel/rosa_task_manager.d \
 src/tests/kernel/struct/priority_queue_test.d \
+src/tests/task_manager/task_manager_tests.d \
 src/kernel/priority_queue.d \
 src/main.d \
 src/kernel/rosa_int.d \
@@ -159,31 +166,40 @@ LINKER_SCRIPT_DEP+=  \
 
 
 
+
+
 src/include/util/%.o: ../src/include/util/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 src/kernel/%.o: ../src/kernel/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 src/tests/kernel/struct/%.o: ../src/tests/kernel/struct/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+src/tests/task_manager/%.o: ../src/tests/task_manager/%.c
+	@echo Building file: $<
+	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 src/%.o: ../src/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -I"../src" -I"../src/include" -I"../src/include/kernel/struct"  -O0 -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3a0512 -c -c -fmessage-length=0 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
@@ -194,21 +210,21 @@ src/%.o: ../src/%.c
 src/kernel/%.o: ../src/kernel/%.S
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU Preprocessing Assembler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -x assembler-with-cpp -c -mpart=uc3a0512 -I "../src" -I "../src/include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -Wa,-g   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -x assembler-with-cpp -c -mpart=uc3a0512 -I "../src" -I "../src/include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -Wa,-g   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 src/kernel/%.o: ../src/kernel/%.x
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU Preprocessing Assembler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -x assembler-with-cpp -c -mpart=uc3a0512 -I "../src" -I "../src/include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -Wa,-g   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -x assembler-with-cpp -c -mpart=uc3a0512 -I "../src" -I "../src/include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -Wa,-g   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 src/kernel/%.o: ../src/kernel/%.X
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU Preprocessing Assembler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -x assembler-with-cpp -c -mpart=uc3a0512 -I "../src" -I "../src/include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -Wa,-g   -o "$@" "$<" 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -x assembler-with-cpp -c -mpart=uc3a0512 -I "../src" -I "../src/include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -Wa,-g   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
@@ -233,13 +249,13 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR32/GNU Linker : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -nostartfiles -Wl,-Map="ROSA.map" -Wl,--start-group  -Wl,--end-group -Wl,--gc-sections --rodata-writable -Wl,--direct-data -mpart=uc3a0512 ../src/drivers/button.o ../src/drivers/delay.o ../src/drivers/gpio.o ../src/drivers/led.o ../src/drivers/pot.o ../src/drivers/usart.o ../src/kernel/rosa_tim_asm.o ../src/cpu/startup/crt0.o -T../src/cpu/linkscript/link_uc3a0512.lds  
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -nostartfiles -Wl,-Map="ROSA.map" -Wl,--start-group  -Wl,--end-group -Wl,--gc-sections --rodata-writable -Wl,--direct-data -mpart=uc3a0512 ../src/drivers/button.o ../src/drivers/delay.o ../src/drivers/gpio.o ../src/drivers/led.o ../src/drivers/pot.o ../src/drivers/usart.o ../src/kernel/rosa_tim_asm.o ../src/cpu/startup/crt0.o -T../src/cpu/linkscript/link_uc3a0512.lds  
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature "ROSA.elf" "ROSA.hex"
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "ROSA.elf" "ROSA.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objdump.exe" -h -S "ROSA.elf" > "ROSA.lss"
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "ROSA.elf" "ROSA.srec"
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-size.exe" "ROSA.elf"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature "ROSA.elf" "ROSA.hex"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "ROSA.elf" "ROSA.eep" || exit 0
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objdump.exe" -h -S "ROSA.elf" > "ROSA.lss"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "ROSA.elf" "ROSA.srec"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-size.exe" "ROSA.elf"
 	
 	
 
