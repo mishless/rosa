@@ -47,3 +47,13 @@ unsigned int isREADYqueueEmpty( void )
 {
 	return isEmpty(READYqueue);
 }
+
+
+#if DEBUG_COMPILATION
+
+PriorityQueue fetchREADYqueue(void)
+{
+	return *READYqueue;
+}
+
+#endif

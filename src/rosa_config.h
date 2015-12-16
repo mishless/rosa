@@ -55,4 +55,6 @@
 #define ROUND_ROBIN_PERIOD		8
 #define MINIMAL_STACK_SIZE      70
 
+#define DEBUG_COMPILATION       1
+
 #endif 
