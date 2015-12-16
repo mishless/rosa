@@ -16,16 +16,7 @@
 #define SUCCESS_CHAR '^'
 #define FAILURE_CHAR '_'
 
-void send_fail()
-{
-	usartWriteChar(&AVR32_USART0, FAILURE_CHAR);
-	BLOCK;
-}
-
-void send_success()
-{
-	usartWriteChar(&AVR32_USART0, SUCCESS_CHAR);
-	BLOCK;
-}
+void send_fail();
+void send_success();
 
 #endif /* TESTS_H_ */

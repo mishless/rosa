@@ -37,6 +37,8 @@
 #include "drivers/pot.h"
 #include "drivers/usart.h"
 
+#include "rosa_queue_manager.h"
+
 /***********************************************************
  * TCBLIST
  *
@@ -73,7 +75,8 @@ void ROSA_init(void)
 	//Start with empty TCBLIST and no EXECTASK.
 	TCBLIST = NULL;
 	EXECTASK = NULL;
-
+	
+	
 	//Initialize the timer to 100 ms period.
 	//...
 	timerInit(100);

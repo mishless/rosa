@@ -56,7 +56,7 @@ void tm_create_02()
 	ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, &task_handle);
 	PriorityQueue ready_queue;
 	
-	ready_queue = DEBUG_fetch_ready_queue();
+	ready_queue = fetchREADYqueue();
 	
 	/*Check queue size*/
 	if(ready_queue.size != 1)
