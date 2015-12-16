@@ -30,6 +30,7 @@
 #include <avr32/io.h>
 #include "kernel/rosa_int.h"
 #include "rosa_config.h"
+#include "rosa_def.h"
 
 #define USART_NO_RX_CHAR 0
 

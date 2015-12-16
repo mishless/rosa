@@ -11,11 +11,13 @@
 
 #include "task_manager_tests.h"
 #include "drivers/usart.h"
+#include "helper_functions.h"
 
 #define SUCCESS_CHAR '^'
 #define FAILURE_CHAR '_'
 
 #define send_fail()		usartWriteChar(&AVR32_USART0, FAILURE_CHAR);
+						
 #define send_success()	usartWriteChar(&AVR32_USART0, SUCCESS_CHAR);
 
 #endif /* TESTS_H_ */

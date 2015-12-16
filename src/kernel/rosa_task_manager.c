@@ -7,6 +7,8 @@
 #include "kernel/rosa_task_private.h"
 #include "kernel/rosa_queue_manager.h"
 #include "rosa_config.h"
+#include "kernel/rosa_ker.h"
+#include <stdlib.h>
 
 unsigned int task_counter = 0;
 
@@ -16,8 +18,21 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 								unsigned int taskPriority,
 								TaskHandle* taskHandle)
 {
-	Task* task = (Task*) taskHandle;
-	int* stack = (int*) malloc(maxStackSize);
+	Task* task;
+	int* stack;
+	
+	task = malloc(sizeof(Task));
+	
+	if(task == NULL)
+		return NOT_ENOUGH_MEMORY;
+	
+	task->t = malloc(sizeof(tcb));
+	
+	if(task->t == NULL)
+		return NOT_ENOUGH_MEMORY;
+		
+	stack = malloc(maxStackSize);
+	
 	if(stack == NULL)
 		return NOT_ENOUGH_MEMORY;
 	if( sizeof(functionNameChArr)/sizeof(char) > 4 || sizeof(functionNameChArr)/sizeof(char) < 1 ) 
@@ -28,10 +43,11 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 		return INVALID_PRIORITY;
 	if( maxStackSize < MINIMAL_STACK_SIZE)
 		return INVALID_STACK_SIZE;
-	ROSA_tcbCreate(task->t, functionNameChArr, &functionBody, stack, maxStackSize);
+	ROSA_tcbCreate(task->t, functionNameChArr, functionBody, stack, maxStackSize);
 	task->originalPriority = taskPriority;
 	putInREADYqueue(task);
 	
+	*taskHandle = (TaskHandle*)task;
 	return SUCCESS;
 }
 
@@ -66,7 +82,7 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 
 unsigned int ROSA_TerminateTask (void)
 {
-	
+	return 0;
 }
 
 void setTaskDelay(TaskHandle* task,
