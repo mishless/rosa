@@ -111,6 +111,7 @@
       <Value>../src/include/tests</Value>
       <Value>../src/include/util</Value>
       <Value>../src/include/kernel</Value>
+      <Value>../src/include/kernel/debug_functions</Value>
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
@@ -196,8 +197,10 @@
     <Compile Include="src\tests\task_manager\task_manager_tests.c">
       <SubType>compile</SubType>
     </Compile>
+    <Folder Include="src\include\kernel\debug_functions" />
     <Folder Include="src\include\tests" />
     <Folder Include="src\include\util\" />
+    <Folder Include="src\kernel\debug_functions" />
     <Folder Include="src\kernel\struct" />
     <Folder Include="src\tests" />
     <Folder Include="src\tests\kernel" />
