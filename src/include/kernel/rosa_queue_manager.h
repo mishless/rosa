@@ -16,9 +16,15 @@ Task* getFromREADYqueue( void );
 Task* peekREADYqueue( void );
 unsigned int isREADYqueueEmpty( void );
 
+void putInDELAYqueue( Task* task );
+Task* getFromDELAYqueue( void );
+Task* peekDELAYqueue( void );
+unsigned int isDELAYqueueEmpty( void );
+
 #if DEBUG_COMPILATION
 
 PriorityQueue fetchREADYqueue(void);
+PriorityQueue fetchDELAYqueue(void);
 
 #endif
 

@@ -46,8 +46,8 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 	ROSA_tcbCreate(task->t, functionNameChArr, functionBody, stack, maxStackSize);
 	task->originalPriority = taskPriority;
 	putInREADYqueue(task);
-	
 	*taskHandle = (TaskHandle*)task;
+	task_counter++;
 	return SUCCESS;
 }
 
@@ -89,7 +89,7 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 	task->period = taskPeriod;
 	putInREADYqueue(task);
 	*taskHandle = (TaskHandle*)task;
-	
+	task_counter++;
 	return SUCCESS;							
 }
 
@@ -101,5 +101,5 @@ unsigned int ROSA_TerminateTask (void)
 void setTaskDelay(TaskHandle* task,
 					ROSA_TickCount wakeUpTime)
 {
-					
+				
 }
