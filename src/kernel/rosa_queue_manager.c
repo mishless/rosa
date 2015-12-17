@@ -1,18 +1,24 @@
 /*
- * rosa_queue_manager.c
- *
- * Created: 12/16/2015 6:59:15 PM
- *  Author: Kolja
- */ 
+* rosa_queue_manager.c
+*
+* Created: 12/16/2015 6:59:15 PM
+*  Author: Kolja
+*/
 #include "priority_queue.h"
 #include "rosa_config.h"
+#include "rosa_task_private.h"
 
 PriorityQueue* READYqueue;
 PriorityQueue* DELAYqueue;
 
 int READYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement)
 {
-	return ((*firstElement).task->originalPriority) > ((*secondElement).task->originalPriority);
+	if (getPriority(firstElement->task) == getPriority(secondElement->task)) {
+		return 0;
+	} else if (getPriority(firstElement->task) > getPriority(secondElement->task)) {
+		return 1;
+	}
+	return -1;
 }
 
 void READYcallback(void)
@@ -22,9 +28,9 @@ void READYcallback(void)
 
 void putInREADYqueue( Task* task )
 {
-	PriorityQueueElement newElement;
-	newElement.task = task;
-	enqueue(READYqueue, &newElement);
+	PriorityQueueElement *newElement = malloc(sizeof(PriorityQueueElement));
+	newElement->task = task;
+	enqueue(READYqueue, newElement);
 }
 
 Task* getFromREADYqueue( void )
@@ -46,7 +52,12 @@ unsigned int isREADYqueueEmpty( void )
 
 int DELAYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement)
 {
-	return ((*firstElement).task->wakeUpTime) < ((*secondElement).task->wakeUpTime);
+	if (firstElement->task->wakeUpTime == secondElement->task->wakeUpTime) {
+		return 0;
+	} else if (firstElement->task->wakeUpTime < secondElement->task->wakeUpTime) {
+		return 1;
+	}
+	return -1;
 }
 
 void DELAYcallback(void)
@@ -56,20 +67,20 @@ void DELAYcallback(void)
 
 void putInDELAYqueue( Task* task )
 {
-	PriorityQueueElement newElement;
-	newElement.task = task;
-	enqueue(DELAYqueue, &newElement);
+	PriorityQueueElement *newElement = malloc(sizeof(PriorityQueueElement));
+	newElement->task = task;
+	enqueue(DELAYqueue, newElement);
 }
 
 Task* getFromDELAYqueue( void )
 {
-	PriorityQueueElement * element = dequeue(DELAYqueue);
+	PriorityQueueElement *element = dequeue(DELAYqueue);
 	return element->task;
 }
 
 Task* peekDELAYqueue( void )
 {
-	PriorityQueueElement * element = peek(DELAYqueue);
+	PriorityQueueElement *element = peek(DELAYqueue);
 	return element->task;
 }
 

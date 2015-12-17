@@ -26,6 +26,7 @@ void deletePriorityQueue(PriorityQueue *queue);
 void enqueue(PriorityQueue *queue, PriorityQueueElement *element);
 PriorityQueueElement *peek(PriorityQueue *queue);
 PriorityQueueElement *dequeue(PriorityQueue *queue);
+void heapify(PriorityQueue *queue, unsigned int index);
 unsigned int isEmpty(PriorityQueue *queue);
 
 #endif // PRIORITY_QUEUE_H_INCLUDED

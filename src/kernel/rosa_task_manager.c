@@ -109,3 +109,11 @@ void setTaskDelay(Task* task,
 {
 	(*task).wakeUpTime = wakeUpTime;			
 }
+
+unsigned int getPriority(Task *task) {
+	if (isEmptyStack(&(task->temporaryPriority))) {
+		return task->originalPriority;
+	}
+	unsigned int priority = popFromStack(&(task->temporaryPriority));
+	return priority;
+}

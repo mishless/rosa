@@ -1,20 +1,16 @@
 /*
- * rosa_task_private.h
- *
- */ 
+* rosa_task_private.h
+*
+*/
 
 #ifndef ROSA_TASK_PRIVATE_H_
 #define ROSA_TASK_PRIVATE_H_
 
 #include "rosa_api_call.h"
 #include "kernel/rosa_def.h"
+#include "stack.h"
 
-typedef struct{
-	unsigned int data[MAX_NUMBER_SEMAPHORES];
-	unsigned int size;
-} Stack;
-
-typedef struct{
+typedef struct {
 	TaskHandle* prev;
 	TaskHandle* next;
 	tcb* t;
@@ -25,8 +21,7 @@ typedef struct{
 	ROSA_TickCount wakeUpTime;
 } Task;
 
-void setTaskDelay(Task* task, 
-					ROSA_TickCount wakeUpTime);
-
+void setTaskDelay(Task *task, ROSA_TickCount wakeUpTime);
+unsigned int getPriority(Task *task);
 
 #endif /* ROSA_TASK_PRIVATE_H_ */
