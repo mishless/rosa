@@ -3,37 +3,44 @@
 int intComparator(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement) {
 	if (firstElement->task->originalPriority == secondElement->task->originalPriority) {
 		return 0;
-		} else if (firstElement->task->originalPriority > secondElement->task->originalPriority )  {
+		} else if (firstElement->task->originalPriority > secondElement->task->originalPriority) {
 		return 1;
 	}
 	return -1;
 }
 
-void callbackOnChange() {
+void callbackOnChange(void) {
+	return;
 	/* For now do nothing */
 }
 
-int test1()
+int mainTest()
 {
-	PriorityQueue *queue = createPriorityQueue(10, (&intComparator), (&callbackOnChange));
+	PriorityQueue *queue = createPriorityQueue(3, (&intComparator), (&callbackOnChange));
+	Task *task1 = malloc(sizeof(Task));
+	task1->originalPriority = 1;
 	PriorityQueueElement *element1 = malloc(sizeof(PriorityQueueElement));
-	element1->task->originalPriority = 1;
+	element1->task = task1;
+
+	Task *task2 = malloc(sizeof(Task));
+	task2->originalPriority = 2;
 	PriorityQueueElement *element2 = malloc(sizeof(PriorityQueueElement));
-	element2->task->originalPriority = 2;
+	element2->task = task2;
+
+	Task *task3 = malloc(sizeof(Task));
+	task3->originalPriority = 3;
 	PriorityQueueElement *element3 = malloc(sizeof(PriorityQueueElement));
-	element3->task->originalPriority = 3;
-	PriorityQueueElement *element4 = malloc(sizeof(PriorityQueueElement));
-	element4->task->originalPriority = 4;
-	PriorityQueueElement *element5 = malloc(sizeof(PriorityQueueElement));
-	element5->task->originalPriority = 5;
-	PriorityQueueElement *element6 = malloc(sizeof(PriorityQueueElement));
-	element6->task->originalPriority = 5;
+	element3->task = task3;
+
 	enqueue(queue, element1);
 	enqueue(queue, element2);
 	enqueue(queue, element3);
-	enqueue(queue, element4);
-	enqueue(queue, element5);
-	enqueue(queue, element6);
+	int i;
+	PriorityQueueElement *element = NULL;
+	for (i=0; i<queue->maximumSize; i++) {
+		element = dequeue(queue);
+
+	}
 	deletePriorityQueue(queue);
 	return 0;
 }
