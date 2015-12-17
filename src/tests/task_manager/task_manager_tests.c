@@ -23,6 +23,8 @@
 #define TEST_PERIOD 25
 #define TEST_DEADLINE 20
 
+// ROSA_CreateTask
+
 void tm_create_01()
 {
 	/*ROSA_CreateTask should allocate and populate the task structure 
@@ -223,6 +225,8 @@ void tm_create_10()
 	
 	send_success();
 }
+
+// ROSA_CreateCyclicTask
 
 void tm_create_11()
 {
@@ -425,17 +429,74 @@ void tm_create_20()
 	send_success();
 }
 
-/* tm_create_21 - tm_create_23 */
+// mixed ROSA_CreateCyclicTask and ROSA_CreateTask
 
-void high_priority_terminate_myself(void)
+void tm_create_21()
+{
+	TaskHandle taskCyclic1, taskCyclic2, taskOrdinary;
+	char task_name[4] = TASK_NAME;
+	
+	send_id("TM-CREATE-21");
+	
+	ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, &taskCyclic1);
+	ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, &taskOrdinary);
+	ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, &taskCyclic2);
+
+	PriorityQueue ready_queue = fetchREADYqueue();
+	
+	if(ready_queue.size != 3)
+		send_fail();
+	if ((*(ready_queue.data[0]) ).task != (Task*) taskCyclic1)
+		send_fail();
+	if ((*(ready_queue.data[1]) ).task != (Task*) taskOrdinary)
+		send_fail();
+	if ((*(ready_queue.data[2]) ).task != (Task*) taskCyclic2)
+		send_fail();
+	
+	send_success();
+}
+
+void tm_create_22()
+{
+	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
+	char task_name[4] = TASK_NAME;
+	PriorityQueue ready_queue;
+	
+	const unsigned int priorityHigh = 5;
+	const unsigned int priorityMedium = 4;
+	const unsigned int priorityLow = 3;
+	
+	send_id("TM-CREATE-22");
+	
+	ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, priorityMedium, TEST_PERIOD, TEST_DEADLINE, &taskMediumPriority);
+	ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, priorityLow, &taskLowPriority);
+	ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, priorityHigh, TEST_PERIOD, TEST_DEADLINE, &taskHighPriority);
+
+	ready_queue = fetchREADYqueue();
+	
+	if(ready_queue.size != 3)
+		send_fail();
+	if ((*(ready_queue.data[0]) ).task != (Task*) taskHighPriority)
+		send_fail();
+	if ((*(ready_queue.data[1]) ).task != (Task*) taskLowPriority)
+		send_fail();
+	if ((*(ready_queue.data[2]) ).task != (Task*) taskMediumPriority)
+		send_fail();
+	
+	send_success();
+}
+
+// TERMINATE
+
+void success_sender(void)
+{
+	send_success();
+}
+
+void terminate_myself(void)
 {
 	ROSA_TerminateTask();
 	send_fail();
-}
-
-void lower_priority_send_success(void)
-{
-	send_success();
 }
 
 void tm_terminate_01()
@@ -444,8 +505,55 @@ void tm_terminate_01()
 	
 	send_id("TM-TERMINATE-01");
 	
-	ROSA_CreateTask(&high_priority_terminate_myself, "high", STACK_SIZE, high_priority, NULL);
-	ROSA_CreateTask(&lower_priority_send_success, "low", STACK_SIZE, low_priority, NULL);
+	ROSA_CreateTask(&terminate_myself, "high", STACK_SIZE, high_priority, NULL);
+	ROSA_CreateTask(&success_sender, "low", STACK_SIZE, low_priority, NULL);
+	
+	ROSA_Start();
+	
+	send_fail();
+}
+
+/*
+void mess_up_CRT_and_terminate(void)
+{
+	setCRT(42);
+	if (ROSA_TerminateTask() == FAILURE)
+		send_success();
+		
+	send_fail();
+}
+
+void tm_terminate_02()
+{
+	send_id("TM-TERMINATE-02");
+	
+	ROSA_CreateTask(&mess_up_CRT_and_terminate, "mess", STACK_SIZE, TEST_PRIORITY, NULL);
+	ROSA_CreateTask(&success_sender, "low", STACK_SIZE, LOW_TEST_PRIORITY, NULL);
+	
+	ROSA_Start();
+	
+	send_fail();
+}
+*/
+
+unsigned int task_creation_counter = 0;
+
+void make_clone_and_terminate(void)
+{
+	if (++task_creation_counter == 10000)
+		send_success();
+		
+	if (ROSA_CreateTask(&make_clone_and_terminate, "high", STACK_SIZE, TEST_PRIORITY, NULL) != SUCCESS)
+		send_fail();
+		
+	ROSA_TerminateTask();
+}
+
+void tm_terminate_03()
+{
+	send_id("TM-TERMINATE-03");
+	
+	ROSA_CreateTask(&make_clone_and_terminate, "high", STACK_SIZE, TEST_PRIORITY, NULL);
 	
 	ROSA_Start();
 	

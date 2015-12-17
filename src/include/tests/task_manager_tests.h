@@ -29,7 +29,10 @@ void tm_create_17();
 void tm_create_18();
 void tm_create_19();
 void tm_create_20();
+void tm_create_21();
+void tm_create_22();
 
 void tm_terminate_01();
+void tm_terminate_03();
 
 #endif /* TASK_MANAGER_TESTS_H_ */

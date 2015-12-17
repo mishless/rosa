@@ -25,7 +25,7 @@
 /* Tab size: 4 */
 
 #include "kernel/rosa_int.h"
-#include "kernel/rosa_scheduler.h"
+#include "kernel/rosa_scheduler_manager.h"
 
 void contextSaveFromISR(void);
 void contextRestoreFromISR(void);

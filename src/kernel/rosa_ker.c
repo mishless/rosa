@@ -29,7 +29,7 @@
 #include "kernel/rosa_ext.h"
 #include "kernel/rosa_ker.h"
 #include "kernel/rosa_tim.h"
-#include "kernel/rosa_scheduler.h"
+#include "kernel/rosa_scheduler_manager.h"
 
 //Driver includes
 #include "drivers/button.h"
