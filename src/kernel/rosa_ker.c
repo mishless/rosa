@@ -79,8 +79,7 @@ void ROSA_init(void)
 	
 	//Initialize the timer to 100 ms period.
 	//...
-	timerInit(100);
-	//...
+	timerInit(TICK);
 	initializeQueues();
 }
 

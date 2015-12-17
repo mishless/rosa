@@ -6,11 +6,21 @@
 */
 #include "stack.h"
 
+#define NULL 0
+
 Stack *createStack(unsigned int size) {
 	Stack *stack = malloc(sizeof(Stack));
+	if(stack == NULL)
+		return NULL;
+	
 	stack->data = malloc(sizeof(int) * size);
+	if(stack->data == NULL)
+		return NULL;
+		
 	stack->size = size;
 	stack->top = -1;
+	
+	return stack;
 }
 
 void destroyStack(Stack *stack) {
@@ -29,6 +39,9 @@ unsigned int popFromStack(Stack *stack) {
 		unsigned int top = stack->data[stack->top--];
 		return top;
 	}
+	
+	/*Shouldn't get to this case ever*/
+	return 0;
 }
 
 unsigned int isEmptyStack(Stack *stack) {

@@ -188,6 +188,9 @@
     <Compile Include="src\include\util\helper_functions.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\kernel\rosa_clock_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\kernel\rosa_queue_manager.c">
       <SubType>compile</SubType>
     </Compile>

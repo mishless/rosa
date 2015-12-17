@@ -13,7 +13,7 @@
 typedef struct {
 	tcb* t;
 	unsigned int originalPriority;
-	Stack temporaryPriority;
+	Stack* temporaryPriority;
 	ROSA_TickCount period;
 	ROSA_TickCount deadline;
 	ROSA_TickCount wakeUpTime;
