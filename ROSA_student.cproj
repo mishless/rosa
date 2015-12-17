@@ -158,6 +158,9 @@
     <Compile Include="src\include\kernel\rosa_scheduler_manager.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\include\kernel\rosa_scheduler_private.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\kernel\rosa_semaphore_manager.h">
       <SubType>compile</SubType>
     </Compile>

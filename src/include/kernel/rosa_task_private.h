@@ -25,7 +25,7 @@ typedef struct{
 	ROSA_TickCount wakeUpTime;
 } Task;
 
-void setTaskDelay(TaskHandle* task, 
+void setTaskDelay(Task* task, 
 					ROSA_TickCount wakeUpTime);
 
 

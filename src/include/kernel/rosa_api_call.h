@@ -28,5 +28,7 @@ typedef void * SemaphoreHandle;
 #define	INVALID_NAME			3
 #define TOO_MANY_TASKS			4
 
+#define FAILURE                 6
+
  
 #endif 

@@ -8,6 +8,7 @@
 #include "kernel/rosa_queue_manager.h"
 #include "rosa_config.h"
 #include "kernel/rosa_ker.h"
+#include "rosa_scheduler_private.h"
 #include <stdlib.h>
 
 unsigned int task_counter = 0;
@@ -95,11 +96,16 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 
 unsigned int ROSA_TerminateTask (void)
 {
-	return 0;
+	Task* task;
+	task = getCRT();
+	free((void*) task);
+	//TODO observer if currently running task is terminated
+	if(task != NULL)
+		return FAILURE;
 }
 
-void setTaskDelay(TaskHandle* task,
+void setTaskDelay(Task* task,
 					ROSA_TickCount wakeUpTime)
 {
-				
+	(*task).wakeUpTime = wakeUpTime;			
 }
