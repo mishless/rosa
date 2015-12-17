@@ -11,8 +11,6 @@
 #include "stack.h"
 
 typedef struct {
-	TaskHandle* prev;
-	TaskHandle* next;
 	tcb* t;
 	unsigned int originalPriority;
 	Stack temporaryPriority;
