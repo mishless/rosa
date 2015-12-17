@@ -157,7 +157,7 @@ void tm_create_06()
 
 void tm_create_07()
 {
-	char invalid_name[] = "invalid";
+	char invalid_name[7] = "invalid";
 	
 	send_id("TM-CREATE-07");
 	
@@ -422,4 +422,31 @@ void tm_create_20()
 		send_fail();
 	
 	send_success();
+}
+
+/* tm_create_21 - tm_create_23 */
+
+void high_priority_terminate_myself(void)
+{
+	ROSA_TerminateTask();
+	send_fail();
+}
+
+void lower_priority_send_success(void)
+{
+	send_success();
+}
+
+void tm_terminate_01()
+{
+	int high_priority = 5, low_priority = 3;
+	
+	send_id("TM-TERMINATE-01");
+	
+	ROSA_CreateTask(&high_priority_terminate_myself, "high", STACK_SIZE, high_priority, NULL);
+	ROSA_CreateTask(&lower_priority_send_success, "low", STACK_SIZE, low_priority, NULL);
+	
+	ROSA_Start();
+	
+	send_fail();
 }

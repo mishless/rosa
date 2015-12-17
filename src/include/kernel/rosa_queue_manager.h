@@ -10,7 +10,6 @@
 #define ROSA_QUEUE_MANAGER_H_
 #include "priority_queue.h"
 
-
 void putInREADYqueue( Task* task );
 Task* getFromREADYqueue( void );
 Task* peekREADYqueue( void );
@@ -20,6 +19,8 @@ void putInDELAYqueue( Task* task );
 Task* getFromDELAYqueue( void );
 Task* peekDELAYqueue( void );
 unsigned int isDELAYqueueEmpty( void );
+
+void initializeQueues( void );
 
 #if DEBUG_COMPILATION
 
