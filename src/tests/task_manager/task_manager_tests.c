@@ -75,6 +75,7 @@ void tm_create_03()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
 	char task_name[4] = TASK_NAME;
+	PriorityQueue ready_queue;
 	
 	const unsigned int priorityHigh = 5;
 	const unsigned int priorityMedium = 4;
@@ -86,7 +87,7 @@ void tm_create_03()
 	ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, priorityLow, &taskLowPriority);
 	ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, priorityHigh, &taskHighPriority);
 	
-	PriorityQueue ready_queue = fetchREADYqueue();
+	ready_queue = fetchREADYqueue();
 	
 	if(ready_queue.size != 3)
 		send_fail();

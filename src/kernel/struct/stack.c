@@ -45,7 +45,7 @@ unsigned int popFromStack(Stack *stack) {
 }
 
 unsigned int isEmptyStack(Stack *stack) {
-	if (stack->top > -1) {
+	if (stack->top == -1) {
 		return 1;
 	}
 	return 0;

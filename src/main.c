@@ -40,7 +40,7 @@
 
 #include "util/helper_functions.h"
 #include "drivers/my_wdt.h"
-
+#include "rosa_api_call.h"
 #include "tests.h"
 
 #define TASK_NUM_CHAR 255
@@ -58,7 +58,7 @@ unsigned int global_i;
 #define ALL_TESTS TM_CREATE_TESTS, TM_TERMINATE_TESTS
 							
 /*Pointers to all the test cases*/
-void (*tests[])(void) = {DEBUG_TESTS};
+void (*tests[])(void) = {ALL_TESTS};
 
 int main(void)
 {

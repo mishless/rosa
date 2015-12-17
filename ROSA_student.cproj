@@ -146,6 +146,9 @@
   </PropertyGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
   <ItemGroup>
+    <Compile Include="src\drivers\my_wdt.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\kernel\rosa_api_call.h">
       <SubType>compile</SubType>
     </Compile>
@@ -309,9 +312,6 @@
     <None Include="src\include\kernel\rosa_off.i">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\include\kernel\rosa_scheduler.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\include\kernel\rosa_tim.h">
       <SubType>compile</SubType>
     </Compile>
@@ -327,9 +327,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\rosa_ker_asm.S">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\kernel\rosa_scheduler.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\rosa_tim.c">

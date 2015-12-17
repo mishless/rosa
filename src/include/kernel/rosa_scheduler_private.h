@@ -13,5 +13,6 @@
 
 Task *getCRT(void);
 
+unsigned int isSchedulerStarted(void);
 
 #endif /* ROSA_SCHEDULER_PRIVATE_H_ */

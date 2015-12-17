@@ -9,6 +9,12 @@
 #ifndef ROSA_SCHEDULER_MANAGER_H_
 #define ROSA_SCHEDULER_MANAGER_H_
 
-void ROSA_Start(void);
+/*Made to avoid crappy function naming.
+  Otherwise there would be ROSA_Start and ROSA_start*/
+
+#define ROSA_Start() ROSA_StartScheduler()
+void ROSA_StartScheduler(void);
+
+void scheduler();
 
 #endif /* ROSA_SCHEDULER_MANAGER_H_ */

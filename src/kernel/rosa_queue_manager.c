@@ -7,6 +7,9 @@
 #include "priority_queue.h"
 #include "rosa_config.h"
 #include "rosa_task_private.h"
+#include "rosa_scheduler_private.h"
+#include "rosa_queue_manager.h"
+#include "rosa_ker.h"
 
 PriorityQueue* READYqueue;
 PriorityQueue* DELAYqueue;
@@ -23,7 +26,13 @@ int READYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *se
 
 void READYcallback(void)
 {
-	//TODO when scheduler is finished and currently running task
+	if(isSchedulerStarted() == 1)
+	{
+		if (getPriority(getCRT()) < getPriority(peekREADYqueue()))
+		{
+			ROSA_yield();
+		}
+	}
 }
 
 void putInREADYqueue( Task* task )

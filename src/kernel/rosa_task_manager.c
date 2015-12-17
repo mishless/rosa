@@ -10,6 +10,7 @@
 #include "kernel/rosa_ker.h"
 #include "rosa_scheduler_private.h"
 #include "stack.h"
+#include "helper_functions.h"
 
 #include <stdlib.h>
 
@@ -46,7 +47,7 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 		
 
 		
-	int name_size = sizeof(functionNameChArr)/sizeof(char);
+	unsigned int name_size = strlen(functionNameChArr);
 	if( name_size > 4 || name_size < 1 ) 
 		return INVALID_NAME;
 	if( task_counter+1 == MAX_NUMBER_TASKS )
@@ -92,8 +93,9 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 	task->temporaryPriority = createStack(MAX_NUMBER_SEMAPHORES);
 	if(task->temporaryPriority == NULL)
 		return NOT_ENOUGH_MEMORY;
-		
-	if( sizeof(functionNameChArr)/sizeof(char) > 4 || sizeof(functionNameChArr)/sizeof(char) < 1 )
+	
+	unsigned int name_size = strlen(functionNameChArr);
+	if( name_size > 4 || name_size < 1 )
 		return INVALID_NAME;
 	if( task_counter+1 == MAX_NUMBER_TASKS )
 		return TOO_MANY_TASKS;
@@ -118,7 +120,7 @@ unsigned int ROSA_TerminateTask (void)
 
 	/*Deallocate memory*/
 	destroyStack(task->temporaryPriority);
-	free(task->t->dataarea);
+	free(task->t->dataarea - task->t->datasize); /*Calculate the pointer which was acquired with malloc*/
 	free(task->t);
 	free((void*) task);
 	

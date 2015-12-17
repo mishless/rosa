@@ -44,6 +44,7 @@ void enqueue(PriorityQueue *queue, PriorityQueueElement *element) {
 			queue->data[PARENT(lastIndex)] = temporaryElement;
 			lastIndex = PARENT(lastIndex);
 		}
+		queue->callbackOnChange();
 	}
 }
 
@@ -58,6 +59,7 @@ PriorityQueueElement *dequeue(PriorityQueue *queue) {
 		heapify(queue, 0);
 		return element;
 	}
+	return NULL;
 }
 
 /* Heapify procedure for priority queue to restore its heapify property */

@@ -61,3 +61,10 @@ int compare_strings(char* str1, char* str2, unsigned int n)
 	
 	return 0;
 }
+
+unsigned int strlen(char* str)
+{
+	unsigned int i = 0;
+	while(*str++ != 0) i++;
+	return i;
+}

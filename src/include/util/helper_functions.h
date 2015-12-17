@@ -24,4 +24,7 @@ void send_id(char* id);
 /*Compare first n bytes of two character arrays*/
 int compare_strings(char* str1, char* str2, unsigned int n);
 
+/*Return the length of the string*/
+unsigned int strlen(char* str);
+
 #endif /* INCFILE1_H_ */
