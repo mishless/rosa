@@ -9,6 +9,7 @@
 #include "rosa_ker.h"
 #include "rosa_queue_manager.h"
 #include "rosa_tim.h"
+#include "rosa_int.h"
 
 extern round_robin_counter;
 
@@ -41,3 +42,8 @@ unsigned int isSchedulerStarted(void)
 {
 	return isStarted;
 }
+
+/*Task* getCRT()
+{
+	return currentlyRunningTask;
+}*/

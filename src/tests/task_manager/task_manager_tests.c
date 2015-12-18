@@ -536,7 +536,7 @@ void tm_create_24()
 	TaskHandle high;
 	
 	send_id("TM-CREATE-24");
-	ROSA_CreateTask(tmcr24_high, "high", STACK_SIZE, 5, &handle);
+	ROSA_CreateTask(tmcr24_high, "high", STACK_SIZE, 5, &high);
 	ROSA_Start();
 	send_fail();
 }

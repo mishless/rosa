@@ -86,7 +86,7 @@ void scm_delayRelative_01(void)
 
 void delay_and_check_for_wake_up(void)
 {
-	ROSA_DelayRelative(0, 10);
+	ROSA_DelayRelative(10);
 	send_success();
 }
 
@@ -153,10 +153,10 @@ void scm_delayRelative_04(void)
 
 void delay_and_check_for_how_long_have_i_been_delayed(void)
 {
-	int startTime = ROSA_TimerTickCount();
+	ROSA_TickCount start_time = ROSA_TimerTickCount();
 	ROSA_DelayRelative(123);
 	
-	int difference = ROSA_TimerTickCount() - startTime;
+	ROSA_TickCount difference = ROSA_TimerTickCount() - start_time;
 	if (difference == 0 || difference == 1)
 		send_success();
 	
@@ -261,10 +261,10 @@ void scm_delayRelative_08(void)
 
 void delay_for_zero_ticks(void)
 {
-	int startTime = ROSA_TimerTickCount();
+	ROSA_TickCount start_time = ROSA_TimerTickCount();
 	ROSA_DelayRelative(0);
 	
-	int difference = ROSA_TimerTickCount() - startTime;
+	ROSA_TickCount difference = ROSA_TimerTickCount() - start_time;
 	if (difference == 1 || difference == 2)
 		send_success();
 		
@@ -377,7 +377,6 @@ void scm_delayAbsolute_04(void)
 
 void delay_absolute_and_check_for_how_long_have_i_been_delayed(void)
 {
-	int startTime = ROSA_TimerTickCount();
 	ROSA_DelayAbsolute(0, 1256);
 	
 	if (ROSA_TimerTickCount() == 1256)
@@ -413,37 +412,6 @@ void scm_delayAbsolute_06(void)
 }
 
 TaskHandle task_absolute_delay_long, task_absolute_delay_medium, task_absolute_delay_short;
-
-void delay_long(void)
-{
-	ROSA_DelayRelative(150);
-}
-
-void delay_medium(void)
-{
-	ROSA_DelayRelative(100);
-	
-	PriorityQueue delayQueue = fetchDELAYqueue();
-	if (( *(delayQueue.data[0]) ).task != (Task*) task_delay_long)
-	send_fail();
-	if (delayQueue.size != 1)
-	send_fail();
-	
-	send_success();
-}
-
-void delay_short(void)
-{
-	ROSA_DelayRelative(50);
-	
-	PriorityQueue delayQueue = fetchDELAYqueue();
-	if (( *(delayQueue.data[0]) ).task != (Task*) task_delay_medium)
-	send_fail();
-	if (delayQueue.size != 2)
-	send_fail();
-	
-	while (1);
-}
 
 void delay_absolute_long(void)
 {
@@ -501,10 +469,10 @@ void scm_delayAbsolute_07(void)
 void delay_absolute_to_past(void)
 {
 	busy_wait(100 * 1000);
-	int start_time = ROSA_TimerTickCount();
+	ROSA_TickCount start_time = ROSA_TimerTickCount();
 	ROSA_DelayAbsolute(0,50);
 	
-	int difference = ROSA_TimerTickCount() - start_time;
+	ROSA_TickCount difference = ROSA_TimerTickCount() - start_time;
 	if (difference == 1 || difference == 2)
 		send_success();
 		

@@ -11,7 +11,7 @@
 #include "rosa_scheduler_private.h"
 #include "stack.h"
 #include "helper_functions.h"
-
+#include "rosa_int.h"
 #include <stdlib.h>
 
 unsigned int task_counter = 0;
@@ -46,8 +46,6 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 	task->temporaryPriority = createStack(MAX_NUMBER_SEMAPHORES);
 	if(task->temporaryPriority == NULL)
 		return NOT_ENOUGH_MEMORY;
-		
-
 		
 	unsigned int name_size = strlen(functionNameChArr);
 	if( name_size > 4 || name_size < 1 ) 
