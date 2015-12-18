@@ -486,6 +486,60 @@ void tm_create_22()
 	send_success();
 }
 
+/****************TM-CREATE-23****************/
+unsigned int tmcr23_flag = 0;
+void tmcr23_high()
+{
+	tmcr23_flag = 1;
+	ROSA_TerminateTask();
+	send_fail();
+}
+
+void tmcr23_low()
+{
+	TaskHandle high;
+	ROSA_CreateTask(tmcr23_high, "high", 100, 6, &high);
+	while(tmcr23_flag == 0);
+	send_success();
+}
+
+void tm_create_23()
+{
+	TaskHandle low;
+	
+	send_id("TM-CREATE-23");
+	
+	ROSA_CreateTask(tmcr23_low, "tst", 100, 5, &low);
+	
+	ROSA_Start();
+	send_fail();
+}
+
+/************TM-CREATE-24***************/
+void tmcr24_low()
+{
+	send_fail();
+}
+
+void tmcr24_high()
+{
+	TaskHandle low;
+	ROSA_CreateTask(tmcr24_low, "low", STACK_SIZE, 4, &low);
+	busy_wait(20);
+	send_success();
+}
+
+
+
+void tm_create_24()
+{
+	TaskHandle high;
+	
+	send_id("TM-CREATE-24");
+	ROSA_CreateTask(tmcr24_high, "high", STACK_SIZE, 5, &handle);
+	ROSA_Start();
+	send_fail();
+}
 // TERMINATE
 
 void success_sender(void)
