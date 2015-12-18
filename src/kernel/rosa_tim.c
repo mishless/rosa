@@ -51,26 +51,34 @@ void timerISR(void)
 	if(sr & AVR32_TC_CPCS_MASK)
 	{	
 		systemTime++;
-		while((task = peekDELAYqueue())->wakeUpTime <= systemTime)
+		while(1)
 		{
+			if(isDELAYqueueEmpty() == 1) break;
+			if((task = peekDELAYqueue())->wakeUpTime > systemTime) break;
 			task = getFromDELAYqueue();
 			putInREADYqueue(task);		
 		}
 		
-		if(getPriority(peekREADYqueue()) > getPriority(getCRT()))
+		if(isREADYqueueEmpty() == 0)
 		{
-			putInREADYqueue(getCRT());
-			ROSA_yieldFromISR();
-		}
-		else if (getPriority(peekREADYqueue()) == getPriority(getCRT()))
-		{
-			if(round_robin_counter == ROUND_ROBIN_PERIOD)
+			if(getPriority(peekREADYqueue()) > getPriority(getCRT()))
 			{
 				putInREADYqueue(getCRT());
 				ROSA_yieldFromISR();
 			}
-			else
-				round_robin_counter++;
+		}
+		else if (isREADYqueueEmpty() == 0)
+		{
+			if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
+			{
+				if(round_robin_counter == ROUND_ROBIN_PERIOD)
+				{
+					putInREADYqueue(getCRT());
+					ROSA_yieldFromISR();
+				}
+				else
+					round_robin_counter++;
+			}
 		}
 	}
 }

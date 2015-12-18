@@ -32,7 +32,6 @@ void check_tick_count_updates_for_20_ticks(void)
 		busy_wait(TICK);
 		if (ROSA_TimerTickCount() != starting_ticks + i + 1)
 			send_fail();
-		
 	}
 	send_success();
 }

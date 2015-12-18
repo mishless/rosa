@@ -9,7 +9,7 @@
 #include <avr32/io.h>
 #include "drivers/usart.h"
 
-#define CYCLES_PER_MS 12000000/11
+#define CYCLES_PER_MS 12000/11
 
 void busy_wait(int milliseconds)
 {

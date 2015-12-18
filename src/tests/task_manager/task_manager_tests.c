@@ -17,7 +17,7 @@
 
 #define TEST_PTR (void*) 42
 #define TASK_NAME "test"
-#define STACK_SIZE 128
+#define STACK_SIZE 1000
 #define TEST_PRIORITY 6
 
 #define TEST_PERIOD 25
@@ -183,7 +183,7 @@ void tm_create_08()
 	{
 		ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, NULL);
 	}
-	int return_code = ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, NULL);
+	int return_code = ROSA_CreateTask(TEST_PTR, task_name, 100, TEST_PRIORITY, NULL);
 	
 	if (return_code != TOO_MANY_TASKS)
 		send_fail();
@@ -384,7 +384,7 @@ void tm_create_18()
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
-		ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, NULL);
+		ROSA_CreateCyclicTask(TEST_PTR, task_name, 100, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, NULL);
 	}
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -594,7 +594,7 @@ unsigned int task_creation_counter = 0;
 
 void make_clone_and_terminate(void)
 {
-	if (++task_creation_counter == 10000)
+	if (++task_creation_counter == 100)
 		send_success();
 		
 	if (ROSA_CreateTask(&make_clone_and_terminate, "high", STACK_SIZE, TEST_PRIORITY, NULL) != SUCCESS)

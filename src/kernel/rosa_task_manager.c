@@ -144,6 +144,8 @@ unsigned int ROSA_TerminateTask (void)
 	Task* task;
 	
 	interruptDisable();
+		
+	task_counter--;
 	
 	task = getCRT();
 
@@ -159,8 +161,6 @@ unsigned int ROSA_TerminateTask (void)
 	
 	if(task != NULL)
 		return FAILURE;
-		
-	task_counter--;
 	
 	return FAILURE;
 }

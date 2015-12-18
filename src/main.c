@@ -69,8 +69,7 @@ unsigned int global_i;
 /*Pointers to all the test cases*/
 void (*tests[])(void) = {ALL_TESTS};
 
-int main(void)
-{
+int main(void){
 	char c = 0;
 	char str[MAX_STR_LEN];
 	unsigned int test_to_run = -1;

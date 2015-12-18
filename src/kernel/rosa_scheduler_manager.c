@@ -11,7 +11,7 @@
 #include "rosa_tim.h"
 #include "rosa_int.h"
 
-extern round_robin_counter;
+extern ROSA_TickCount round_robin_counter;
 
 unsigned int isStarted = 0;
 
