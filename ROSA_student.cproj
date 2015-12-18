@@ -176,6 +176,9 @@
     <Compile Include="src\include\kernel\rosa_task_private.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\include\kernel\struct\blocked_priority_queue.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\kernel\struct\stack.h">
       <SubType>compile</SubType>
     </Compile>
@@ -204,6 +207,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\rosa_task_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\kernel\struct\blocked_priority_queue.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\struct\stack.c">
