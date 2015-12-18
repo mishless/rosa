@@ -28,6 +28,7 @@
 #define _ROSA_TIMER_H_
 
 #include <avr32/io.h>
+#include "rosa_api_call.h"
 
 /***********************************************************
  * Kernel timer functions
@@ -49,5 +50,6 @@ extern void timerRCSet(int);
 //Timer period variables
 extern int timerPrescale;
 extern int timerRC;
-
+extern unsigned int interrupt_flag;
+extern ROSA_TickCount systemTime;
 #endif /* _ROSA_TIMER_H_ */

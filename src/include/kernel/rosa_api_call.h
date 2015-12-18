@@ -8,11 +8,11 @@
 
 #include "rosa_config.h"
 
-typedef volatile unsigned long long ROSA_TickCount;
-
 typedef void * TaskHandle;
 
 typedef void * SemaphoreHandle;
+
+typedef volatile unsigned long long ROSA_TickCount;
 
 #include "rosa_scheduler_manager.h"
 #include "rosa_task_manager.h"

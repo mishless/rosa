@@ -27,6 +27,7 @@
 #include "rosa_config.h"
 #include "drivers/delay.h"
 #include "kernel/rosa_int.h"
+#include "rosa_queue_manager.h"
 
 /***********************************************************
  * timerInterruptHandler
@@ -38,12 +39,23 @@ __attribute__((__interrupt__))
 void timerISR(void)
 {
 	int sr;
+	Task* task;
 	volatile avr32_tc_t * tc = &AVR32_TC;
 
 	//Read the timer status register to determine if this is a valid interrupt
 	sr = tc->channel[0].sr;
 	if(sr & AVR32_TC_CPCS_MASK)
+	{	
+		systemTime++;
+		while((task = peekDELAYqueue())->wakeUpTime <= systemTime)
+		{
+			task = getFromDELAYqueue();
+			
+			/*OBSERVER WILL MESS THIS UP. THINK OF SOMETHING SMART!!!*/
+			putInREADYqueue(task);
+		}
 		ROSA_yieldFromISR();
+	}
 }
 
 

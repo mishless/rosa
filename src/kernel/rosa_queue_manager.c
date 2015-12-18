@@ -14,6 +14,8 @@
 PriorityQueue* READYqueue;
 PriorityQueue* DELAYqueue;
 
+unsigned int interrupt_flag = 0;
+
 int READYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement)
 {
 	if (getPriority(firstElement->task) == getPriority(secondElement->task)) {
@@ -71,7 +73,7 @@ int DELAYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *se
 
 void DELAYcallback(void)
 {
-	//TODO when scheduler is finished and currently running task
+	ROSA_yield();
 }
 
 void putInDELAYqueue( Task* task )

@@ -18,8 +18,7 @@ void ROSA_StartScheduler(void)
 	currentlyRunningTask = getFromREADYqueue();
 	tcb* t = currentlyRunningTask->t;
 	TCBLIST = t;
-	/*Start the timer*/
-	
+	timerStart();
 	/*ROSA_start will take TCBLIST and put it in EXECTASK*/
 	ROSA_start();
 }
