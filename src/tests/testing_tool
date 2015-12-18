@@ -15,6 +15,8 @@ current_tc = 0;
 current_tc_state = 0;
 # Array buffer of chars
 buffer = array('B', []);
+#Counter for success
+successCounter = 0;
 
 # Check if the directory to store reports exist and create it if it doesn't
 if not os.path.exists(directory):
@@ -45,6 +47,9 @@ while 1:
 	try:
 		#If the total number of test cases is already set and we haven't reached the maximum number of test cases
 		if (total_tc_number != 0 and current_tc == total_tc_number + 1):
+			print("Successful test cases: %d\n" % successCounter, end="")
+			unsuccessfulCounter = (int(total_tc_number)) - successCounter
+			print("Unsuccessful test cases: %d\n" % unsuccessfulCounter, end="")
 			break
 		value = ser.read()
 		if (value == b'?'):
@@ -58,7 +63,6 @@ while 1:
 				# else set the report flag for the next tast case to 0
 				if (current_tc != 0 and current_tc_state == 0):
 					print('Failure!')
-					print('---------------------------------------')
 				else:
 					current_tc_state = 0
 				# Testing tool answers "Run the current test case." and increments it
@@ -67,13 +71,12 @@ while 1:
 				ser.write(b'\r')
 				current_tc = current_tc + 1
 		elif (value == b'^'):
-			current_tc_state = 1;
+			current_tc_state = 1
+			successCounter += 1
 			print('Success!')
-			print('---------------------------------------')
 		elif (value == b'_'):
 			current_tc_state = 1;
 			print('Failure!')
-			print('---------------------------------------')
 		elif (value == b'\x00'):
 			# If there is nothing in the buffer continue
 			if (len(buffer) == 0):
@@ -85,7 +88,7 @@ while 1:
 				print("The total number of test cases is %d." % total_tc_number)
 			else:
 				# The board has sent an end transmission character - flush the buffer and print the test case ID
-				print(buffer[3:].tostring())
+				print(buffer[3:].tostring().decode('ascii'), end=" ")
 			# Empty the buffer
 			buffer = array('B', [])
 		elif (value == b''):

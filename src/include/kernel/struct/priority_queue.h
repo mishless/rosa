@@ -18,10 +18,9 @@ typedef struct PriorityQueue {
 	unsigned int maximumSize;
 	PriorityQueueElement **data;
 	int (*comparator)(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement);
-	void (*callbackOnChange)();
 } PriorityQueue;
 
-PriorityQueue *createPriorityQueue(unsigned int maximumSize, int (*comparator)(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement), void (*callbackOnChange)());
+PriorityQueue *createPriorityQueue(unsigned int maximumSize, int (*comparator)(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement));
 void deletePriorityQueue(PriorityQueue *queue);
 void enqueue(PriorityQueue *queue, PriorityQueueElement *element);
 PriorityQueueElement *peek(PriorityQueue *queue);

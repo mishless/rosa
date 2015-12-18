@@ -7,12 +7,11 @@
 unsigned int counter = 0;
 
 /* Create priority queue by specifying: maximum size of the queue, comparator function and callbackOnQueueChange function. */
-PriorityQueue *createPriorityQueue(unsigned int maximumSize, int (*comparator)(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement), void (*callbackOnChange)(void)) {
+PriorityQueue *createPriorityQueue(unsigned int maximumSize, int (*comparator)(PriorityQueueElement *firstElement, PriorityQueueElement *secondElement)) {
 	PriorityQueue *queue = NULL;
 	queue = malloc(sizeof(*queue));
 	queue->maximumSize = maximumSize;
 	queue->comparator = comparator;
-	queue->callbackOnChange = callbackOnChange;
 	queue->data = malloc(maximumSize * sizeof(*(queue->data)));
 	queue->size = 0;
 	return queue;
@@ -44,7 +43,6 @@ void enqueue(PriorityQueue *queue, PriorityQueueElement *element) {
 			queue->data[PARENT(lastIndex)] = temporaryElement;
 			lastIndex = PARENT(lastIndex);
 		}
-		queue->callbackOnChange();
 	}
 }
 

@@ -69,31 +69,12 @@ unsigned int global_i;
 /*Pointers to all the test cases*/
 void (*tests[])(void) = {ALL_TESTS};
 
-void task1(void)
-{
-	unsigned int cnt = 0;
-	while(1)
-	{
-		;
-	}
-}
-void try_stuff()
-{
-	TaskHandle task_handle;
-	ROSA_init();
-	
-	ROSA_CreateTask(task1, "tusk", 150, 3, &task_handle);
-	ROSA_Start();
-}
-
 int main(void)
 {
 	char c = 0;
 	char str[MAX_STR_LEN];
 	unsigned int test_to_run = -1;
 	unsigned int task_num = sizeof(tests)/sizeof(int*);
-	
-	try_stuff();
 	
 	/*Set up the system*/
 	disable_wdt();

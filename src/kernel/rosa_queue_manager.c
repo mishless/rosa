@@ -26,17 +26,6 @@ int READYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *se
 	return -1;
 }
 
-void READYcallback(void)
-{
-	if(isSchedulerStarted() == 1)
-	{
-		if (getPriority(getCRT()) < getPriority(peekREADYqueue()))
-		{
-			ROSA_yield();
-		}
-	}
-}
-
 void putInREADYqueue( Task* task )
 {
 	PriorityQueueElement *newElement = malloc(sizeof(PriorityQueueElement));
@@ -71,11 +60,6 @@ int DELAYcomparator(PriorityQueueElement *firstElement, PriorityQueueElement *se
 	return -1;
 }
 
-void DELAYcallback(void)
-{
-	ROSA_yield();
-}
-
 void putInDELAYqueue( Task* task )
 {
 	PriorityQueueElement *newElement = malloc(sizeof(PriorityQueueElement));
@@ -103,8 +87,8 @@ unsigned int isDELAYqueueEmpty( void )
 
 void initializeQueues(void)
 {
-	READYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &READYcomparator, &READYcallback );
-	DELAYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &DELAYcomparator, &DELAYcallback );
+	READYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &READYcomparator );
+	DELAYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &DELAYcomparator );
 }
 
 #if DEBUG_COMPILATION
