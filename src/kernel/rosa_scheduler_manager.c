@@ -10,6 +10,8 @@
 #include "rosa_queue_manager.h"
 #include "rosa_tim.h"
 
+extern round_robin_counter;
+
 unsigned int isStarted = 0;
 
 Task* currentlyRunningTask = NULL ;
@@ -28,7 +30,8 @@ void scheduler()
 {
 	interruptDisable();
 	
-	currentlyRunningTask = getFromREADYqueue();	
+	round_robin_counter = 0;
+	currentlyRunningTask = getFromREADYqueue();
 	EXECTASK = currentlyRunningTask->t;
 	
 	interruptEnable();

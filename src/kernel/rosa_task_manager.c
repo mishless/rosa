@@ -72,9 +72,9 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 		{
 			putInREADYqueue(getCRT());
 			ROSA_yield();
+		}
 	}
 		
-	
 	return SUCCESS;
 }
 
@@ -128,9 +128,15 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 	task_counter++;
 	
 	interruptEnable();
-	
+		
 	if(isSchedulerStarted() == 1)
-		ROSA_yield();	
+	{
+		if(getPriority(getCRT()) < taskPriority)
+		{
+			putInREADYqueue(getCRT());
+			ROSA_yield();
+		}
+	}
 	
 	return SUCCESS;							
 }

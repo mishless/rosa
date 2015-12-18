@@ -11,6 +11,7 @@
 
 #include "rosa_task_private.h"
 
+extern Task* currentlyRunningTask;
 #define getCRT() currentlyRunningTask
 
 unsigned int isSchedulerStarted(void);

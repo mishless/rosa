@@ -28,6 +28,7 @@
 #include "drivers/delay.h"
 #include "kernel/rosa_int.h"
 #include "rosa_queue_manager.h"
+#include "rosa_scheduler_private.h"
 
 /***********************************************************
  * timerInterruptHandler
@@ -35,6 +36,9 @@
  * Comment:
  * 	This is the basic timer interrupt service routine.
  **********************************************************/
+
+ROSA_TickCount round_robin_counter = 0;
+
 __attribute__((__interrupt__))
 void timerISR(void)
 {
@@ -50,11 +54,24 @@ void timerISR(void)
 		while((task = peekDELAYqueue())->wakeUpTime <= systemTime)
 		{
 			task = getFromDELAYqueue();
-			
-			putInREADYqueue(task);
+			putInREADYqueue(task);		
 		}
 		
-		ROSA_yieldFromISR();
+		if(getPriority(peekREADYqueue()) > getPriority(getCRT()))
+		{
+			putInREADYqueue(getCRT());
+			ROSA_yieldFromISR();
+		}
+		else if (getPriority(peekREADYqueue()) == getPriority(getCRT()))
+		{
+			if(round_robin_counter == ROUND_ROBIN_PERIOD)
+			{
+				putInREADYqueue(getCRT());
+				ROSA_yieldFromISR();
+			}
+			else
+				round_robin_counter++;
+		}
 	}
 }
 
@@ -68,7 +85,6 @@ void timerISR(void)
  **********************************************************/
 int timerPeriodSet(unsigned int ms)
 {
-
 	int rc, prescale;
 	int f[] = { 2, 8, 32, 128 };
 	//FOSC0 / factor_prescale * time[s];
