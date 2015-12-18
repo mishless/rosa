@@ -25,6 +25,8 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 	Task* task;
 	int* stack;
 	
+	interruptDisable();
+	
 	task = malloc(sizeof(Task));
 	
 	if(task == NULL)
@@ -61,6 +63,13 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 	putInREADYqueue(task);
 	*taskHandle = (TaskHandle*)task;
 	task_counter++;
+	
+	interruptEnable();
+	
+	if(isSchedulerStarted() == 1)
+		ROSA_yield();
+		
+	
 	return SUCCESS;
 }
 
@@ -74,6 +83,8 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 {
 	Task* task;
 	int* stack;
+	
+	interruptDisable();
 	
 	task = malloc(sizeof(Task));
 	
@@ -110,12 +121,21 @@ unsigned int ROSA_CreateCyclicTask (void (*functionBody) (void),
 	putInREADYqueue(task);
 	*taskHandle = (TaskHandle*)task;
 	task_counter++;
+	
+	interruptEnable();
+	
+	if(isSchedulerStarted() == 1)
+		ROSA_yield();	
+	
 	return SUCCESS;							
 }
 
 unsigned int ROSA_TerminateTask (void)
 {
 	Task* task;
+	
+	interruptDisable();
+	
 	task = getCRT();
 
 	/*Deallocate memory*/
@@ -124,11 +144,15 @@ unsigned int ROSA_TerminateTask (void)
 	free(task->t);
 	free((void*) task);
 	
+	interruptEnable();
+	
 	ROSA_yield();
 	
 	if(task != NULL)
 		return FAILURE;
 		
+	task_counter--;
+	
 	return FAILURE;
 }
 

@@ -51,7 +51,6 @@ void timerISR(void)
 		{
 			task = getFromDELAYqueue();
 			
-			/*OBSERVER WILL MESS THIS UP. THINK OF SOMETHING SMART!!!*/
 			putInREADYqueue(task);
 		}
 		ROSA_yieldFromISR();

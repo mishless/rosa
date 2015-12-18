@@ -16,7 +16,7 @@ void callbackOnChange(void) {
 
 int mainTest()
 {
-	PriorityQueue *queue = createPriorityQueue(3, (&intComparator), (&callbackOnChange));
+	PriorityQueue *queue = createPriorityQueue(3, (&intComparator));
 	Task *task1 = malloc(sizeof(Task));
 	task1->originalPriority = 1;
 	PriorityQueueElement *element1 = malloc(sizeof(PriorityQueueElement));

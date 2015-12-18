@@ -8,6 +8,7 @@
 #include "kernel/rosa_task_private.h"
 #include "rosa_ker.h"
 #include "rosa_queue_manager.h"
+#include "rosa_tim.h"
 
 unsigned int isStarted = 0;
 
@@ -30,8 +31,10 @@ Task *getCRT(void)
 
 void scheduler()
 {
+	interruptDisable();
 	currentlyRunningTask = getFromREADYqueue();	
 	EXECTASK = currentlyRunningTask->t;
+	interruptEnable();
 }
 
 unsigned int isSchedulerStarted(void)
