@@ -22,4 +22,13 @@ void scm_delayRelative_07(void);
 void scm_delayRelative_08(void);
 void scm_delayRelative_09(void);
 
+void scm_delayAbsolute_01(void);
+void scm_delayAbsolute_02(void);
+void scm_delayAbsolute_03(void);
+void scm_delayAbsolute_04(void);
+void scm_delayAbsolute_05(void);
+void scm_delayAbsolute_06(void);
+void scm_delayAbsolute_07(void);
+void scm_delayAbsolute_08(void);
+
 #endif /* CLOCK_MANAGER_TESTS_H_ */
