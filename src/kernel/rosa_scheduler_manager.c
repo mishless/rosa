@@ -24,16 +24,13 @@ void ROSA_StartScheduler(void)
 	ROSA_start();
 }
 
-Task *getCRT(void)
-{
-	return currentlyRunningTask;
-}
-
 void scheduler()
 {
 	interruptDisable();
+	
 	currentlyRunningTask = getFromREADYqueue();	
 	EXECTASK = currentlyRunningTask->t;
+	
 	interruptEnable();
 }
 

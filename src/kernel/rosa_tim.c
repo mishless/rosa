@@ -53,6 +53,7 @@ void timerISR(void)
 			
 			putInREADYqueue(task);
 		}
+		
 		ROSA_yieldFromISR();
 	}
 }

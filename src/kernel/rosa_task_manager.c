@@ -67,7 +67,12 @@ unsigned int ROSA_CreateTask (void (*functionBody) (void),
 	interruptEnable();
 	
 	if(isSchedulerStarted() == 1)
-		ROSA_yield();
+	{
+		if(getPriority(getCRT()) < taskPriority)
+		{
+			putInREADYqueue(getCRT());
+			ROSA_yield();
+	}
 		
 	
 	return SUCCESS;
