@@ -9,6 +9,7 @@
 #ifndef TESTS_H_
 #define TESTS_H_
 
+#include "clock_manager_tests.h"
 #include "task_manager_tests.h"
 #include "drivers/usart.h"
 #include "helper_functions.h"
