@@ -46,10 +46,7 @@
 #define TASK_NUM_CHAR 255
 #define MAX_STR_LEN 30
 
-
 unsigned int global_i;
-
-#define DEBUG_TESTS tm_create_07
 
 #define TM_CREATE_TESTS tm_create_01, tm_create_02, tm_create_03, tm_create_04, tm_create_05, tm_create_06, tm_create_07, \
 			 tm_create_08, tm_create_09, tm_create_10, tm_create_11, tm_create_12, tm_create_13, tm_create_14, \
@@ -67,7 +64,7 @@ unsigned int global_i;
 #define ALL_TESTS TM_CREATE_TESTS, TM_TERMINATE_TESTS, SCM_TESTS
 							
 /*Pointers to all the test cases*/
-void (*tests[])(void) = {ALL_TESTS};
+void (*tests[])(void) = {scm_delayRelative_02};
 
 int main(void){
 	char c = 0;

@@ -17,12 +17,51 @@ unsigned int isStarted = 0;
 
 Task* currentlyRunningTask = NULL ;
 
+void idle_task(void)
+{
+	while (1);
+}
+
+void make_idle_task(void)
+{
+	int* stack;
+	int stackSize = 64;
+	Task* task;
+	
+	interruptDisable();
+	
+	task = malloc(sizeof(Task));
+	if(task == NULL)
+		return;
+	
+	task->t = malloc(sizeof(tcb));
+	if(task->t == NULL)
+		return;
+	
+	stack = malloc(stackSize);
+	if(stack == NULL)
+		return;
+	
+	ROSA_tcbCreate(task->t, "idle", &idle_task, stack, stackSize);
+	task->originalPriority = 0;
+	
+	putInREADYqueue(task);
+	
+	interruptEnable();
+}
+
 void ROSA_StartScheduler(void)
 {
+	make_idle_task();
+	
 	currentlyRunningTask = getFromREADYqueue();
 	tcb* t = currentlyRunningTask->t;
 	TCBLIST = t;
+	
 	timerStart();
+	
+	isStarted = 1;
+	
 	/*ROSA_start will take TCBLIST and put it in EXECTASK*/
 	ROSA_start();
 }

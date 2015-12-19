@@ -50,7 +50,9 @@ void timerISR(void)
 	sr = tc->channel[0].sr;
 	if(sr & AVR32_TC_CPCS_MASK)
 	{	
-		systemTime++;
+		putInREADYqueue(getCRT());
+		ROSA_yieldFromISR();
+		/*systemTime++;
 		while(1)
 		{
 			if(isDELAYqueueEmpty() == 1) break;
@@ -66,10 +68,7 @@ void timerISR(void)
 				putInREADYqueue(getCRT());
 				ROSA_yieldFromISR();
 			}
-		}
-		else if (isREADYqueueEmpty() == 0)
-		{
-			if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
+			else if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
 			{
 				if(round_robin_counter == ROUND_ROBIN_PERIOD)
 				{
@@ -79,7 +78,7 @@ void timerISR(void)
 				else
 					round_robin_counter++;
 			}
-		}
+		}*/
 	}
 }
 

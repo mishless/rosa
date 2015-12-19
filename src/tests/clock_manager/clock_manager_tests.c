@@ -16,7 +16,7 @@
 #include "priority_queue.h"
 
 #define TEST_NAME "test"
-#define STACK_SIZE 128
+#define STACK_SIZE 1000
 #define TEST_PRIORITY 5
 #define LOW_PRIORITY 4
 
@@ -85,7 +85,7 @@ void scm_delayRelative_01(void)
 
 void delay_and_check_for_wake_up(void)
 {
-	ROSA_DelayRelative(10);
+	ROSA_DelayRelative(10);                              
 	send_success();
 }
 
