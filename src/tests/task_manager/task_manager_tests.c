@@ -181,7 +181,7 @@ void tm_create_08()
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
-		ROSA_CreateTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, NULL);
+		ROSA_CreateTask(TEST_PTR, task_name, 100, TEST_PRIORITY, NULL);
 	}
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, 100, TEST_PRIORITY, NULL);
 	
@@ -386,7 +386,7 @@ void tm_create_18()
 	{
 		ROSA_CreateCyclicTask(TEST_PTR, task_name, 100, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, NULL);
 	}
-	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, STACK_SIZE, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, NULL);
+	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, 100, TEST_PRIORITY, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
 	if (return_code != TOO_MANY_TASKS)
 		send_fail();

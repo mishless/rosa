@@ -1,5 +1,6 @@
 /*
-* rosa_task_private.h
+*
+* ROSA Task Manager Component Private Header
 *
 */
 
