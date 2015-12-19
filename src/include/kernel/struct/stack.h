@@ -1,5 +1,5 @@
 /*
-* stack.h
+* Stack Structure Header File
 *
 * Created: 12/17/2015 3:43:28 PM
 * Author: Mihaela Stoycheva
@@ -8,6 +8,7 @@
 
 #ifndef STACK_H_
 #define STACK_H_
+#include <stdlib.h>
 
 typedef struct {
 	unsigned int *data;
