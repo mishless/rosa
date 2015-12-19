@@ -212,6 +212,9 @@
     <Compile Include="src\kernel\struct\blocked_priority_queue.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\kernel\struct\priority_queue.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\kernel\struct\stack.c">
       <SubType>compile</SubType>
     </Compile>
@@ -268,9 +271,6 @@
     </None>
     <Folder Include="src" />
     <Compile Include="src\include\kernel\struct\priority_queue.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\kernel\priority_queue.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">
