@@ -41,6 +41,9 @@ void make_idle_task(void)
 	stack = malloc(stackSize);
 	if(stack == NULL)
 		return;
+		
+	// This is primarily for getPriority, so it doesn't return garbage, even though this task won't use IPCP.
+	task->temporaryPriority = createStack(0);
 	
 	ROSA_tcbCreate(task->t, "idle", &idle_task, stack, stackSize);
 	task->originalPriority = 0;

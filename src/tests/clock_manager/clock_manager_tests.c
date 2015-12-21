@@ -18,19 +18,22 @@
 #define TEST_NAME "test"
 #define STACK_SIZE 1000
 #define TEST_PRIORITY 5
-#define LOW_PRIORITY 4
+#define LOW_PRIORITY (TEST_PRIORITY - 1)
 
 //		ROSA_TimerTickCount
 
 void check_tick_count_updates_for_20_ticks(void)
 {
 	int i;
-	ROSA_TickCount starting_ticks = ROSA_TimerTickCount();
+	ROSA_TickCount difference, current_ticks, ticks_before = ROSA_TimerTickCount();
 	
 	for (i = 0; i < 20; i++)
 	{
 		busy_wait(TICK);
-		if (ROSA_TimerTickCount() != starting_ticks + i + 1)
+		current_ticks = ROSA_TimerTickCount();
+		difference = current_ticks - ticks_before;
+		ticks_before = current_ticks;
+		if (difference != 0 && difference != 1 && difference != 2) // busy_wait is very inexact
 			send_fail();
 	}
 	send_success();
@@ -156,7 +159,7 @@ void delay_and_check_for_how_long_have_i_been_delayed(void)
 	ROSA_DelayRelative(123);
 	
 	ROSA_TickCount difference = ROSA_TimerTickCount() - start_time;
-	if (difference == 0 || difference == 1)
+	if (difference == 123 || difference == 124)
 		send_success();
 	
 	send_fail();
@@ -172,7 +175,7 @@ void scm_delayRelative_05(void)
 
 void delay_to_past(void)
 {
-	busy_wait(100 * 1000);
+	busy_wait(100 * TICK);
 	ROSA_DelayRelative(-1);
 	send_success();
 }
@@ -376,9 +379,11 @@ void scm_delayAbsolute_04(void)
 
 void delay_absolute_and_check_for_how_long_have_i_been_delayed(void)
 {
+	ROSA_TickCount start_time = ROSA_TimerTickCount();
 	ROSA_DelayAbsolute(0, 1256);
 	
-	if (ROSA_TimerTickCount() == 1256)
+	ROSA_TickCount difference = ROSA_TimerTickCount() - start_time;
+	if (difference == 1256 || difference == 1257)
 		send_success();
 	
 	send_fail();
@@ -414,12 +419,12 @@ TaskHandle task_absolute_delay_long, task_absolute_delay_medium, task_absolute_d
 
 void delay_absolute_long(void)
 {
-	ROSA_DelayRelative(150);
+	ROSA_DelayAbsolute(0, 150);
 }
 
 void delay_absolute_medium(void)
 {
-	ROSA_DelayRelative(100);
+	ROSA_DelayAbsolute(0, 100);
 	
 	PriorityQueue delayQueue = fetchDELAYqueue();
 	if (( *(delayQueue.data[0]) ).task != (Task*) task_absolute_delay_long)
@@ -432,7 +437,7 @@ void delay_absolute_medium(void)
 
 void delay_absolute_short(void)
 {
-	ROSA_DelayRelative(50);
+	ROSA_DelayAbsolute(0, 50);
 	
 	PriorityQueue delayQueue = fetchDELAYqueue();
 	if (( *(delayQueue.data[0]) ).task != (Task*) task_absolute_delay_medium)
@@ -458,16 +463,16 @@ void scm_delayAbsolute_07(void)
 {
 	send_id("SCM-ABSOLUTE-07");
 	
-	ROSA_CreateTask(&delay_medium, TEST_NAME, STACK_SIZE, TEST_PRIORITY, &task_absolute_delay_medium);
-	ROSA_CreateTask(&delay_long, TEST_NAME, STACK_SIZE, LOW_PRIORITY, &task_absolute_delay_long);
-	ROSA_CreateTask(&delay_short, TEST_NAME, STACK_SIZE, LOW_PRIORITY - 1, &task_absolute_delay_short);
-	ROSA_CreateTask(&check_other_tasks_wakeup_time, TEST_NAME, STACK_SIZE, LOW_PRIORITY - 2, NULL);
+	ROSA_CreateTask(&delay_absolute_medium, TEST_NAME, STACK_SIZE, TEST_PRIORITY, &task_absolute_delay_medium);
+	ROSA_CreateTask(&delay_absolute_long, TEST_NAME, STACK_SIZE, LOW_PRIORITY, &task_absolute_delay_long);
+	ROSA_CreateTask(&delay_absolute_short, TEST_NAME, STACK_SIZE, LOW_PRIORITY - 1, &task_absolute_delay_short);
+	ROSA_CreateTask(&check_if_3_tasks_in_delay_queue, TEST_NAME, STACK_SIZE, LOW_PRIORITY - 2, NULL);
 	ROSA_Start();	
 }
 
 void delay_absolute_to_past(void)
 {
-	busy_wait(100 * 1000);
+	busy_wait(100 * TICK);
 	ROSA_TickCount start_time = ROSA_TimerTickCount();
 	ROSA_DelayAbsolute(0,50);
 	

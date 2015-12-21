@@ -43,22 +43,18 @@ __attribute__((__interrupt__))
 void timerISR(void)
 {
 	int sr;
-	Task* task;
 	volatile avr32_tc_t * tc = &AVR32_TC;
 
 	//Read the timer status register to determine if this is a valid interrupt
 	sr = tc->channel[0].sr;
 	if(sr & AVR32_TC_CPCS_MASK)
-	{	
-		putInREADYqueue(getCRT());
-		ROSA_yieldFromISR();
-		/*systemTime++;
+	{
+		systemTime++;
 		while(1)
 		{
 			if(isDELAYqueueEmpty() == 1) break;
-			if((task = peekDELAYqueue())->wakeUpTime > systemTime) break;
-			task = getFromDELAYqueue();
-			putInREADYqueue(task);		
+			if((peekDELAYqueue())->wakeUpTime > systemTime) break;
+			putInREADYqueue(getFromDELAYqueue());		
 		}
 		
 		if(isREADYqueueEmpty() == 0)
@@ -78,7 +74,7 @@ void timerISR(void)
 				else
 					round_robin_counter++;
 			}
-		}*/
+		}
 	}
 }
 

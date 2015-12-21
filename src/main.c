@@ -64,7 +64,7 @@ unsigned int global_i;
 #define ALL_TESTS TM_CREATE_TESTS, TM_TERMINATE_TESTS, SCM_TESTS
 							
 /*Pointers to all the test cases*/
-void (*tests[])(void) = {scm_delayRelative_02};
+void (*tests[])(void) = {SCM_TESTS};
 
 int main(void){
 	char c = 0;
