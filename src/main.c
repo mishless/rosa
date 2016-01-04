@@ -58,13 +58,14 @@ unsigned int global_i;
 								scm_delayRelative_05, scm_delayRelative_06, scm_delayRelative_07, scm_delayRelative_08, \
 								scm_delayRelative_09
 #define SCM_DELAY_ABSOLUTE_TESTS scm_delayAbsolute_01, scm_delayAbsolute_02, scm_delayAbsolute_03, scm_delayAbsolute_04, \
-								scm_delayAbsolute_05, scm_delayAbsolute_06, scm_delayAbsolute_07, scm_delayAbsolute_08																
-#define SCM_TESTS SCM_GET_TICKS_TESTS, SCM_DELAY_RELATIVE_TESTS, SCM_DELAY_ABSOLUTE_TESTS
+								scm_delayAbsolute_05, scm_delayAbsolute_06, scm_delayAbsolute_07, scm_delayAbsolute_08	
+#define SCM_END_CYCLE_TESTS scm_endCycle_01, scm_endCycle_02, scm_endCycle_03, scm_endCycle_04, scm_endCycle_05, scm_endCycle_06, scm_endCycle_07, scm_endCycle_08															
+#define SCM_TESTS SCM_GET_TICKS_TESTS, SCM_DELAY_RELATIVE_TESTS, SCM_DELAY_ABSOLUTE_TESTS, SCM_END_CYCLE_TESTS
 
 #define ALL_TESTS TM_CREATE_TESTS, TM_TERMINATE_TESTS, SCM_TESTS
 							
 /*Pointers to all the test cases*/
-void (*tests[])(void) = {SCM_TESTS};
+void (*tests[])(void) = {ALL_TESTS};
 
 int main(void){
 	char c = 0;

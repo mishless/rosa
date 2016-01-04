@@ -31,4 +31,13 @@ void scm_delayAbsolute_06(void);
 void scm_delayAbsolute_07(void);
 void scm_delayAbsolute_08(void);
 
+void scm_endCycle_01(void);
+void scm_endCycle_02(void);
+void scm_endCycle_03(void);
+void scm_endCycle_04(void);
+void scm_endCycle_05(void);
+void scm_endCycle_06(void);
+void scm_endCycle_07(void);
+void scm_endCycle_08(void);
+
 #endif /* CLOCK_MANAGER_TESTS_H_ */
