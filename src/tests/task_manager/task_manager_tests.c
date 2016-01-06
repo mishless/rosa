@@ -18,7 +18,8 @@
 #define TEST_PTR (void*) 42
 #define TASK_NAME "test"
 #define SMALL_STACK_SIZE 1000
-#define PRIORITY_5 6
+#define PRIORITY_5 5
+#define PRIORITY_4 4
 
 #define TEST_PERIOD 25
 #define TEST_DEADLINE 20
@@ -157,12 +158,27 @@ void tm_create_06()
 	send_success();
 }
 
-
 void tm_create_07()
+{
+	char task_name[4] = TASK_NAME;
+	const int invalid_stack_size = 10;
+	
+	send_id("TM-CREATE-07");
+	
+	int return_code = ROSA_CreateTask(TEST_PTR, task_name, invalid_stack_size, PRIORITY_5, NULL);
+	
+	if (return_code != INVALID_STACK_SIZE)
+	send_fail();
+	
+	send_success();
+}
+
+
+void tm_create_08()
 {
 	char invalid_name[7] = "invalid";
 	
-	send_id("TM-CREATE-07");
+	send_id("TM-CREATE-08");
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, invalid_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
@@ -172,12 +188,12 @@ void tm_create_07()
 	send_success();
 }
 
-void tm_create_08()
+void tm_create_09()
 {
 	char task_name[4] = TASK_NAME;
 	int i;
 	
-	send_id("TM-CREATE-08");
+	send_id("TM-CREATE-09");
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
@@ -191,11 +207,11 @@ void tm_create_08()
 	send_success();
 }
 
-void tm_create_09()
+void tm_create_10()
 {
 	char task_name[4] = TASK_NAME;
 	
-	send_id("TM-CREATE-09");
+	send_id("TM-CREATE-10");
 	
 	int enough_memory;
 	do
@@ -211,29 +227,15 @@ void tm_create_09()
 	send_success();
 }
 
-void tm_create_10()
-{
-	char task_name[4] = TASK_NAME;
-	const int invalid_stack_size = 10;
-	
-	send_id("TM-CREATE-10");
-	
-	int return_code = ROSA_CreateTask(TEST_PTR, task_name, invalid_stack_size, PRIORITY_5, NULL);
-	
-	if (return_code != INVALID_STACK_SIZE)
-		send_fail();
-	
-	send_success();
-}
 
 // ROSA_CreateCyclicTask
 
-void tm_create_11()
+void tm_create_cyclic_01()
 {
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("TM-CREATE-11");
+	send_id("TM-CREATE-CYCLIC-01");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task_handle);
 	
@@ -256,12 +258,12 @@ void tm_create_11()
 	send_success();
 }
 
-void tm_create_12()
+void tm_create_cyclic_02()
 {
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 		
-	send_id("TM-CREATE-12");
+	send_id("TM-CREATE-CYCLIC-02");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task_handle);
 	PriorityQueue ready_queue;
@@ -277,7 +279,7 @@ void tm_create_12()
 	send_success();
 }
 
-void tm_create_13()
+void tm_create_cyclic_03()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
 	char task_name[4] = TASK_NAME;
@@ -286,7 +288,7 @@ void tm_create_13()
 	const unsigned int priorityMedium = 4;
 	const unsigned int priorityLow = 3;
 	
-	send_id("TM-CREATE-13");
+	send_id("TM-CREATE-CYCLIC-03");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityMedium, TEST_PERIOD, TEST_DEADLINE, &taskMediumPriority);
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityLow, TEST_PERIOD, TEST_DEADLINE, &taskLowPriority);
@@ -306,12 +308,12 @@ void tm_create_13()
 	send_success();
 }
 
-void tm_create_14()
+void tm_create_cyclic_04()
 {
 	TaskHandle task1, task2, task3;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("TM-CREATE-14");
+	send_id("TM-CREATE-CYCLIC-04");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task1);
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task2);
@@ -331,11 +333,11 @@ void tm_create_14()
 	send_success();
 }
 
-void tm_create_15()
+void tm_create_cyclic_05()
 {
 	char task_name[4] = TASK_NAME;
 	
-	send_id("TM-CREATE-15");
+	send_id("TM-CREATE-CYCLIC-05");
 	
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -345,12 +347,12 @@ void tm_create_15()
 	send_success();
 }
 
-void tm_create_16()
+void tm_create_cyclic_06()
 {
 	char task_name[4] = TASK_NAME;
 	const int invalid_priority = 0;
 	
-	send_id("TM-CREATE-16");
+	send_id("TM-CREATE-CYCLIC-06");
 	
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, invalid_priority, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -360,12 +362,28 @@ void tm_create_16()
 	send_success();
 }
 
+void tm_create_cyclic_07()
+{
+	TaskHandle task;
+	char task_name[4] = TASK_NAME;
+	
+	send_id("TM-CREATE-CYCLIC-07");
+	
+	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, 0, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task);
+	
+	if (return_code != INVALID_STACK_SIZE)
+	{
+		send_fail();
+	}
+	
+	send_success();
+}
 
-void tm_create_17()
+void tm_create_cyclic_08()
 {
 	char invalid_name[] = "invalid";
 	
-	send_id("TM-CREATE-17");
+	send_id("TM-CREATE-CYCLIC-08");
 	
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, invalid_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -375,12 +393,12 @@ void tm_create_17()
 	send_success();
 }
 
-void tm_create_18()
+void tm_create_cyclic_09()
 {
 	char task_name[4] = TASK_NAME;
 	int i;
 	
-	send_id("TM-CREATE-18");
+	send_id("TM-CREATE-CYCLIC-09");
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
@@ -394,11 +412,11 @@ void tm_create_18()
 	send_success();
 }
 
-void tm_create_19()
+void tm_create_cyclic_10()
 {
 	char task_name[4] = TASK_NAME;
 	
-	send_id("TM-CREATE-19");
+	send_id("TM-CREATE-CYCLIC-10");
 	
 	int enough_memory;
 	do
@@ -414,29 +432,14 @@ void tm_create_19()
 	send_success();
 }
 
-void tm_create_20()
-{
-	char task_name[4] = TASK_NAME;
-	const int invalid_stack_size = 10;
-	
-	send_id("TM-CREATE-20");
-	
-	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, invalid_stack_size, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, NULL);
-	
-	if (return_code != INVALID_STACK_SIZE)
-		send_fail();
-	
-	send_success();
-}
-
 // mixed ROSA_CreateCyclicTask and ROSA_CreateTask
 
-void tm_create_21()
+void tm_mixed_create_01()
 {
 	TaskHandle taskCyclic1, taskCyclic2, taskOrdinary;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("TM-CREATE-21");
+	send_id("TM--MIXED-CREATE-01");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &taskCyclic1);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskOrdinary);
@@ -456,7 +459,7 @@ void tm_create_21()
 	send_success();
 }
 
-void tm_create_22()
+void tm_mixed_create_02()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
 	char task_name[4] = TASK_NAME;
@@ -466,7 +469,7 @@ void tm_create_22()
 	const unsigned int priorityMedium = 4;
 	const unsigned int priorityLow = 3;
 	
-	send_id("TM-CREATE-22");
+	send_id("TM-MIXED-CREATE-02");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityMedium, TEST_PERIOD, TEST_DEADLINE, &taskMediumPriority);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityLow, &taskLowPriority);
@@ -540,6 +543,266 @@ void tm_create_24()
 	ROSA_Start();
 	send_fail();
 }
+
+//Create Task functionality from a task
+
+void tmtc1()
+{
+	TaskHandle task_handle_1;
+	char task_name[4] = TASK_NAME;
+	
+	ROSA_CreateTask((void*) 50, task_name, 10, 3, &task_handle_1);
+	
+	if( ((Task*)task_handle_1)->t->staddr != ((void*) 50))
+	{		
+		send_fail();
+	}
+	if( compare_strings(task_name, ((Task*)task_handle_1)->t->id, 4) != 0)
+		send_fail();
+	if( ((Task*)task_handle_1)->t->datasize != 10)
+		send_fail();
+	if( ((Task*)task_handle_1)->originalPriority != 3)		
+		send_fail();
+		
+	send_success();
+}
+
+void tm_tt_create_01()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-01");
+	
+	ROSA_CreateTask(tmtc1, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc2()
+{
+	TaskHandle task_handle;
+	char task_name[4] = TASK_NAME;
+	
+	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
+	PriorityQueue ready_queue;
+	
+	ready_queue = fetchREADYqueue();
+	
+	/*Check queue size*/
+	if(ready_queue.size != 1)
+	send_fail();
+	if( ( *(ready_queue.data[0]) ).task != (Task*) task_handle )
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_02()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-02");
+	
+	ROSA_CreateTask(tmtc2, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc3()
+{
+	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
+	char task_name[4] = TASK_NAME;
+	PriorityQueue ready_queue;
+	
+	const unsigned int priorityHigh = 5;
+	const unsigned int priorityMedium = 4;
+	const unsigned int priorityLow = 3;
+	
+	ROSA_CreateTask(TEST_PTR, task_name, 10, priorityMedium, &taskMediumPriority);
+	ROSA_CreateTask(TEST_PTR, task_name, 10, priorityLow, &taskLowPriority);
+	ROSA_CreateTask(TEST_PTR, task_name, 10, priorityHigh, &taskHighPriority);
+	
+	ready_queue = fetchREADYqueue();
+	
+	if(ready_queue.size != 3)
+	send_fail();
+	if ((*(ready_queue.data[0]) ).task != (Task*) taskHighPriority)
+	send_fail();
+	if ((*(ready_queue.data[1]) ).task != (Task*) taskLowPriority)
+	send_fail();
+	if ((*(ready_queue.data[2]) ).task != (Task*) taskMediumPriority)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_03()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-03");
+	
+	ROSA_CreateTask(tmtc3, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc4()
+{
+	TaskHandle task1, task2, task3;
+	char task_name[4] = TASK_NAME;
+	
+	ROSA_CreateTask(TEST_PTR, task_name, 10, PRIORITY_5, &task1);
+	ROSA_CreateTask(TEST_PTR, task_name, 10, PRIORITY_5, &task2);
+	ROSA_CreateTask(TEST_PTR, task_name, 10, PRIORITY_5, &task3);
+	
+	PriorityQueue ready_queue = fetchREADYqueue();
+	
+	if(ready_queue.size != 4)
+	send_fail();
+	if ((*(ready_queue.data[0]) ).task != (Task*) task1)
+	send_fail();
+	if ((*(ready_queue.data[1]) ).task != (Task*) task2)
+	send_fail();
+	if ((*(ready_queue.data[2]) ).task != (Task*) task3)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_04()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-04");
+	
+	ROSA_CreateTask(tmtc4, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc5()
+{
+	char task_name[4] = TASK_NAME;
+	
+	int return_code = ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	
+	if (return_code != SUCCESS)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_05()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-05");
+	
+	ROSA_CreateTask(tmtc5, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc6()
+{
+	char task_name[4] = TASK_NAME;
+	const int invalid_priority = 0;
+	
+	int return_code = ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, invalid_priority, NULL);
+	
+	if (return_code != INVALID_PRIORITY)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_06()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-06");
+	
+	ROSA_CreateTask(tmtc6, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc7()
+{
+	char task_name[4] = TASK_NAME;
+	const int invalid_stack_size = 10;
+	
+	int return_code = ROSA_CreateTask(TEST_PTR, task_name, invalid_stack_size, PRIORITY_5, NULL);
+	
+	if (return_code != INVALID_STACK_SIZE)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_07()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-07");
+	
+	ROSA_CreateTask(tmtc7, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc8()
+{
+	char invalid_name[7] = "invalid";
+	
+	int return_code = ROSA_CreateTask(TEST_PTR, invalid_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	
+	if (return_code != INVALID_NAME)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_08()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-08");
+	
+	ROSA_CreateTask(tmtc8, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
+void tmtc9()
+{
+	char task_name[4] = TASK_NAME;
+	int i;
+	
+	for (i = 0; i < MAX_NUMBER_TASKS; i++)
+	{
+		ROSA_CreateTask(TEST_PTR, task_name, 100, PRIORITY_5, NULL);
+	}
+	int return_code = ROSA_CreateTask(TEST_PTR, task_name, 100, PRIORITY_5, NULL);
+	
+	if (return_code != TOO_MANY_TASKS)
+	send_fail();
+	
+	send_success();
+}
+
+void tm_tt_create_09()
+{
+	TaskHandle task_handle;
+	
+	send_id("TM-TT-CREATE-09");
+	
+	ROSA_CreateTask(tmtc8, "task", SMALL_STACK_SIZE, 5, &task_handle);
+	ROSA_Start();
+	send_fail();
+}
+
 // TERMINATE
 
 void success_sender(void)
@@ -567,8 +830,8 @@ void tm_terminate_01()
 	send_fail();
 }
 
-/*
-void mess_up_CRT_and_terminate(void)
+
+/*void mess_up_CRT_and_terminate(void)
 {
 	setCRT(42);
 	if (ROSA_TerminateTask() == FAILURE)
@@ -581,20 +844,20 @@ void tm_terminate_02()
 {
 	send_id("TM-TERMINATE-02");
 	
-	ROSA_CreateTask(&mess_up_CRT_and_terminate, "mess", STACK_SIZE, TEST_PRIORITY, NULL);
-	ROSA_CreateTask(&success_sender, "low", STACK_SIZE, LOW_TEST_PRIORITY, NULL);
+	ROSA_CreateTask(&mess_up_CRT_and_terminate, "mess", SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(&success_sender, "low", STACK_SIZE, PRIORITY_4, NULL);
 	
 	ROSA_Start();
 	
 	send_fail();
-}
-*/
+}*/
+
 
 unsigned int task_creation_counter = 0;
 
 void make_clone_and_terminate(void)
 {
-	if (++task_creation_counter == 100)
+	if (++task_creation_counter == 65)
 		send_success();
 		
 	if (ROSA_CreateTask(&make_clone_and_terminate, "high", SMALL_STACK_SIZE, PRIORITY_5, NULL) != SUCCESS)

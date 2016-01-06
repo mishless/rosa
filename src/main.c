@@ -49,9 +49,13 @@
 unsigned int global_i;
 
 #define TM_CREATE_TESTS tm_create_01, tm_create_02, tm_create_03, tm_create_04, tm_create_05, tm_create_06, tm_create_07, \
-			 tm_create_08, tm_create_09, tm_create_10, tm_create_11, tm_create_12, tm_create_13, tm_create_14, \
-			 tm_create_15, tm_create_16, tm_create_17, tm_create_18, tm_create_19, tm_create_20, tm_create_21, tm_create_22
-#define TM_TERMINATE_TESTS tm_terminate_01, /*tm_terminate_02, */tm_terminate_03
+			 tm_create_08, tm_create_09, tm_create_10
+#define TM_CREATE_CYCLIC_TESTS	tm_create_cyclic_01, tm_create_cyclic_02, tm_create_cyclic_03, tm_create_cyclic_04, \
+			tm_create_cyclic_05, tm_create_cyclic_06, tm_create_cyclic_07, tm_create_cyclic_08, tm_create_cyclic_09, tm_create_cyclic_10 
+#define TM_TT_CREATE_TESTS tm_tt_create_01, tm_tt_create_02, tm_tt_create_03, tm_tt_create_04, tm_tt_create_05, \
+			tm_tt_create_06, tm_tt_create_07, tm_tt_create_08, tm_tt_create_09
+#define TM_MIXED_CREATE_TESTS	tm_mixed_create_01, tm_mixed_create_02, tm_create_23, tm_create_24
+#define TM_TERMINATE_TESTS		tm_terminate_01, /*tm_terminate_02,*/ tm_terminate_03
 
 #define SCM_GET_TICKS_TESTS scm_getTicks_01, scm_getTicks_02
 #define SCM_DELAY_RELATIVE_TESTS scm_delayRelative_01, scm_delayRelative_02, scm_delayRelative_03, scm_delayRelative_04, \
@@ -62,7 +66,13 @@ unsigned int global_i;
 #define SCM_END_CYCLE_TESTS scm_endCycle_01, scm_endCycle_02, scm_endCycle_03, scm_endCycle_04, scm_endCycle_05, scm_endCycle_06, scm_endCycle_07, scm_endCycle_08															
 #define SCM_TESTS SCM_GET_TICKS_TESTS, SCM_DELAY_RELATIVE_TESTS, SCM_DELAY_ABSOLUTE_TESTS, SCM_END_CYCLE_TESTS
 
-#define ALL_TESTS TM_CREATE_TESTS, TM_TERMINATE_TESTS, SCM_TESTS
+#define SCH_TESTS		s_schedule_01, s_schedule_02, s_schedule_03				
+																				
+#define TM_TESTS	TM_CREATE_TESTS, TM_CREATE_CYCLIC_TESTS, TM_TT_CREATE_TESTS, TM_MIXED_CREATE_TESTS, TM_TERMINATE_TESTS
+
+#define SCM_TESTS	SCM_GET_TICKS_TESTS, SCM_DELAY_RELATIVE_TESTS, SCM_DELAY_ABSOLUTE_TESTS
+
+#define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS
 							
 /*Pointers to all the test cases*/
 void (*tests[])(void) = {ALL_TESTS};
