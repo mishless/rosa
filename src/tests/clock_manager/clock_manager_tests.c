@@ -584,22 +584,32 @@ int afterDelayAbsolute = 0;
 
 void cyclicTaskThatMissesItsPeriod(void)
 {
-	ROSA_DelayAbsolute(0, 22);
+	ROSA_DelayAbsolute(0, 167);
 	afterDelayAbsolute = 1;
 	ROSA_EndCycle();
+	send_fail();
 }
 
 void checkWakeUpTimeAfterMissedPeriod(void)
 {
-	busy_wait(23);
-	send_success();
+	PriorityQueue delay_q;
+	
+	while(afterDelayAbsolute != 1)
+		;
+	
+	delay_q = fetchDELAYqueue();
+	
+	if(delay_q.data[0]->task->wakeUpTime == 170)
+		send_success();	
+	else
+		send_fail();
 }
 
 void scm_endCycle_05(void)
 {
 	send_id("SCM-ENDCYCLE-05");
-	ROSA_CreateCyclicTask(&cyclicTaskThatMissesItsPeriod, TEST_NAME, 4096, PRIORITY_5, (ROSA_TickCount) 20, (ROSA_TickCount) 20, &cyclicTaskThatMissesItsPeriodHandle);
-	ROSA_CreateTask(&checkWakeUpTimeAfterMissedPeriod, TEST_NAME, 4096, PRIORITY_4, NULL);
+	ROSA_CreateCyclicTask(&cyclicTaskThatMissesItsPeriod, TEST_NAME, 4096, PRIORITY_6, (ROSA_TickCount) 10, (ROSA_TickCount) 10, &cyclicTaskThatMissesItsPeriodHandle);
+	ROSA_CreateTask(&checkWakeUpTimeAfterMissedPeriod, TEST_NAME, 4096, PRIORITY_5, NULL);
 	ROSA_Start();
 }
 
@@ -639,7 +649,7 @@ void cyclicTaskThatDoesntMissesPeriod(void)
 		}
 		send_success();
 	}
-	ROSA_DelayAbsolute(0, 7);
+	ROSA_DelayAbsolute(0, 167);
 	executedAtLeastOnce = 1;
 	ROSA_EndCycle();
 }
@@ -648,7 +658,7 @@ void scm_endCycle_07(void)
 {
 	send_id("SCM-ENDCYCLE-07");
 	executedAtLeastOnce = 0;
-	ROSA_CreateCyclicTask(&cyclicTaskThatDoesntMissesPeriod, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 6, (ROSA_TickCount) 6, NULL);
+	ROSA_CreateCyclicTask(&cyclicTaskThatDoesntMissesPeriod, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 10, (ROSA_TickCount) 10, NULL);
 	ROSA_Start();
 }
 

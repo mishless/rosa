@@ -39,6 +39,10 @@
 
 ROSA_TickCount round_robin_counter = 0;
 
+#define ROSA_yieldFromISRFixed() asm("sub SP, -0x4");\
+								 ROSA_yieldFromISR();\
+								 asm("sub SP, 0x4")
+
 __attribute__((__interrupt__))
 void timerISR(void)
 {
@@ -54,25 +58,25 @@ void timerISR(void)
 		{
 			if(isDELAYqueueEmpty() == 1) break;
 			if((peekDELAYqueue())->wakeUpTime > systemTime) break;
-			putInREADYqueue(getFromDELAYqueue());		
+			putInREADYqueue(getFromDELAYqueue());
 		}
-		
+	
 		if(isREADYqueueEmpty() == 0)
 		{
 			if(getPriority(peekREADYqueue()) > getPriority(getCRT()))
 			{
 				putInREADYqueue(getCRT());
-				ROSA_yieldFromISR();
+				ROSA_yieldFromISRFixed();
 			}
 			else if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
 			{
 				if(round_robin_counter == ROUND_ROBIN_PERIOD)
 				{
 					putInREADYqueue(getCRT());
-					ROSA_yieldFromISR();
+					ROSA_yieldFromISRFixed();
 				}
 				else
-					round_robin_counter++;
+				round_robin_counter++;
 			}
 		}
 	}

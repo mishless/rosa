@@ -32,7 +32,7 @@ void tm_create_01()
 	  correctly and assign it to the provided handle.*/
 	
 	TaskHandle task_handle;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-01");
 	
@@ -56,7 +56,7 @@ void tm_create_01()
 void tm_create_02()
 {
 	TaskHandle task_handle;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 		
 	send_id("TM-CREATE-02");
 	
@@ -77,7 +77,7 @@ void tm_create_02()
 void tm_create_03()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	PriorityQueue ready_queue;
 	
 	const unsigned int priorityHigh = 5;
@@ -107,7 +107,7 @@ void tm_create_03()
 void tm_create_04()
 {
 	TaskHandle task1, task2, task3;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-04");
 	
@@ -131,7 +131,7 @@ void tm_create_04()
 
 void tm_create_05()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-05");
 	
@@ -145,7 +145,7 @@ void tm_create_05()
 
 void tm_create_06()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	const int invalid_priority = 0;
 	
 	send_id("TM-CREATE-06");
@@ -158,9 +158,10 @@ void tm_create_06()
 	send_success();
 }
 
+/*Not used anymore, since every stack size is valid*/
 void tm_create_07()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	const int invalid_stack_size = 10;
 	
 	send_id("TM-CREATE-07");
@@ -190,7 +191,7 @@ void tm_create_08()
 
 void tm_create_09()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	int i;
 	
 	send_id("TM-CREATE-09");
@@ -209,7 +210,7 @@ void tm_create_09()
 
 void tm_create_10()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-10");
 	
@@ -233,7 +234,7 @@ void tm_create_10()
 void tm_create_cyclic_01()
 {
 	TaskHandle task_handle;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-CYCLIC-01");
 	
@@ -261,7 +262,7 @@ void tm_create_cyclic_01()
 void tm_create_cyclic_02()
 {
 	TaskHandle task_handle;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 		
 	send_id("TM-CREATE-CYCLIC-02");
 	
@@ -282,7 +283,7 @@ void tm_create_cyclic_02()
 void tm_create_cyclic_03()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	const unsigned int priorityHigh = 5;
 	const unsigned int priorityMedium = 4;
@@ -311,7 +312,7 @@ void tm_create_cyclic_03()
 void tm_create_cyclic_04()
 {
 	TaskHandle task1, task2, task3;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-CYCLIC-04");
 	
@@ -335,7 +336,7 @@ void tm_create_cyclic_04()
 
 void tm_create_cyclic_05()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-CYCLIC-05");
 	
@@ -349,7 +350,7 @@ void tm_create_cyclic_05()
 
 void tm_create_cyclic_06()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	const int invalid_priority = 0;
 	
 	send_id("TM-CREATE-CYCLIC-06");
@@ -362,10 +363,11 @@ void tm_create_cyclic_06()
 	send_success();
 }
 
+/*Not used anymore, since every stack size is valid*/
 void tm_create_cyclic_07()
 {
 	TaskHandle task;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-CYCLIC-07");
 	
@@ -395,7 +397,7 @@ void tm_create_cyclic_08()
 
 void tm_create_cyclic_09()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	int i;
 	
 	send_id("TM-CREATE-CYCLIC-09");
@@ -414,7 +416,7 @@ void tm_create_cyclic_09()
 
 void tm_create_cyclic_10()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("TM-CREATE-CYCLIC-10");
 	
@@ -437,9 +439,9 @@ void tm_create_cyclic_10()
 void tm_mixed_create_01()
 {
 	TaskHandle taskCyclic1, taskCyclic2, taskOrdinary;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
-	send_id("TM--MIXED-CREATE-01");
+	send_id("TM-MIXED-CREATE-01");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &taskCyclic1);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskOrdinary);
@@ -462,7 +464,7 @@ void tm_mixed_create_01()
 void tm_mixed_create_02()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	PriorityQueue ready_queue;
 	
 	const unsigned int priorityHigh = 5;
@@ -549,7 +551,7 @@ void tm_create_24()
 void tmtc1()
 {
 	TaskHandle task_handle_1;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	ROSA_CreateTask((void*) 50, task_name, 10, 3, &task_handle_1);
 	
@@ -581,18 +583,22 @@ void tm_tt_create_01()
 void tmtc2()
 {
 	TaskHandle task_handle;
-	char task_name[4] = TASK_NAME;
-	
-	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
+	char task_name[5] = TASK_NAME;
 	PriorityQueue ready_queue;
 	
 	ready_queue = fetchREADYqueue();
 	
+	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
+	
+	
+	ready_queue = fetchREADYqueue();
+	
 	/*Check queue size*/
-	if(ready_queue.size != 1)
-	send_fail();
+	if(ready_queue.size != 2)
+		/*Ready queue should be 2 because the idle task exists too*/
+		send_fail();
 	if( ( *(ready_queue.data[0]) ).task != (Task*) task_handle )
-	send_fail();
+		send_fail();
 	
 	send_success();
 }
@@ -611,7 +617,7 @@ void tm_tt_create_02()
 void tmtc3()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	PriorityQueue ready_queue;
 	
 	const unsigned int priorityHigh = 5;
@@ -624,14 +630,14 @@ void tmtc3()
 	
 	ready_queue = fetchREADYqueue();
 	
-	if(ready_queue.size != 3)
-	send_fail();
+	if(ready_queue.size != 4)
+		send_fail();
 	if ((*(ready_queue.data[0]) ).task != (Task*) taskHighPriority)
-	send_fail();
-	if ((*(ready_queue.data[1]) ).task != (Task*) taskLowPriority)
-	send_fail();
-	if ((*(ready_queue.data[2]) ).task != (Task*) taskMediumPriority)
-	send_fail();
+		send_fail();
+	if ((*(ready_queue.data[2]) ).task != (Task*) taskLowPriority)
+		send_fail();
+	if ((*(ready_queue.data[1]) ).task != (Task*) taskMediumPriority)
+		send_fail();
 	
 	send_success();
 }
@@ -650,7 +656,7 @@ void tm_tt_create_03()
 void tmtc4()
 {
 	TaskHandle task1, task2, task3;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	ROSA_CreateTask(TEST_PTR, task_name, 10, PRIORITY_5, &task1);
 	ROSA_CreateTask(TEST_PTR, task_name, 10, PRIORITY_5, &task2);
@@ -659,13 +665,13 @@ void tmtc4()
 	PriorityQueue ready_queue = fetchREADYqueue();
 	
 	if(ready_queue.size != 4)
-	send_fail();
+		send_fail();
 	if ((*(ready_queue.data[0]) ).task != (Task*) task1)
-	send_fail();
-	if ((*(ready_queue.data[1]) ).task != (Task*) task2)
-	send_fail();
-	if ((*(ready_queue.data[2]) ).task != (Task*) task3)
-	send_fail();
+		send_fail();
+	if ((*(ready_queue.data[2]) ).task != (Task*) task2)
+		send_fail();
+	if ((*(ready_queue.data[1]) ).task != (Task*) task3)
+		send_fail();
 	
 	send_success();
 }
@@ -683,7 +689,7 @@ void tm_tt_create_04()
 
 void tmtc5()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
@@ -706,7 +712,7 @@ void tm_tt_create_05()
 
 void tmtc6()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	const int invalid_priority = 0;
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, invalid_priority, NULL);
@@ -730,7 +736,7 @@ void tm_tt_create_06()
 
 void tmtc7()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	const int invalid_stack_size = 10;
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, invalid_stack_size, PRIORITY_5, NULL);
@@ -741,6 +747,7 @@ void tmtc7()
 	send_success();
 }
 
+/*Not used anymore, since every stack size is valid*/
 void tm_tt_create_07()
 {
 	TaskHandle task_handle;
@@ -777,7 +784,7 @@ void tm_tt_create_08()
 
 void tmtc9()
 {
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	int i;
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)

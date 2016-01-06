@@ -40,7 +40,6 @@ PriorityQueue fetchREADYqueue(void);
 PriorityQueue fetchDELAYqueue(void);
 BlockedPriorityQueue fetchBLOCKEDqueue(void);
 
-
 #endif
 
 #endif /* ROSA_QUEUE_MANAGER_H_ */

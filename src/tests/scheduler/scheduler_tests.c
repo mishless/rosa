@@ -22,27 +22,22 @@ TaskHandle task_handle_ss1;
 
 void ss1_task()
 {
-	//if(currentlyRunningTask != (Task*)task_handle_ss1)
-	//if( ((Task*)task_handle_ss1)->t->staddr != &currentlyRunningTask->t->staddr)
-	if( ((Task*)task_handle_ss1)->t->staddr == (*((*(*(&currentlyRunningTask))).t)).staddr)
-	{		
+	if(getCRT() == task_handle_ss1)
 		send_success();
-	}
-	
-	//send_fail();
-	send_success();
+	else
+		send_fail();
 }
 
 void s_schedule_01()
 {
 	/*ROSA_Start should start scheduler and put a task in currently running state*/
 	
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("S-SCHEDULE-01");
 	
 	ROSA_CreateTask(ss1_task, task_name, STACK_SIZE, TEST_PRIORITY, &task_handle_ss1);
-	
+
 	ROSA_Start();
 	
 	send_fail();
@@ -58,7 +53,7 @@ void s_schedule_02()
 	/*ROSA_Start should start scheduler and check if the currently running task is newly created*/
 	
 	TaskHandle task_handle;
-	char task_name[4] = TASK_NAME;
+	char task_name[5] = TASK_NAME;
 	
 	send_id("S-SCHEDULE-02");
 	

@@ -77,12 +77,6 @@ unsigned int ROSA_CreateTask(void (*functionBody) (void), char *functionNameChAr
 		return INVALID_PRIORITY;
 	}
 
-	// Check if the specified maximum stack size is valid
-	if (maxStackSize < MINIMAL_STACK_SIZE)
-	{
-		return INVALID_STACK_SIZE;
-	}
-
 	// Create TCB structure for task
 	ROSA_tcbCreate(task->t, functionNameChArr, functionBody, stack, maxStackSize);
 	// Assign original priority to be equal to task priority
@@ -164,12 +158,6 @@ unsigned int ROSA_CreateCyclicTask(void (*functionBody) (void), char *functionNa
 	if (taskPriority == 0)
 	{
 		return INVALID_PRIORITY;
-	}
-
-	// Check if the specified maximum stack size is valid
-	if (maxStackSize < MINIMAL_STACK_SIZE)
-	{
-		return INVALID_STACK_SIZE;
 	}
 
 	// Create TCB structure for task

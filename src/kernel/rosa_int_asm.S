@@ -244,7 +244,8 @@ isInterruptEnabled:
 //SFINT0 = Supervisor Stack Frame for interrupt 0
 .equ SFINT0OFFSET,0x06*0x04
 
-.equ SFINT0_R7_TASK,-0x01*0x04+SFINT0OFFSET
+.equ SFINT0_R6_TASK, -0x01*0x04+SFINT0OFFSET
+.equ SFINT0_R7_TASK,-0x02*0x04+SFINT0OFFSET
 .equ SFINT0_SR, 0x00*0x04+SFINT0OFFSET
 .equ SFINT0_PC, 0x01*0x04+SFINT0OFFSET
 .equ SFINT0_LR, 0x02*0x04+SFINT0OFFSET
@@ -283,6 +284,10 @@ contextSaveFromISR:
 	ld.w r0,sp[SFINT0_R7_TASK]
 	st.w r12[TCB.SAVEREG.R7],r0
 
+	//save r6 also because it needs to
+	ld.w r0,sp[SFINT0_R6_TASK]
+	st.w r12[TCB.SAVEREG.R6],r0
+
 	//Save RETADDR
 	ld.w r0,sp[SFINT0_PC]
 	st.w r12[TCB.RETADDR],r0
@@ -296,6 +301,10 @@ contextSaveFromISR:
 	st.w --sp,r0
 	stmts sp,sp
 	ld.w r0,sp++
+
+	//ne pitaj
+	sub r0, -0x4
+
 	st.w r12[TCB.SAVEUSP],r0
 
 	mov pc,lr
