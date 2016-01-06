@@ -28,7 +28,18 @@ typedef volatile unsigned long long ROSA_TickCount;
 #define	INVALID_NAME			3
 #define TOO_MANY_TASKS			4
 
+#define TOO_MANY_SEMAPHORES		7
+#define INVALID_INITIAL_VALUE	8
+#define SEMAPHORE_NOT_FOUND		9
+
 #define FAILURE                 6
 
+//Semaphore 
+	//types
+#define BINARY					0
+#define MUTEX					1
+	//state
+#define SEMAPHORE_FREE			0
+#define SEMAPHORE_OCCUPIED		1
  
 #endif 

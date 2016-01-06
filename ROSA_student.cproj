@@ -209,6 +209,9 @@
     <Compile Include="src\kernel\rosa_scheduler_manager.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\kernel\rosa_semaphore_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\kernel\rosa_task_manager.c">
       <SubType>compile</SubType>
     </Compile>

@@ -234,7 +234,7 @@ unsigned int ROSA_TerminateTask(void)
 		return FAILURE;
 	}
 
-	return FAILURE;
+	return SUCCESS;
 }
 
 /*
