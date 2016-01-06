@@ -22,5 +22,6 @@ typedef struct {
 
 void setTaskDelay(Task *task, ROSA_TickCount wakeUpTime);
 unsigned int getPriority(Task *task);
+ROSA_TickCount getWakeUpTime(Task *task); 
 
 #endif /* ROSA_TASK_PRIVATE_H_ */

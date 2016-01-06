@@ -4,15 +4,12 @@
 * Created: 12/16/2015 6:59:15 PM
 *  Author: Kolja
 */
-#include "priority_queue.h"
-#include "rosa_config.h"
-#include "rosa_task_private.h"
-#include "rosa_scheduler_private.h"
+
 #include "rosa_queue_manager.h"
-#include "rosa_ker.h"
 
 PriorityQueue* READYqueue;
 PriorityQueue* DELAYqueue;
+BlockedPriorityQueue* BLOCKEDqueue;
 
 unsigned int interrupt_flag = 0;
 
@@ -84,11 +81,45 @@ unsigned int isDELAYqueueEmpty( void )
 	return isEmpty(DELAYqueue);
 }
 
+int BLOCKEDcomparator(BlockedPriorityQueueElement *firstElement, BlockedPriorityQueueElement *secondElement)
+{
+	if (getWakeUpTime(firstElement->task) == getWakeUpTime(secondElement->task)) {
+		return 0;
+		} else if (getWakeUpTime(firstElement->task) < getWakeUpTime(secondElement->task)) {
+		return 1;
+	}
+	return -1;
+}
+
+void putInBLOCKEDqueue( Task* task )
+{
+	BlockedPriorityQueueElement *newElement = malloc(sizeof(BlockedPriorityQueueElement));
+	newElement->task = task;
+	enqueueBlockedPriorityQueue(BLOCKEDqueue, newElement);
+}
+
+Task* getFromBLOCKEDqueue( void )
+{
+	BlockedPriorityQueueElement * element = dequeueBlockedPriorityQueue(BLOCKEDqueue);
+	return element->task;
+}
+
+Task* peekBLOCKEDqueue( void )
+{
+	BlockedPriorityQueueElement * element = peekBlockedPriorityQueue(BLOCKEDqueue);
+	return element->task;
+}
+
+unsigned int isBLOCKEDqueueEmpty( void )
+{
+	return isEmptyBlockedPriorityQueue(BLOCKEDqueue);
+}
 
 void initializeQueues(void)
 {
 	READYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &READYcomparator );
 	DELAYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &DELAYcomparator );
+	BLOCKEDqueue = createBlockedPriorityQueue( MAX_NUMBER_TASKS*MAX_NUMBER_SEMAPHORES, &BLOCKEDcomparator);
 }
 
 #if DEBUG_COMPILATION
@@ -101,6 +132,11 @@ PriorityQueue fetchREADYqueue(void)
 PriorityQueue fetchDELAYqueue(void)
 {
 	return *DELAYqueue;
+}
+
+BlockedPriorityQueue fetchBLOCKEDqueue(void)
+{
+	return *BLOCKEDqueue;
 }
 
 #endif

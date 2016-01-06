@@ -10,7 +10,7 @@
 unsigned int semaphore_counter = 0;
 unsigned int semaphore_id = 0;
 
-int BLOCKEDcomparator(BlockedPriorityQueueElement *firstElement, BlockedPriorityQueueElement *secondElement)
+int SM_BLOCKEDcomparator(BlockedPriorityQueueElement *firstElement, BlockedPriorityQueueElement *secondElement)
 {
 	if (getPriority(firstElement->task) == getPriority(secondElement->task)) {
 		return 0;
@@ -33,7 +33,7 @@ unsigned int ROSA_SemaphoreCreateBinary (SemaphoreHandle* handle, unsigned int i
 		return NOT_ENOUGH_MEMORY;
 	}
 
-	semaphore->SemaphoreBlockedQueue = createBlockedPriorityQueue(MAX_NUMBER_TASKS, &BLOCKEDcomparator);
+	semaphore->SemaphoreBlockedQueue = createBlockedPriorityQueue(MAX_NUMBER_TASKS, &SM_BLOCKEDcomparator);
 	
 	// Check if memory was successfully allocated for blocked priority queue structure
 	if (semaphore->SemaphoreBlockedQueue == NULL)
@@ -81,7 +81,7 @@ unsigned int ROSA_SemaphoreCreatePrio (SemaphoreHandle* handle, unsigned int ini
 		return NOT_ENOUGH_MEMORY;
 	}
 
-	semaphore->SemaphoreBlockedQueue = createBlockedPriorityQueue(MAX_NUMBER_TASKS, &BLOCKEDcomparator);
+	semaphore->SemaphoreBlockedQueue = createBlockedPriorityQueue(MAX_NUMBER_TASKS, &SM_BLOCKEDcomparator);
 	
 	// Check if memory was successfully allocated for blocked priority queue structure
 	if (semaphore->SemaphoreBlockedQueue == NULL)
@@ -99,7 +99,7 @@ unsigned int ROSA_SemaphoreCreatePrio (SemaphoreHandle* handle, unsigned int ini
 	
 	semaphore->type = MUTEX;
 	
-	if(initialValue != SEMAPHORE_OCCUPIED && initialValue != SEMAPHORE_FREE)
+	if(initialValue != SEMAPHORE_FREE)
 	{
 		return INVALID_INITIAL_VALUE;
 	}

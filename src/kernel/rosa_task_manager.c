@@ -257,3 +257,8 @@ unsigned int getPriority(Task *task)
 	unsigned int priority = popFromStack(task->temporaryPriority);
 	return priority;
 }
+
+ROSA_TickCount getWakeUpTime(Task *task)
+{
+	return task->wakeUpTime;
+}
