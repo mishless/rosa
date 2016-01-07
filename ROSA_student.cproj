@@ -179,6 +179,9 @@
     <Compile Include="src\include\kernel\struct\blocked_priority_queue.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\include\kernel\struct\map.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\kernel\struct\stack.h">
       <SubType>compile</SubType>
     </Compile>
@@ -219,6 +222,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\struct\blocked_priority_queue.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\kernel\struct\map.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\kernel\struct\priority_queue.c">
