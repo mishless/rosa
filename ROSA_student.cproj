@@ -188,7 +188,7 @@
     <Compile Include="src\include\tests\clock_manager_tests.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\include\tests\scheduler_tests.h">
+    <Compile Include="src\include\tests\scheduler_manager_tests.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\include\tests\semaphore_manager_tests.h">
@@ -239,7 +239,7 @@
     <Compile Include="src\tests\kernel\struct\priority_queue_test.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\tests\scheduler\scheduler_tests.c">
+    <Compile Include="src\tests\scheduler_manager\scheduler_manager_tests.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tests\semaphore_manager\semaphore_manager_tests.c">
@@ -261,7 +261,7 @@
     <Folder Include="src\tests\kernel\struct" />
     <Folder Include="src\tests\clock_manager" />
     <Folder Include="src\tests\semaphore_manager" />
-    <Folder Include="src\tests\scheduler" />
+    <Folder Include="src\tests\scheduler_manager" />
     <Folder Include="src\tests\task_manager" />
     <None Include="AUTHOR">
       <SubType>compile</SubType>

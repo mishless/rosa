@@ -6,7 +6,7 @@
  */ 
 
 #include <avr32/io.h>
-#include "scheduler_tests.h"
+#include "scheduler_manager_tests.h"
 #include "helper_functions.h"
 #include "rosa_api_call.h"
 #include "rosa_ker.h"
