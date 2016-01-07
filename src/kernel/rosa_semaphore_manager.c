@@ -202,6 +202,37 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 
 unsigned int ROSA_SemaphoreGive (SemaphoreHandle handle)
 {
+	interruptDisable();
+	
+	Semaphore* semaphore = (Semaphore*) handle;
+	Task* task = getCRT();
+	
+	if(semaphore->state == SEMAPHORE_OCCUPIED)
+	{
+		//Binary semaphore
+		if(semaphore->type == BINARY)
+		{
+			semaphore->state = SEMAPHORE_FREE;
+			while (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
+			{
+				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
+			}
+		}
+		//Mutex
+		else
+		{
+			semaphore->state = SEMAPHORE_FREE;
+			unsigned int trash = popFromStack(task->temporaryPriority);
+			while (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
+			{
+				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
+			}
+		}
+		
+		putInREADYqueue(task);
+		ROSA_yield();
+	}
+	
 	// Return SUCCESS
 	return SUCCESS;
 }

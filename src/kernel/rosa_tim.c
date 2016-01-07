@@ -60,7 +60,14 @@ void timerISR(void)
 			if((peekDELAYqueue())->wakeUpTime > systemTime) break;
 			putInREADYqueue(getFromDELAYqueue());
 		}
-	
+		
+		while(1)
+		{
+			if(isBLOCKEDqueueEmpty() == 1) break;
+			if((peekBLOCKEDqueue())->wakeUpTime > systemTime) break;
+			putInREADYqueue(getFromBLOCKEDqueue());
+		}
+		
 		if(isREADYqueueEmpty() == 0)
 		{
 			if(getPriority(peekREADYqueue()) > getPriority(getCRT()))
