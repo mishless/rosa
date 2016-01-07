@@ -39,9 +39,8 @@
 
 ROSA_TickCount round_robin_counter = 0;
 
-#define ROSA_yieldFromISRFixed() asm("sub SP, -0x4");\
-								 ROSA_yieldFromISR();\
-								 asm("sub SP, 0x4")
+#define ROSA_yieldFromISRFixed() ROSA_yieldFromISR()
+
 
 __attribute__((__interrupt__))
 void timerISR(void)

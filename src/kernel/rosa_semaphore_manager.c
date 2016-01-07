@@ -60,7 +60,7 @@ unsigned int ROSA_SemaphoreCreateBinary (SemaphoreHandle* handle, unsigned int i
 	
 	semaphore->state = initialValue;
 	
-	*handle = (SemaphoreHandle*)semaphore;
+	*handle = (SemaphoreHandle) semaphore;
 	
 	//Enable interrupts
 	interruptEnable();
@@ -123,18 +123,13 @@ unsigned int ROSA_SemaphoreCreatePrio (SemaphoreHandle* handle, unsigned int ini
 	return SUCCESS;
 }
 
-unsigned int ROSA_SemaphoreDelete (SemaphoreHandle* handle)
+unsigned int ROSA_SemaphoreDelete (SemaphoreHandle handle)
 {
 	//Disable interrupts
 	interruptDisable();
 	
 	//cast semaphore handle
 	Semaphore* semaphore = (Semaphore*) handle;
-	
-	if (semaphore == NULL)
-	{
-		return SEMAPHORE_NOT_FOUND;
-	}
 	
 	//deallocate blocked queue memory
 	deleteBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue);
@@ -147,12 +142,6 @@ unsigned int ROSA_SemaphoreDelete (SemaphoreHandle* handle)
 	
 	//Enable interrupts
 	interruptEnable();
-	
-	// Check if the memory was deallocated successfully
-	if(semaphore != NULL)
-	{
-		return FAILURE;
-	}
 	
 	return SUCCESS;
 }

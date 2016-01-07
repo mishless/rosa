@@ -18,7 +18,7 @@ unsigned int ROSA_SemaphoreCreatePrio (SemaphoreHandle* handle,
 											unsigned int initialValue,
 											unsigned int priority);
 											
-unsigned int ROSA_SemaphoreDelete (SemaphoreHandle* handle);
+unsigned int ROSA_SemaphoreDelete (SemaphoreHandle handle);
 
 unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle,
 									ROSA_TickCount timeout);

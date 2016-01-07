@@ -28,8 +28,8 @@ void sm_create_binary_01()
 	  correctly and assign it to the provided handle.*/
 	
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE_BINARY-01");
+
+	send_id("SM-CREATE-BINARY-01");
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
 	
@@ -61,7 +61,7 @@ void sm_create_binary_02()
 	SemaphoreHandle semaphore_handle;
 	Semaphore* semaphore;
 	
-	send_id("SM-CREATE_BINARY-02");
+	send_id("SM-CREATE-BINARY-02");
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
 	
@@ -79,7 +79,7 @@ void sm_create_binary_05()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_BINARY-05");
+	send_id("SM-CREATE-BINARY-05");
 	
 	int return_code = ROSA_SemaphoreCreateBinary(&semaphore_handle, 5);
 	
@@ -96,7 +96,7 @@ void sm_create_binary_06()
 	SemaphoreHandle semaphore_handle;
 	int i = 0;
 	
-	send_id("SM-CREATE_BINARY-06");
+	send_id("SM-CREATE-BINARY-06");
 	
 	for (i = 0; i < MAX_NUMBER_SEMAPHORES; i++)
 	{
@@ -117,7 +117,7 @@ void sm_create_binary_07()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_BINARY-07");
+	send_id("SM-CREATE-BINARY-07");
 	
 	int enough_memory;
 	do
@@ -139,7 +139,7 @@ void sm_create_binary_08()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_BINARY-08");
+	send_id("SM-CREATE-BINARY-08");
 	
 	int return_code = ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
 	
@@ -185,7 +185,7 @@ void sm_create_binary_09()
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("SM-CREATE_BINARY-09");
+	send_id("SM-CREATE-BINARY-09");
 	
 	ROSA_CreateTask(task_sm_cb_09, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -215,7 +215,7 @@ void sm_create_binary_10()
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("SM-CREATE_BINARY-10");
+	send_id("SM-CREATE-BINARY-10");
 	
 	ROSA_CreateTask(task_sm_cb_10, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -227,7 +227,7 @@ void sm_create_prio_01()
 {	
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_PRIO-01");
+	send_id("SM-CREATE-PRIO-01");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -264,7 +264,7 @@ void sm_create_prio_02()
 	SemaphoreHandle semaphore_handle;
 	Semaphore* semaphore;
 	
-	send_id("SM-CREATE_PRIO-02");
+	send_id("SM-CREATE-PRIO-02");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -282,7 +282,7 @@ void sm_create_prio_05()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_PRIO-05");
+	send_id("SM-CREATE-PRIO-05");
 	
 	int return_code = ROSA_SemaphoreCreatePrio(&semaphore_handle, 5, PRIORITY_5);
 	
@@ -299,7 +299,7 @@ void sm_create_prio_06()
 	SemaphoreHandle semaphore_handle;
 	int i = 0;
 	
-	send_id("SM-CREATE_PRIO-06");
+	send_id("SM-CREATE-PRIO-06");
 	
 	for (i = 0; i < MAX_NUMBER_SEMAPHORES; i++)
 	{
@@ -320,7 +320,7 @@ void sm_create_prio_07()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_PRIO-07");
+	send_id("SM-CREATE-PRIO-07");
 	
 	int enough_memory;
 	do
@@ -342,7 +342,7 @@ void sm_create_prio_08()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_PRIO-08");
+	send_id("SM-CREATE-PRIO-08");
 	
 	int return_code = ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, 0);
 	
@@ -358,7 +358,7 @@ void sm_create_prio_09()
 {
 	SemaphoreHandle semaphore_handle;
 	
-	send_id("SM-CREATE_PRIO-09");
+	send_id("SM-CREATE-PRIO-09");
 	
 	int return_code = ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -376,7 +376,7 @@ void task_sm_cp_10 ()
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
-	if( ((Semaphore*)semaphore_handle)->type != BINARY)
+	if( ((Semaphore*)semaphore_handle)->type != MUTEX)
 	{
 		send_fail();
 	}
@@ -404,7 +404,7 @@ void sm_create_prio_10()
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("SM-CREATE_PRIO-10");
+	send_id("SM-CREATE-PRIO-10");
 	
 	ROSA_CreateTask(task_sm_cp_10, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -434,7 +434,7 @@ void sm_create_prio_11()
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("SM-CREATE_PRIO-11");
+	send_id("SM-CREATE-PRIO-11");
 	
 	ROSA_CreateTask(task_sm_cp_11, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -447,7 +447,7 @@ void sm_create_mix_01()
 	SemaphoreHandle semaphore_handle_binary;
 	SemaphoreHandle semaphore_handle_prio;
 	
-	send_id("SM-CREATE_MIX-01");
+	send_id("SM-CREATE-MIX-01");
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle_binary, SEMAPHORE_FREE);
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_prio, SEMAPHORE_FREE, PRIORITY_5);
@@ -492,7 +492,7 @@ void sm_create_mix_01()
 		send_fail();
 	}
 	
-	if( ((Semaphore*)semaphore_handle_prio)->id != 0)
+	if( ((Semaphore*)semaphore_handle_prio)->id != 1)
 	{
 		send_fail();
 	}
@@ -548,7 +548,7 @@ void task_sm_cm_02 ()
 		send_fail();
 	}
 	
-	if( ((Semaphore*)semaphore_handle_prio)->id != 0)
+	if( ((Semaphore*)semaphore_handle_prio)->id != 1)
 	{
 		send_fail();
 	}
@@ -561,7 +561,7 @@ void sm_create_mix_02()
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("SM-CREATE_MIX-02");
+	send_id("SM-CREATE-MIX-02");
 	
 	ROSA_CreateTask(task_sm_cm_02, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -580,7 +580,7 @@ void task_sm_d_03 ()
 		{
 			send_fail();
 		}
-		if(ROSA_SemaphoreDelete(&semaphore_handle) != SUCCESS)
+			if(ROSA_SemaphoreDelete(semaphore_handle) != SUCCESS)
 		{
 			send_fail();
 		}
@@ -595,7 +595,7 @@ void sm_delete_03()
 	TaskHandle task_handle;
 	char task_name[4] = TASK_NAME;
 	
-	send_id("SM-CREATE_MIX-02");
+	send_id("SM-DELETE-03");
 	
 	ROSA_CreateTask(task_sm_d_03, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -605,12 +605,12 @@ void sm_delete_03()
 
 void sm_delete_04()
 {
-	send_id("SM-CREATE_MIX-04");
+	send_id("SM-DELETE-04");
 	
 	SemaphoreHandle semaphore_handle;
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
-	if(ROSA_SemaphoreDelete(&semaphore_handle) != SUCCESS)
+	if(ROSA_SemaphoreDelete(semaphore_handle) != SUCCESS)
 	{
 		send_fail();
 	}
@@ -618,9 +618,9 @@ void sm_delete_04()
 	send_success();	
 }
 
-void sm_delete_05()
+/*void sm_delete_05()
 {
-	send_id("SM-CREATE_MIX-05");
+	send_id("SM-DELETE-05");
 	
 	SemaphoreHandle semaphore_handle;
 	
@@ -631,4 +631,4 @@ void sm_delete_05()
 	}
 
 	send_success();
-}
+}*/

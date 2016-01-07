@@ -503,7 +503,7 @@ void tmcr23_high()
 void tmcr23_low()
 {
 	TaskHandle high;
-	ROSA_CreateTask(tmcr23_high, "high", 100, 6, &high);
+	ROSA_CreateTask(tmcr23_high, "high", SMALL_STACK_SIZE, 6, &high);
 	while(tmcr23_flag == 0);
 	send_success();
 }
@@ -514,7 +514,7 @@ void tm_create_23()
 	
 	send_id("TM-CREATE-23");
 	
-	ROSA_CreateTask(tmcr23_low, "tst", 100, 5, &low);
+	ROSA_CreateTask(tmcr23_low, "tst", SMALL_STACK_SIZE, 5, &low);
 	
 	ROSA_Start();
 	send_fail();

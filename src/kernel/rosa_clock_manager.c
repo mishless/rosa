@@ -19,7 +19,7 @@ void ROSA_DelayRelative (ROSA_TickCount tickCount)
 	ROSA_TickCount time;
 	Task* task;
 	
-	//interruptDisable();
+	interruptDisable();
 	
 	time = systemTime;
 	task = getCRT();
@@ -27,7 +27,7 @@ void ROSA_DelayRelative (ROSA_TickCount tickCount)
 	
 	putInDELAYqueue(task);
 	
-	//interruptEnable();
+	interruptEnable();
 	
 	ROSA_yield();
 }
