@@ -1,4 +1,4 @@
-import sys, getopt, serial, os
+import sys, getopt, serial, os, webbrowser
 from array import *
 
 # TODO: Directory to store reports from ROSA testing tool
@@ -43,13 +43,33 @@ port = 'COM' + str(com_port)
 ser = serial.Serial(port,56700)
 value = 0
 
+numberOfTestCasesMsg = 'The total number of test cases is {0}.'
+successfulTestCasesMsg = '<div style=\'padding-top:20px;color:green\'>Successful test cases: {0}.<div>'
+unsuccessfulTestCasesMsg = '<div style=\'padding-top:5px;color:red\'>Unsuccessful test cases: {0}.<div>'
+currentResult = ''
+currentId = ''
+
+html = '<html style="background-image: url(\'background.png\');color: #353535; font-family:\'Verdana\';"><title>ROSA Test Cases Results</title><body><div style=\'padding:40px\'><div>{0}</div><div style=\'display:table;\'>{1}</div><div>{2}</div></div><body></html>'
+title = '<div style="padding-bottom:20px;font-size:larger;">ROSA Test Cases Results</div>'
+testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
+table = ''
+row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div></div>'
+
 while 1:
 	try:
 		#If the total number of test cases is already set and we haven't reached the maximum number of test cases
 		if (total_tc_number != 0 and current_tc == total_tc_number + 1):
-			print("Successful test cases: %d\n" % successCounter, end="")
+			successfulTestCasesMsg = successfulTestCasesMsg.format(successCounter)
 			unsuccessfulCounter = (int(total_tc_number)) - successCounter
-			print("Unsuccessful test cases: %d\n" % unsuccessfulCounter, end="")
+			unsuccessfulTestCasesMsg = unsuccessfulTestCasesMsg.format(unsuccessfulCounter)
+			html = html.format(title + testInformation, table, successfulTestCasesMsg + unsuccessfulTestCasesMsg)
+			
+			path = os.path.abspath('temp.html')
+			url = 'file://' + path
+
+			with open(path, 'w') as f:
+				f.write(html)
+			webbrowser.open(url)
 			break
 		value = ser.read()
 		if (value == b'?'):
@@ -62,9 +82,11 @@ while 1:
 				# If there is a current test case running and it has not reported yet report failure
 				# else set the report flag for the next tast case to 0
 				if (current_tc != 0 and current_tc_state == 0):
+					currentResult = 'failure'
 					print('Failure!')
 				else:
 					current_tc_state = 0
+				table = table + row.format(currentResult, currentId)
 				# Testing tool answers "Run the current test case." and increments it
 				ser.write(b'%');
 				ser.write(str(current_tc).encode())
@@ -73,9 +95,11 @@ while 1:
 		elif (value == b'^'):
 			current_tc_state = 1
 			successCounter += 1
+			currentResult = 'success'
 			print('Success!')
 		elif (value == b'_'):
 			current_tc_state = 1;
+			currentResult = 'failure'
 			print('Failure!')
 		elif (value == b'\x00'):
 			# If there is nothing in the buffer continue
@@ -85,10 +109,12 @@ while 1:
 			if (total_tc_number == 0):
 				# This is the total number of test cases
 				total_tc_number = int(buffer.tostring())
-				print("The total number of test cases is %d." % total_tc_number)
+				numberOfTestCasesMsg = numberOfTestCasesMsg.format(total_tc_number)
+				testInformation = testInformation.format(numberOfTestCasesMsg)
 			else:
 				# The board has sent an end transmission character - flush the buffer and print the test case ID
 				print(buffer[3:].tostring().decode('ascii'), end=" ")
+				currentId = buffer[3:].tostring().decode('ascii').strip().strip("\n")
 			# Empty the buffer
 			buffer = array('B', [])
 		elif (value == b''):
