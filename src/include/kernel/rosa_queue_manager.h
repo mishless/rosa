@@ -11,11 +11,11 @@
 
 #include "priority_queue.h"
 #include "rosa_ker.h"
-#include "blocked_priority_queue.h"
+#include "rosa_task_private.h"
 #include "priority_queue.h"
 #include "rosa_config.h"
-#include "rosa_task_private.h"
 #include "rosa_scheduler_private.h"
+#include "blocked_priority_queue.h"
 
 void putInREADYqueue( Task* task );
 Task* getFromREADYqueue( void );
@@ -27,7 +27,7 @@ Task* getFromDELAYqueue( void );
 Task* peekDELAYqueue( void );
 unsigned int isDELAYqueueEmpty( void );
 
-void putInBLOCKEDqueue( Task* task );
+void putInBLOCKEDqueue( Task* task, BlockedPriorityQueue* buddyQueue );
 Task* getFromBLOCKEDqueue( void );
 Task* peekBLOCKEDqueue( void );
 unsigned int isBLOCKEDqueueEmpty( void );

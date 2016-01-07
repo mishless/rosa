@@ -242,7 +242,7 @@ unsigned int getPriority(Task *task)
 	{
 		return task->originalPriority;
 	}
-	unsigned int priority = popFromStack(task->temporaryPriority);
+	unsigned int priority = peekFromStack(task->temporaryPriority);
 	return priority;
 }
 

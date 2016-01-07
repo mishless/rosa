@@ -9,6 +9,7 @@
 
 unsigned int semaphore_counter = 0;
 unsigned int semaphore_id = 0;
+extern ROSA_TickCount systemTime;
 
 int SM_BLOCKEDcomparator(BlockedPriorityQueueElement *firstElement, BlockedPriorityQueueElement *secondElement)
 {
@@ -158,6 +159,43 @@ unsigned int ROSA_SemaphoreDelete (SemaphoreHandle* handle)
 
 unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 {
+	interruptDisable();
+	
+	Semaphore* semaphore = (Semaphore*) handle;
+	Task* task = getCRT();	
+	//Binary semaphore
+	if(semaphore->type == BINARY)
+	{
+		if (semaphore->state == SEMAPHORE_FREE)
+			semaphore->state = SEMAPHORE_OCCUPIED;
+		else if( timeout > 0 )
+		{
+			task->wakeUpTime =  systemTime + timeout;
+			putInBLOCKEDqueue(task, semaphore->SemaphoreBlockedQueue);
+			interruptEnable();
+			ROSA_yield();
+			interruptDisable();
+		}
+	}
+	//Mutex
+	else 
+	{
+		if (semaphore->state == SEMAPHORE_FREE)
+		{
+			semaphore->state = SEMAPHORE_OCCUPIED;
+			pushIntoStack(task->temporaryPriority, semaphore->priority);
+		}
+		else if( timeout > 0 )
+		{
+			task->wakeUpTime =  systemTime + timeout;
+			putInBLOCKEDqueue(task, semaphore->SemaphoreBlockedQueue);
+			interruptEnable();
+			ROSA_yield();
+			interruptDisable();
+		}
+	}
+	interruptEnable();
+	
 	// Return SUCCESS
 	return SUCCESS;
 }

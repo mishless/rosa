@@ -9,13 +9,13 @@
 #ifndef BLOCKED_PRIORITY_QUEUE_H_
 #define BLOCKED_PRIORITY_QUEUE_H_
 
-#include<stdlib.h>
+#include <stdlib.h>
 #include "rosa_task_private.h"
 
 /* BlockedPriorityQueueElement contains id, task information, pointer to another buddy BlockedPriorityQueueElement and a pointer to another buddy BlockedPriorityQueue. */
 struct BlockedPriorityQueueElement {
 	unsigned int id;
-	Task *task;
+	Task* task;
 	struct BlockedPriorityQueueElement **buddyElement;
 	struct BlockedPriorityQueue *buddyQueue;
 };

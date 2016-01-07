@@ -5,6 +5,7 @@
 *  Author: Kolja
 */
 
+
 #include "rosa_queue_manager.h"
 
 PriorityQueue* READYqueue;
@@ -91,9 +92,10 @@ int BLOCKEDcomparator(BlockedPriorityQueueElement *firstElement, BlockedPriority
 	return -1;
 }
 
-void putInBLOCKEDqueue( Task* task )
+void putInBLOCKEDqueue( Task* task, BlockedPriorityQueue* buddyQueue )
 {
 	BlockedPriorityQueueElement *newElement = malloc(sizeof(BlockedPriorityQueueElement));
+	newElement->buddyQueue = buddyQueue ;
 	newElement->task = task;
 	enqueueBlockedPriorityQueue(BLOCKEDqueue, newElement);
 }
@@ -119,7 +121,7 @@ void initializeQueues(void)
 {
 	READYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &READYcomparator );
 	DELAYqueue = createPriorityQueue( MAX_NUMBER_TASKS, &DELAYcomparator );
-	BLOCKEDqueue = createBlockedPriorityQueue( MAX_NUMBER_TASKS*MAX_NUMBER_SEMAPHORES, &BLOCKEDcomparator);
+	BLOCKEDqueue = createBlockedPriorityQueue( MAX_NUMBER_TASKS, &BLOCKEDcomparator);
 }
 
 #if DEBUG_COMPILATION

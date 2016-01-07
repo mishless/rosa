@@ -7,6 +7,9 @@
 #define ROSA_SEMAPHORE_MANAGER_H_
 
 #include "rosa_api_call.h"
+#include "rosa_task_private.h"
+
+
 
 unsigned int ROSA_SemaphoreCreateBinary (SemaphoreHandle* handle,
 											unsigned int initialValue);

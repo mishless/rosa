@@ -68,16 +68,20 @@ void timerISR(void)
 				putInREADYqueue(getCRT());
 				ROSA_yieldFromISRFixed();
 			}
-			else if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
+			
+			else if (isEmptyStack(((Task*)getCRT())->temporaryPriority))
 			{
-				if(round_robin_counter == ROUND_ROBIN_PERIOD)
+				if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
 				{
-					putInREADYqueue(getCRT());
-					ROSA_yieldFromISRFixed();
+					if(round_robin_counter == ROUND_ROBIN_PERIOD)
+					{
+						putInREADYqueue(getCRT());
+						ROSA_yieldFromISRFixed();
+					}
+					else
+					round_robin_counter++;
 				}
-				else
-				round_robin_counter++;
-			}
+			}				
 		}
 	}
 }

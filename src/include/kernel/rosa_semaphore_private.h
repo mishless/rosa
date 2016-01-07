@@ -8,6 +8,8 @@
 
 #include "rosa_api_call.h"
 #include "blocked_priority_queue.h"
+#include "rosa_scheduler_private.h"
+#include "rosa_queue_manager.h"
 
 typedef struct
 {

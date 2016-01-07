@@ -19,6 +19,7 @@ typedef struct {
 Stack *createStack(unsigned int size);
 void destroyStack(Stack *stack);
 void pushIntoStack(Stack *stack, unsigned int element);
+unsigned int peekFromStack(Stack *stack);
 unsigned int popFromStack(Stack *stack);
 unsigned int isEmptyStack(Stack *stack);
 

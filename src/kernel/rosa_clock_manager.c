@@ -32,8 +32,7 @@ void ROSA_DelayRelative (ROSA_TickCount tickCount)
 	ROSA_yield();
 }
 
-void ROSA_DelayAbsolute (ROSA_TickCount reference,
-ROSA_TickCount tickCount)
+void ROSA_DelayAbsolute (ROSA_TickCount reference, ROSA_TickCount tickCount)
 {
 	Task* task;
 	
