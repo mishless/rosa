@@ -22,7 +22,6 @@ typedef struct
 #include "clock_manager_tests.h"
 #include "task_manager_tests.h"
 #include "scheduler_manager_tests.h"
-#include "scheduler_manager_tests.h"
 #include "semaphore_manager_tests.h"
 
 #include "drivers/usart.h"

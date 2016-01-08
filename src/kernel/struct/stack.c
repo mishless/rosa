@@ -54,7 +54,7 @@ unsigned int popFromStack(Stack *stack)
 
 unsigned int peekFromStack(Stack *stack)
 {
-	return stack->top;
+	return stack->data[stack->top];
 }
 
 unsigned int isEmptyStack(Stack *stack)

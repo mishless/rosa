@@ -164,6 +164,7 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 			interruptEnable();
 			ROSA_yield();
 			interruptDisable();
+			return TIMEOUT;
 		}
 	}
 	//Mutex
@@ -172,7 +173,15 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 		if (semaphore->state == SEMAPHORE_FREE)
 		{
 			semaphore->state = SEMAPHORE_OCCUPIED;
-			pushIntoStack(task->temporaryPriority, semaphore->priority);
+			int task_prio = getPriority(task);
+			if (task_prio > semaphore->priority)
+			{
+				pushIntoStack(task->temporaryPriority, task_prio);
+			}
+			else
+			{
+				pushIntoStack(task->temporaryPriority, semaphore->priority);
+			}			
 		}
 		else if( timeout > 0 )
 		{
@@ -181,6 +190,7 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 			interruptEnable();
 			ROSA_yield();
 			interruptDisable();
+			return TIMEOUT;
 		}
 	}
 	interruptEnable();
