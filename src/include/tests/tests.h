@@ -23,6 +23,8 @@ typedef struct
 #include "task_manager_tests.h"
 #include "scheduler_manager_tests.h"
 #include "semaphore_manager_tests.h"
+#include "stress_tests.h"
+#include "integration_tests.h"
 
 #include "drivers/usart.h"
 #include "helper_functions.h"

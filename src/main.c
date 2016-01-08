@@ -84,8 +84,14 @@ unsigned int global_i;
 
 #define SM_TESTS SM_CREATE_BINARY_TESTS, SM_CREATE_PRIORITY_TESTS, SM_CREATE_MIX_TESTS, SM_DELETE_TESTS, SM_TAKE_BINARY_TESTS, SM_TAKE_PRIORITY_TESTS, SM_GIVE_BINARY_TESTS, SM_GIVE_PRIORITY_TESTS
 
+/***** Integration Manager tests *****/
+#define INTEGRATION_TESTS &it_01, &it_02
+
+/***** Stress tests *****/
+#define STRESS_TESTS &it_st_01, &it_st_02
+
 /***** All tests *****/
-#define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS
+#define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS
 					
 							
 /****** Active test cases *****/
