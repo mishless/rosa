@@ -51,11 +51,11 @@ unsigned int global_i;
 /********************* TESTS ************************/
 
 /***** Task Manager Tests *****/
-#define TM_CREATE_TESTS tm_create_01, tm_create_02, tm_create_03, tm_create_04, tm_create_05, tm_create_06, tm_create_08, tm_create_09, tm_create_10
-#define TM_CREATE_CYCLIC_TESTS	tm_create_cyclic_01, tm_create_cyclic_02, tm_create_cyclic_03, tm_create_cyclic_04, tm_create_cyclic_05, tm_create_cyclic_06, tm_create_cyclic_08, tm_create_cyclic_09, tm_create_cyclic_10 
-#define TM_TT_CREATE_TESTS tm_tt_create_01, tm_tt_create_02, tm_tt_create_03, tm_tt_create_04, tm_tt_create_05, tm_tt_create_06, tm_tt_create_08, tm_tt_create_09
-#define TM_MIXED_CREATE_TESTS	tm_mixed_create_01, tm_mixed_create_02, tm_create_23, tm_create_24
-#define TM_TERMINATE_TESTS		tm_terminate_01, /*tm_terminate_02,*/ tm_terminate_03
+#define TM_CREATE_TESTS &tm_create_01, &tm_create_02, &tm_create_03, &tm_create_04, &tm_create_05, &tm_create_06, &tm_create_08, &tm_create_09, &tm_create_10
+#define TM_CREATE_CYCLIC_TESTS	&tm_create_cyclic_01, &tm_create_cyclic_02, &tm_create_cyclic_03, &tm_create_cyclic_04, &tm_create_cyclic_05, &tm_create_cyclic_06, &tm_create_cyclic_08, &tm_create_cyclic_09, &tm_create_cyclic_10 
+#define TM_TT_CREATE_TESTS &tm_tt_create_01, &tm_tt_create_02, &tm_tt_create_03, &tm_tt_create_04, &tm_tt_create_05, &tm_tt_create_06, &tm_tt_create_08, &tm_tt_create_09
+#define TM_MIXED_CREATE_TESTS	&tm_mixed_create_01, &tm_mixed_create_02
+#define TM_TERMINATE_TESTS		&tm_terminate_01, /*&tm_terminate_02,*/ &tm_terminate_03
 
 #define TM_TESTS	TM_CREATE_TESTS, TM_CREATE_CYCLIC_TESTS, TM_TT_CREATE_TESTS, TM_MIXED_CREATE_TESTS, TM_TERMINATE_TESTS
 
@@ -85,7 +85,7 @@ unsigned int global_i;
 					
 							
 /****** Active test cases *****/
-Test *tests[] = {&tm_create_01, &tm_create_02, &tm_create_03};
+Test *tests[] = {TM_TESTS};
 	
 int main(void){
 	char c = 0;

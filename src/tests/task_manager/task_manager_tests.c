@@ -32,10 +32,7 @@ const char suite_create_task[] =	"Create Task";
 /*** TM-CREATE-01 ***/
 	
 void tm_create_01_main()
-{
-	/*ROSA_CreateTask should allocate and populate the task structure 
-	  correctly and assign it to the provided handle.*/
-	
+{	
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
 	
@@ -132,12 +129,11 @@ Test tm_create_03 = {
 	.function =		tm_create_03_main};
 
 /*** TM-CREATE-04 ***/
-void tm_create_04()
+
+void tm_create_04_main()
 {
 	TaskHandle task1, task2, task3;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-04");
 	
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task1);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task2);
@@ -157,11 +153,19 @@ void tm_create_04()
 	send_success();
 }
 
-void tm_create_05()
+Test tm_create_04 = {
+	.id =			"TM-CREATE-04",
+	.description =	"Multiple calls to ROSA_CreateTask should populate the READY queue in the correct way with same task priorities.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_04_main};
+
+/*** TM-CREATE-05 ***/
+
+void tm_create_05_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-05");
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
@@ -171,12 +175,20 @@ void tm_create_05()
 	send_success();
 }
 
-void tm_create_06()
+Test tm_create_05 = {
+	.id =			"TM-CREATE-05",
+	.description =	"Return code from ROSA_CreateTask should be SUCCESS if parameters are valid.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_05_main};
+
+/*** TM-CREATE-06 ***/
+
+void tm_create_06_main()
 {
 	char task_name[5] = TASK_NAME;
 	const int invalid_priority = 0;
-	
-	send_id("TM-CREATE-06");
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, invalid_priority, NULL);
 	
@@ -186,13 +198,19 @@ void tm_create_06()
 	send_success();
 }
 
-/*Not used anymore, since every stack size is valid*/
-void tm_create_07()
+Test tm_create_06 = {
+	.id =			"TM-CREATE-06",
+	.description =	"Return code from ROSA_CreateTask should be INVALID_PRIORITY when 0 is used for priority.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_06_main};
+
+/*Not used anymore, since every stack size is valid
+void tm_create_07_main()
 {
 	char task_name[5] = TASK_NAME;
 	const int invalid_stack_size = 10;
-	
-	send_id("TM-CREATE-07");
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, task_name, invalid_stack_size, PRIORITY_5, NULL);
 	
@@ -201,13 +219,13 @@ void tm_create_07()
 	
 	send_success();
 }
+*/
 
+/*** TM-CREATE-08 ***/
 
-void tm_create_08()
+void tm_create_08_main()
 {
 	char invalid_name[7] = "invalid";
-	
-	send_id("TM-CREATE-08");
 	
 	int return_code = ROSA_CreateTask(TEST_PTR, invalid_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
@@ -217,12 +235,20 @@ void tm_create_08()
 	send_success();
 }
 
-void tm_create_09()
+Test tm_create_08 = {
+	.id =			"TM-CREATE-08",
+	.description =	"Return code from ROSA_CreateTask should be TOO_MANY_TASKS when it 3 tasks are created.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_08_main};
+
+/*** TM-CREATE-09 ***/
+
+void tm_create_09_main()
 {
 	char task_name[5] = TASK_NAME;
 	int i;
-	
-	send_id("TM-CREATE-09");
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
@@ -236,11 +262,19 @@ void tm_create_09()
 	send_success();
 }
 
-void tm_create_10()
+Test tm_create_09 = {
+	.id =			"TM-CREATE-09",
+	.description =	"Return code from ROSA_CreateTask should be NOT_ENOUGH_MEMORY when the system is out of memory.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_create_09_main};
+
+/*** TM-CREATE-10 ***/
+
+void tm_create_10_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-10");
 	
 	int enough_memory;
 	do
@@ -256,15 +290,23 @@ void tm_create_10()
 	send_success();
 }
 
+Test tm_create_10 = {
+	.id =			"TM-CREATE-10",
+	.description =	"ROSA_CreateCyclicTask should allocate and populate the task structure correctly and assign it to the provided handle.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_create_10_main};
 
-// ROSA_CreateCyclicTask
 
-void tm_create_cyclic_01()
+/*************** TEST SUITE: Task Create Cyclic ***************/
+
+/*** TM-CREATE-CYCLIC-01 ***/
+
+void tm_create_cyclic_01_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-CYCLIC-01");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task_handle);
 	
@@ -287,12 +329,20 @@ void tm_create_cyclic_01()
 	send_success();
 }
 
-void tm_create_cyclic_02()
+Test tm_create_cyclic_01 = {
+	.id =			"TM-CREATE-CYCLIC-01",
+	.description =	"ROSA_CreateCyclicTask should allocate and populate the task structure correctly and assign it to the provided handle.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_cyclic_01_main};
+
+/*** TM-CREATE-CYCLIC-02 ***/
+
+void tm_create_cyclic_02_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-		
-	send_id("TM-CREATE-CYCLIC-02");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task_handle);
 	PriorityQueue ready_queue;
@@ -308,7 +358,17 @@ void tm_create_cyclic_02()
 	send_success();
 }
 
-void tm_create_cyclic_03()
+Test tm_create_cyclic_02 = {
+	.id =			"TM-CREATE-CYCLIC-02",
+	.description =	"ROSA_CreateCyclicTask should insert the newly created task in the READY queue.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_cyclic_02_main};
+
+/*** TM-CREATE-CYCLIC-03 ***/
+
+void tm_create_cyclic_03_main()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
 	char task_name[5] = TASK_NAME;
@@ -316,8 +376,6 @@ void tm_create_cyclic_03()
 	const unsigned int priorityHigh = 5;
 	const unsigned int priorityMedium = 4;
 	const unsigned int priorityLow = 3;
-	
-	send_id("TM-CREATE-CYCLIC-03");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityMedium, TEST_PERIOD, TEST_DEADLINE, &taskMediumPriority);
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityLow, TEST_PERIOD, TEST_DEADLINE, &taskLowPriority);
@@ -337,12 +395,20 @@ void tm_create_cyclic_03()
 	send_success();
 }
 
-void tm_create_cyclic_04()
+Test tm_create_cyclic_03 = {
+	.id =			"TM-CREATE-CYCLIC-03",
+	.description =	"Multiple calls to ROSA_CreateCyclicTask should populate the READY queue in the correct way with different task priorities.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_cyclic_03_main};
+
+/*** TM-CREATE-CYCLIC-04 ***/
+
+void tm_create_cyclic_04_main()
 {
 	TaskHandle task1, task2, task3;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-CYCLIC-04");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task1);
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task2);
@@ -362,11 +428,19 @@ void tm_create_cyclic_04()
 	send_success();
 }
 
-void tm_create_cyclic_05()
+Test tm_create_cyclic_04 = {
+	.id =			"TM-CREATE-CYCLIC-04",
+	.description =	"Multiple calls to ROSA_CreateCyclicTask should populate the READY queue in the correct way with same task priorities.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_create_cyclic_04_main};
+
+/*** TM-CREATE-CYCLIC-05 ***/
+
+void tm_create_cyclic_05_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-CYCLIC-05");
 	
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -376,12 +450,20 @@ void tm_create_cyclic_05()
 	send_success();
 }
 
-void tm_create_cyclic_06()
+Test tm_create_cyclic_05 = {
+	.id =			"TM-CREATE-CYCLIC-05",
+	.description =	"Return code from ROSA_CreateCyclicTask should be SUCCESS if parameters are valid.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_cyclic_05_main};
+
+/*** TM-CREATE-CYCLIC-06 ***/
+
+void tm_create_cyclic_06_main()
 {
 	char task_name[5] = TASK_NAME;
 	const int invalid_priority = 0;
-	
-	send_id("TM-CREATE-CYCLIC-06");
 	
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, invalid_priority, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -391,7 +473,16 @@ void tm_create_cyclic_06()
 	send_success();
 }
 
-/*Not used anymore, since every stack size is valid*/
+Test tm_create_cyclic_06 = {
+	.id =			"TM-CREATE-CYCLIC-06",
+	.description =	"Return code from ROSA_CreateCyclicTask should be INVALID_PRIORITY when 0 is used for priority.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_cyclic_06_main};
+
+
+/*Not used anymore, since every stack size is valid
 void tm_create_cyclic_07()
 {
 	TaskHandle task;
@@ -408,12 +499,13 @@ void tm_create_cyclic_07()
 	
 	send_success();
 }
+*/
 
-void tm_create_cyclic_08()
+/*** TM-CREATE-CYCLIC-09 ***/
+
+void tm_create_cyclic_08_main()
 {
 	char invalid_name[] = "invalid";
-	
-	send_id("TM-CREATE-CYCLIC-08");
 	
 	int return_code = ROSA_CreateCyclicTask(TEST_PTR, invalid_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, NULL);
 	
@@ -423,12 +515,20 @@ void tm_create_cyclic_08()
 	send_success();
 }
 
-void tm_create_cyclic_09()
+Test tm_create_cyclic_08 = {
+	.id =			"TM-CREATE-CYCLIC-08",
+	.description =	"Return code from ROSA_CreateCyclicTask should be TOO_MANY_TASKS when it 3 tasks are created.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_cyclic_08_main};
+
+/*** TM-CREATE_CYCLIC-09 ***/
+
+void tm_create_cyclic_09_main()
 {
 	char task_name[5] = TASK_NAME;
 	int i;
-	
-	send_id("TM-CREATE-CYCLIC-09");
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
@@ -442,11 +542,19 @@ void tm_create_cyclic_09()
 	send_success();
 }
 
-void tm_create_cyclic_10()
+Test tm_create_cyclic_09 = {
+	.id =			"TM-CREATE-CYCLIC-09",
+	.description =	"Return code from ROSA_CreateCyclicTask should be NOT_ENOUGH_MEMORY when the system is out of memory.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_create_cyclic_09_main};
+
+/*** TM-CREATE-CYCLIC-10 ***/
+
+void tm_create_cyclic_10_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-CYCLIC-10");
 	
 	int enough_memory;
 	do
@@ -462,14 +570,22 @@ void tm_create_cyclic_10()
 	send_success();
 }
 
-// mixed ROSA_CreateCyclicTask and ROSA_CreateTask
+Test tm_create_cyclic_10 = {
+	.id =			"TM-CREATE-CYCLIC-10",
+	.description =	"Creation of a cyclic task and a normal task with the same priority.",
+	.plan =			"Task Manager",
+	.suite =		"Create Cyclic Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_create_cyclic_10_main};
 
-void tm_mixed_create_01()
+/**************** TEST SUITE: CREATE TASK MIXED ****************/
+
+/*** TM-MIXED-CREATE-01 ***/
+
+void tm_mixed_create_01_main()
 {
 	TaskHandle taskCyclic1, taskCyclic2, taskOrdinary;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-MIXED-CREATE-01");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &taskCyclic1);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskOrdinary);
@@ -489,7 +605,17 @@ void tm_mixed_create_01()
 	send_success();
 }
 
-void tm_mixed_create_02()
+Test tm_mixed_create_01 = {
+	.id =			"TM-MIXED-CREATE-01",
+	.description =	"Creation of a cyclic task and a normal task with the same priority.",
+	.plan =			"Task Manager",
+	.suite =		"Create Mixed Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_mixed_create_01_main};
+
+/*** TM-MIXED-CREATE-02 ***/
+
+void tm_mixed_create_02_main()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
 	char task_name[5] = TASK_NAME;
@@ -498,8 +624,6 @@ void tm_mixed_create_02()
 	const unsigned int priorityHigh = 5;
 	const unsigned int priorityMedium = 4;
 	const unsigned int priorityLow = 3;
-	
-	send_id("TM-MIXED-CREATE-02");
 	
 	ROSA_CreateCyclicTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityMedium, TEST_PERIOD, TEST_DEADLINE, &taskMediumPriority);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityLow, &taskLowPriority);
@@ -519,62 +643,18 @@ void tm_mixed_create_02()
 	send_success();
 }
 
-/****************TM-CREATE-23****************/
-unsigned int tmcr23_flag = 0;
-void tmcr23_high()
-{
-	tmcr23_flag = 1;
-	ROSA_TerminateTask();
-	send_fail();
-}
-
-void tmcr23_low()
-{
-	TaskHandle high;
-	ROSA_CreateTask(tmcr23_high, "high", SMALL_STACK_SIZE, 6, &high);
-	while(tmcr23_flag == 0);
-	send_success();
-}
-
-void tm_create_23()
-{
-	TaskHandle low;
-	
-	send_id("TM-CREATE-23");
-	
-	ROSA_CreateTask(tmcr23_low, "tst", SMALL_STACK_SIZE, 5, &low);
-	
-	ROSA_Start();
-	send_fail();
-}
-
-/************TM-CREATE-24***************/
-void tmcr24_low()
-{
-	send_fail();
-}
-
-void tmcr24_high()
-{
-	TaskHandle low;
-	ROSA_CreateTask(tmcr24_low, "low", SMALL_STACK_SIZE, 4, &low);
-	busy_wait(20);
-	send_success();
-}
+Test tm_mixed_create_02 = {
+	.id =			"TM-MIXED-CREATE-02",
+	.description =	"Creation of a cyclic task and a normal task with different priority.",
+	.plan =			"Task Manager",
+	.suite =		"Create Mixed Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_mixed_create_02_main};
 
 
+/************ TEST SUITE: CREATE TASK FROM TASK ************/
 
-void tm_create_24()
-{
-	TaskHandle high;
-	
-	send_id("TM-CREATE-24");
-	ROSA_CreateTask(tmcr24_high, "high", SMALL_STACK_SIZE, 5, &high);
-	ROSA_Start();
-	send_fail();
-}
-
-//Create Task functionality from a task
+/*** TM-TT-CREATE-01 ***/
 
 void tmtc1()
 {
@@ -597,16 +677,24 @@ void tmtc1()
 	send_success();
 }
 
-void tm_tt_create_01()
+void tm_tt_create_01_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-01");
 	
 	ROSA_CreateTask(tmtc1, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
+
+Test tm_tt_create_01 = {
+	.id =			"TM-TT-CREATE-01",
+	.description =	"ROSA_CreateTask should allocate and populate the task structure correctly and assign it to the provided handle.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_tt_create_01_main};
+
+/*** TM-TT-CREATE-02 ***/
 
 void tmtc2()
 {
@@ -631,16 +719,24 @@ void tmtc2()
 	send_success();
 }
 
-void tm_tt_create_02()
+void tm_tt_create_02_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-02");
 	
 	ROSA_CreateTask(tmtc2, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
+
+Test tm_tt_create_02 = {
+	.id =			"TM-TT-CREATE-02",
+	.description =	"ROSA_CreateTask should insert the newly created task in the READY queue.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_tt_create_02_main};
+
+/*** TM-TT-CREATE-03 ***/
 
 void tmtc3()
 {
@@ -670,16 +766,24 @@ void tmtc3()
 	send_success();
 }
 
-void tm_tt_create_03()
+void tm_tt_create_03_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-03");
 	
 	ROSA_CreateTask(tmtc3, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
+
+Test tm_tt_create_03 = {
+	.id =			"TM-TT-CREATE-03",
+	.description =	"Multiple calls to ROSA_CreateTask should populate the READY queue in the correct way with different task priorities.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_tt_create_03_main};
+
+/*** TM-TT-CREATE-04 ***/
 
 void tmtc4()
 {
@@ -704,17 +808,24 @@ void tmtc4()
 	send_success();
 }
 
-void tm_tt_create_04()
+void tm_tt_create_04_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-04");
 	
 	ROSA_CreateTask(tmtc4, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
 
+Test tm_tt_create_04 = {
+	.id =			"TM-TT-CREATE-04",
+	.description =	"Multiple calls to ROSA_CreateTask should populate the READY queue in the correct way with same task priorities.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_tt_create_04_main};
+
+/*** TM-TT-CREATE-05 ***/
 void tmtc5()
 {
 	char task_name[5] = TASK_NAME;
@@ -727,16 +838,24 @@ void tmtc5()
 	send_success();
 }
 
-void tm_tt_create_05()
+void tm_tt_create_05_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-05");
 	
 	ROSA_CreateTask(tmtc5, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
+
+Test tm_tt_create_05 = {
+	.id =			"TM-TT-CREATE-05",
+	.description =	"Return code from ROSA_CreateTask should be SUCCESS if parameters are valid.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_tt_create_05_main};
+
+/*** TM-TT-CREATE-06 ***/
 
 void tmtc6()
 {
@@ -751,16 +870,24 @@ void tmtc6()
 	send_success();
 }
 
-void tm_tt_create_06()
+void tm_tt_create_06_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-06");
 	
 	ROSA_CreateTask(tmtc6, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
+
+Test tm_tt_create_06 = {
+	.id =			"TM-TT-CREATE-06",
+	.description =	"Return code from ROSA_CreateTask should be INVALID_PRIORITY when 0 is used for priority.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_tt_create_06_main};
+
+/*
 
 void tmtc7()
 {
@@ -775,17 +902,16 @@ void tmtc7()
 	send_success();
 }
 
-/*Not used anymore, since every stack size is valid*/
 void tm_tt_create_07()
 {
 	TaskHandle task_handle;
 	
-	send_id("TM-TT-CREATE-07");
-	
 	ROSA_CreateTask(tmtc7, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
-}
+}*/
+
+/*** TM-TT-CREATE-08 ***/
 
 void tmtc8()
 {
@@ -799,16 +925,24 @@ void tmtc8()
 	send_success();
 }
 
-void tm_tt_create_08()
+void tm_tt_create_08_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-08");
 	
 	ROSA_CreateTask(tmtc8, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
+
+Test tm_tt_create_08 = {
+	.id =			"TM-TT-CREATE-08",
+	.description =	"Return code from ROSA_CreateTask should be TOO_MANY_TASKS when it 3 tasks are created.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_tt_create_08_main};
+
+/*** TM-TT-CREATE-09 ***/
 
 void tmtc9()
 {
@@ -827,18 +961,24 @@ void tmtc9()
 	send_success();
 }
 
-void tm_tt_create_09()
+void tm_tt_create_09_main()
 {
 	TaskHandle task_handle;
-	
-	send_id("TM-TT-CREATE-09");
 	
 	ROSA_CreateTask(tmtc8, "task", SMALL_STACK_SIZE, 5, &task_handle);
 	ROSA_Start();
 	send_fail();
 }
 
-// TERMINATE
+Test tm_tt_create_09 = {
+	.id =			"TM-TT-CREATE-09",
+	.description =	"Return code from ROSA_CreateTask should be TOO_MANY_TASKS when it 3 tasks are created.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task From Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_tt_create_09_main};
+
+/********** TEST SUITE: TERMINATE TASK **************/
 
 void success_sender(void)
 {
@@ -851,11 +991,11 @@ void terminate_myself(void)
 	send_fail();
 }
 
-void tm_terminate_01()
+/*** TM-TERMINATE-01 ***/
+
+void tm_terminate_01_main()
 {
 	int high_priority = 5, low_priority = 3;
-	
-	send_id("TM-TERMINATE-01");
 	
 	ROSA_CreateTask(&terminate_myself, "high", SMALL_STACK_SIZE, high_priority, NULL);
 	ROSA_CreateTask(&success_sender, "low", SMALL_STACK_SIZE, low_priority, NULL);
@@ -865,6 +1005,13 @@ void tm_terminate_01()
 	send_fail();
 }
 
+Test tm_terminate_01 = {
+	.id =			"TM-TERMINATE-01",
+	.description =	"When user calls and invokes ROSA_TerminateTask, the task should be terminated.",
+	.plan =			"Task Manager",
+	.suite =		"Terminate Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_terminate_01_main};
 
 /*void mess_up_CRT_and_terminate(void)
 {
@@ -887,7 +1034,7 @@ void tm_terminate_02()
 	send_fail();
 }*/
 
-
+/*** TM-TERMINATE-03 ***/
 unsigned int task_creation_counter = 0;
 
 void make_clone_and_terminate(void)
@@ -901,13 +1048,19 @@ void make_clone_and_terminate(void)
 	ROSA_TerminateTask();
 }
 
-void tm_terminate_03()
+void tm_terminate_03_main()
 {
-	send_id("TM-TERMINATE-03");
-	
 	ROSA_CreateTask(&make_clone_and_terminate, "high", SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
 	ROSA_Start();
 	
 	send_fail();
 }
+
+Test tm_terminate_03 = {
+	.id =			"TM-TERMINATE-03",
+	.description =	"Check for memory leaks using stress test.",
+	.plan =			"Task Manager",
+	.suite =		"Terminate Task",
+	.type =			TEST_FUNCTIONAL,
+.function =		tm_terminate_03_main};
