@@ -95,8 +95,7 @@ unsigned int global_i;
 
 /***** All tests *****/
 #define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS
-					
-							
+
 /****** Active test cases *****/
 Test *tests[] = {&sm_take_prio_13};
 	
