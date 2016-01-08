@@ -195,10 +195,10 @@ void swedish_test_main()
 	ROSA_SemaphoreCreatePrio(&semaphore_1, SEMAPHORE_FREE, PRIORITY_4);
 	ROSA_SemaphoreCreatePrio(&semaphore_2, SEMAPHORE_FREE, PRIORITY_4);
 	
-	ROSA_CreateCyclicTask(task_1, task_name, SMALL_STACK_SIZE, PRIORITY_4, PERIOD, DEADLINE, NULL);
-	ROSA_CreateCyclicTask(task_2, task_name, SMALL_STACK_SIZE, PRIORITY_3, PERIOD, DEADLINE, NULL);
-	ROSA_CreateCyclicTask(task_3, task_name, SMALL_STACK_SIZE, PRIORITY_2, PERIOD, DEADLINE, NULL);
-	ROSA_CreateCyclicTask(task_4, task_name, SMALL_STACK_SIZE, PRIORITY_1, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_1, task_name, 4096, PRIORITY_4, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_2, task_name, 4096, PRIORITY_3, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_3, task_name, 4096, PRIORITY_2, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_4, task_name, 4096, PRIORITY_1, PERIOD, DEADLINE, NULL);
 	
 	ROSA_StartScheduler();
 }

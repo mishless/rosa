@@ -49,7 +49,7 @@ void run_test(Test test)
 		usart_write("&type=")
 		usart_write( (test.type == TEST_FUNCTIONAL) ? ("f") : ("p") );
 		usartWriteChar(&AVR32_USART0, 0);
-		(void (*)())test.function();
+		((void (*)())test.function)();
 	}
 	else if(test.type == TEST_PERFORMANCE)
 	{
@@ -74,7 +74,7 @@ void run_test(Test test)
 		/*If the test doesn't use a parameter, just run it*/
 		if(str[0] == '-')
 		{
-			test.function();
+			((void (*)())test.function)();
 		}
 	}
 }

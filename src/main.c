@@ -97,7 +97,7 @@ unsigned int global_i;
 #define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS
 
 /****** Active test cases *****/
-Test *tests[] = {&sm_take_prio_13};
+Test *tests[] = {&swedish_test};
 	
 int main(void){
 	char c = 0;
