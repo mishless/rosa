@@ -1,22 +1,25 @@
 import sys, getopt, serial, os, webbrowser
 from array import *
+from enum import Enum
+from collections import namedtuple
 
 # TODO: Directory to store reports from ROSA testing tool
 directory = './logs'
 # The COM port that will be used for the testing session
-com_port = None
+comPort = None
 
 # The total number of test cases
 total_tc_number = 0;
 # The currently executing test case
-current_tc = 0;
+currentTestCaseNumber = 0
+currentTestCase = None
 # The state of the currently executing test case
 # 0 means it hasn't reported and 1 that it has reported
-current_tc_state = 0;
+currentTestCaseNumber_state = 0;
 # Array buffer of chars
 buffer = array('B', []);
 #Counter for success
-successCounter = 0;
+successCounter = 0
 
 # Check if the directory to store reports exist and create it if it doesn't
 if not os.path.exists(directory):
@@ -33,14 +36,14 @@ if (len(options) == 0):
 	sys.exit(2)
 for option, argument in options:
 	if option in ("-c", "--com_port"):
-		com_port = argument
+		comPort = argument
 	else:
 		print('testing_tool.py -c <com_port>')
 		sys.exit(2)
-print('COM port #%s will be used.\n' % com_port)
+print('COM port #%s will be used.\n' % comPort)
 
-port = 'COM' + str(com_port)
-ser = serial.Serial(port,56700)
+port = 'COM' + str(comPort)
+ser = serial.Serial(port,56700,timeout=0)
 value = 0
 
 numberOfTestCasesMsg = 'The total number of test cases is {0}.'
@@ -50,15 +53,29 @@ currentResult = ''
 currentId = ''
 
 html = '<html style="background-image: url(\'background.png\');color: #353535; font-family:\'Verdana\';"><title>ROSA Test Cases Results</title><body><div style=\'padding:40px\'><div>{0}</div><div style=\'display:table;\'>{1}</div><div>{2}</div></div><body></html>'
-title = '<div style="padding-bottom:20px;font-size:larger;">ROSA Test Cases Results</div>'
+title = '<div style=\'display: table; padding-bottom: 15px;\'><div style=\'background-image: url("logo.png");background-size: 40px;height: 40px;background-repeat: no-repeat;display: table-cell;width: 40px;padding-right: 15px;\'></div><div style="font-size:larger;display: table-cell;vertical-align: middle;height: 40px;">ROSA Test Cases Results</div></div>'
 testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
 table = ''
 row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div></div>'
 
+# States INITIALIZE, WAITING_FOR_NUMBER_OF_TEST_CASES, WAITING_FOR_TEST_CASE_INFORMATION, WAITING_FOR_NORMAL_TEST_CASE_RESULT, WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT 
+class States(Enum):
+	INITIALIZE = 0
+	WAITING_FOR_NUMBER_OF_TEST_CASES = 1
+	WAITING_FOR_REQUEST = 2
+	REPORT_RESULT = 3
+	WAITING_FOR_TEST_CASE_INFORMATION = 4
+	WAITING_FOR_NORMAL_TEST_CASE_RESULT = 5
+	WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT = 6
+	FINISHED = 7
+	
+TestCase = namedtuple('TestCase', 'id description plan suite type')
+
+state = States.INITIALIZE
+
 while 1:
 	try:
-		#If the total number of test cases is already set and we haven't reached the maximum number of test cases
-		if (total_tc_number != 0 and current_tc == total_tc_number + 1):
+		if (state is States.FINISHED):
 			successfulTestCasesMsg = successfulTestCasesMsg.format(successCounter)
 			unsuccessfulCounter = (int(total_tc_number)) - successCounter
 			unsuccessfulTestCasesMsg = unsuccessfulTestCasesMsg.format(unsuccessfulCounter)
@@ -72,56 +89,126 @@ while 1:
 			webbrowser.open(url)
 			break
 		value = ser.read()
-		if (value == b'?'):
-			# The board is asking "What should I do?"
-			if (total_tc_number == 0):
+		if (state is States.INITIALIZE):
+			if (value == b'?'):
 				# Testing tool answers "Give me the number of test cases."
 				print('Give me the number of test cases.')
+				state = States.WAITING_FOR_NUMBER_OF_TEST_CASES
+				print("State changed to States.WAITING_FOR_NUMBER_OF_TEST_CASES")
 				ser.write(b'#');
-			else:
-				# If there is a current test case running and it has not reported yet report failure
-				# else set the report flag for the next tast case to 0
-				if (current_tc != 0 and current_tc_state == 0):
-					currentResult = 'failure'
-					print('Failure!')
-				else:
-					current_tc_state = 0
-				table = table + row.format(currentResult, currentId)
-				# Testing tool answers "Run the current test case." and increments it
-				ser.write(b'%');
-				ser.write(str(current_tc).encode())
-				ser.write(b'\r')
-				current_tc = current_tc + 1
-		elif (value == b'^'):
-			current_tc_state = 1
-			successCounter += 1
-			currentResult = 'success'
-			print('Success!')
-		elif (value == b'_'):
-			current_tc_state = 1;
-			currentResult = 'failure'
-			print('Failure!')
-		elif (value == b'\x00'):
-			# If there is nothing in the buffer continue
-			if (len(buffer) == 0):
+		elif (state is States.WAITING_FOR_NUMBER_OF_TEST_CASES):
+			if (value == b''):
 				continue
-			# If the total number of test cases is not set, set it
-			if (total_tc_number == 0):
+			if (value == b'\x00'):
+				# If there is nothing in the buffer continue
+				if (len(buffer) == 0):
+					continue
 				# This is the total number of test cases
 				total_tc_number = int(buffer.tostring())
 				numberOfTestCasesMsg = numberOfTestCasesMsg.format(total_tc_number)
 				testInformation = testInformation.format(numberOfTestCasesMsg)
+				# Empty the buffer
+				buffer = array('B', [])
+				state = States.WAITING_FOR_REQUEST
+				print("State changed to States.WAITING_FOR_REQUEST")
 			else:
-				# The board has sent an end transmission character - flush the buffer and print the test case ID
-				print(buffer[3:].tostring().decode('ascii'), end=" ")
-				currentId = buffer[3:].tostring().decode('ascii').strip().strip("\n")
-			# Empty the buffer
-			buffer = array('B', [])
-		elif (value == b''):
-			continue
-		else:
-			# Append to the buffer
-			buffer.append(ord(value));
+				# Append to the buffer
+				buffer.append(ord(value))
+		elif (state is States.WAITING_FOR_REQUEST):
+			if (value == b'?'):
+				# Testing tool answers "Run the current test case." and increments it
+				state = States.WAITING_FOR_TEST_CASE_INFORMATION
+				print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
+				ser.write(b'%');
+				ser.write(str(currentTestCaseNumber).encode())
+				ser.write(b'\r')
+				currentTestCaseNumber = currentTestCaseNumber + 1
+		elif (state is States.WAITING_FOR_TEST_CASE_INFORMATION):
+			if (value == b''):
+				continue
+			if (value == b'\x00'):
+				# If there is nothing in the buffer continue
+				if (len(buffer) == 0):
+					continue
+				else:
+					# The board has sent an end transmission character - flush the buffer and print the test case ID
+					# print(buffer.tostring().decode('ascii'), end=" ")
+					id = ''
+					description = ''
+					plan = ''
+					suite = ''
+					type = ''
+					tuplesArray = buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r").split("&")
+					for tuple in tuplesArray:
+						keyValueArray = tuple.split("=")
+						if (keyValueArray[0] == 'id'):
+							id = keyValueArray[1]
+						elif (keyValueArray[0] == 'description'):
+							description = keyValueArray[1]
+						elif (keyValueArray[0] == 'plan'):
+							plan = keyValueArray[1]
+						elif (keyValueArray[0] == 'suite'):
+							suite = keyValueArray[1]
+						elif (keyValueArray[0] == 'type'):
+							type = keyValueArray[1]
+					currentTestCase = TestCase(id, description, plan, suite, type)
+					# Empty the buffer
+					buffer = array('B', [])
+					# Check the type and put in correct state
+					if (currentTestCase.type == 'f'):
+						state = States.WAITING_FOR_NORMAL_TEST_CASE_RESULT
+						print("State changed to States.WAITING_FOR_NORMAL_TEST_CASE_RESULT")
+					elif (currentTestCase.type == 'p'):
+						state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
+						print("State changed to States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT")
+			else:
+				# Append to the buffer
+				buffer.append(ord(value));
+		elif (state is States.WAITING_FOR_NORMAL_TEST_CASE_RESULT):
+			if (value == b'^'):
+				currentTestCaseNumber_state = 1
+				successCounter += 1
+				currentResult = 'success'
+				print('Success!')
+			elif (value == b'_'):
+				currentTestCaseNumber_state = 1;
+				currentResult = 'failure'
+				print('Failure!')
+			elif (value == b'?'):
+				currentResult = 'failure'
+				print('Failure!')
+			else:
+				continue
+			state = States.REPORT_RESULT
+			print("State changed to States.REPORT_RESULT")
+		elif (state is States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT):
+			if (value == b''):
+				continue
+			if (value == b'\x00'):
+				# If there is nothing in the buffer continue
+				if (len(buffer) == 0):
+					continue
+				else:
+					result = buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r")
+					# Empty the buffer
+					buffer = array('B', [])
+					# Check the type and put in correct state
+					if (currentTestCase.type == 'f'):
+						state = States.WAITING_FOR_NORMAL_TEST_CASE_RESULT
+					elif (currentTestCase.type == 'p'):
+						state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
+			else:
+				# Append to the buffer
+				buffer.append(ord(value));
+		elif (state is States.REPORT_RESULT):
+			print("HERE")
+			table = table + row.format(currentResult, currentTestCase.id)
+			if (currentTestCaseNumber == total_tc_number):
+				state = States.FINISHED
+				print("State changed to States.FINISHED")
+			else:
+				state = States.WAITING_FOR_REQUEST
+				print("State changed to States.WAITING_FOR_REQUEST")
 	# Catch Ctrl-C
 	except KeyboardInterrupt:
 		print('Testing tool terminated by the user.')
