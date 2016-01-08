@@ -6,10 +6,10 @@
  */ 
 
 #include <avr32/io.h>
-#include "clock_manager_tests.h"
 #include "helper_functions.h"
 #include "rosa_api_call.h"
 #include "rosa_task_private.h"
+#include "clock_manager_tests.h"
 #include "rosa_ker.h"
 #include "tests.h"
 #include "rosa_queue_manager.h"
@@ -24,7 +24,9 @@
 #define PRIORITY_4 4
 #define PRIORITY_3 3
 
-// Test Cases for ROSA_TimerTickCount
+/*************** TEST SUITE: Get Ticks ***************/
+
+/** SCM-GETTICKS-01 **/
 
 void check_tick_count_updates_for_20_ticks(void)
 {
@@ -43,25 +45,47 @@ void check_tick_count_updates_for_20_ticks(void)
 	send_success();
 }
 
-void scm_getTicks_01(void)
+void scm_getTicks_01_main(void)
 {
-	send_id("SCM-GETTICKS-01");
-	
+	/* ROSA_TimerTickCount successive calls should return larger numbers 
+	compared to previous calls. */
 	ROSA_CreateTask(&check_tick_count_updates_for_20_ticks, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
 
-void scm_getTicks_02(void)
+Test scm_getTicks_01 = {
+	.id =			"SCM-GETTICKS-01",
+	.description =	"ROSA_TimerTickCount successive calls should return larger numbers compared to previous calls.",
+	.plan =			"System Clock Manager",
+	.suite =		"Get Ticks",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_getTicks_01_main
+};
+
+/** SCM-GETTICKS-02 **/
+
+void scm_getTicks_02_main(void)
 {
-	send_id("SCM-GETTICKS-02");
-	
+	/* ROSA_TimerTickCount calls before starting scheduler should always return zero. */
+
 	if (ROSA_TimerTickCount() == 0)
 		send_success();
 	else
 		send_fail();
 }
 
-// Test Cases for ROSA_DelayRelative
+Test scm_getTicks_02 = {
+	.id =			"SCM-GETTICKS-02",
+	.description =	"ROSA_TimerTickCount calls before starting scheduler should always return zero.",
+	.plan =			"System Clock Manager",
+	.suite =		"Get Ticks",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_getTicks_02_main
+};
+
+/*************** TEST SUITE: Delay Relative ***************/
+
+/** SCM-RELATIVE-01 **/
 
 int is_delayed = 1;
 
@@ -81,14 +105,25 @@ void check_if_other_is_delayed(void)
 		send_fail();
 }
 
-void scm_delayRelative_01(void)
+void scm_delayRelative_01_main(void)
 {
-	send_id("SCM-RELATIVE-01");
+	/* ROSA_ DelayRelative should delay a task for a long time and task should stop working for a short time. */
 	
 	ROSA_CreateTask(&delay_for_long_time_and_set_flag, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(&check_if_other_is_delayed, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_01 = {
+	.id =			"SCM-RELATIVE-01",
+	.description =	"ROSA_ DelayRelative should delay a task for a long time and task should stop working for a short time.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_01_main
+};
+
+/** SCM-RELATIVE-02 **/
 
 void relativeDelayAndSendSuccess(void)
 {
@@ -96,12 +131,22 @@ void relativeDelayAndSendSuccess(void)
 	send_success();
 }
 
-void scm_delayRelative_02(void)
+void scm_delayRelative_02_main(void)
 {
-	send_id("SCM-RELATIVE-02");
 	ROSA_CreateTask(&relativeDelayAndSendSuccess, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_02 = {
+	.id =			"SCM-RELATIVE-02",
+	.description =	"Task calling ROSA_DelayRelative should wake up.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_02_main
+};
+
+/** SCM-RELATIVE-03 **/
 
 TaskHandle task_delay_myself;
 
@@ -121,14 +166,24 @@ void check_if_other_is_in_delay_queue(void)
 	send_success();
 }
 
-void scm_delayRelative_03(void)
+void scm_delayRelative_03_main(void)
 {
-	send_id("SCM-RELATIVE-03");
-	
+	/* Task which calls ROSA_DelayRelative should be in DELAY queue. */
 	ROSA_CreateTask(&delay_for_long_time, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, &task_delay_myself);
 	ROSA_CreateTask(&check_if_other_is_in_delay_queue, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_03 = {
+.id =			"SCM-RELATIVE-03",
+.description =	"Task which calls ROSA_DelayRelative should be in DELAY queue.",
+.plan =			"System Clock Manager",
+.suite =		"Delay Relative",
+.type =			TEST_FUNCTIONAL,
+.function =		scm_delayRelative_03_main
+};
+
+/** SCM-RELATIVE-04 **/
 
 ROSA_TickCount ticks_before_delay;
 
@@ -147,14 +202,25 @@ void check_other_tasks_wakeup_time(void)
 	send_success();
 }
 
-void scm_delayRelative_04(void)
+void scm_delayRelative_04_main(void)
 {
-	send_id("SCM-RELATIVE-04");
-	
+	/* Task which calls ROSA_DelayRelative should have correct wake up time. */
+
 	ROSA_CreateTask(&write_current_ticks_and_delay, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(&check_other_tasks_wakeup_time, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_04 = {
+	.id =			"SCM-RELATIVE-04",
+	.description =	"Task which calls ROSA_DelayRelative should have correct wake up time.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_04_main
+};
+
+/** SCM-RELATIVE-05 **/
 
 void delay_and_check_for_how_long_have_i_been_delayed(void)
 {
@@ -168,13 +234,23 @@ void delay_and_check_for_how_long_have_i_been_delayed(void)
 	send_fail();
 }
 
-void scm_delayRelative_05(void)
+void scm_delayRelative_05_main(void)
 {
-	send_id("SCM-RELATIVE-05");
-	
+	/** Task which calls ROSA_DelayRelative should wake up at correct time. **/
 	ROSA_CreateTask(&delay_and_check_for_how_long_have_i_been_delayed, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_05 = {
+	.id =			"SCM-RELATIVE-05",
+	.description =	"Task which calls ROSA_DelayRelative should wake up at correct time.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_05_main
+};
+
+/** SCM-RELATIVE-06 **/
 
 void delay_to_past(void)
 {
@@ -188,14 +264,25 @@ void sendFailTask(void) {
 	send_fail();
 }
 
-void scm_delayRelative_06(void)
+void scm_delayRelative_06_main(void)
 {
-	send_id("SCM-RELATIVE-06");
-	
+	/* Task which calls ROSA_DelayRelative for invalid amount of time might wake up immediately. */
+
 	ROSA_CreateTask(&delay_to_past, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(&sendFailTask, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_06 = {
+	.id =			"SCM-RELATIVE-06",
+	.description =	"Task which calls ROSA_DelayRelative for invalid amount of time might wake up immediately.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_06_main
+};
+
+/** SCM-RELATIVE-07 **/
 
 void delay_and_check_delay_queue_after(void)
 {
@@ -206,12 +293,24 @@ void delay_and_check_delay_queue_after(void)
 	send_fail();
 }
 
-void scm_delayRelative_07(void)
+void scm_delayRelative_07_main(void)
 {
-	send_id("SCM-RELATIVE-07");
+	/* Then task wakes up, it shouldn't be in DELAY queue. */
+
 	ROSA_CreateTask(&delay_and_check_delay_queue_after, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_07 = {
+	.id =			"SCM-RELATIVE-07",
+	.description =	"Then task wakes up, it shouldn't be in DELAY queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_07_main
+};
+
+/** SCM-RELATIVE-08 **/
 
 TaskHandle task_delay_long, task_delay_medium, task_delay_short;
 
@@ -251,15 +350,27 @@ void check_state_of_tasks_in_delay_queue(void)
 	send_success();
 }
 
-void scm_delayRelative_08(void)
+void scm_delayRelative_08_main(void)
 {
-	send_id("SCM-RELATIVE-08");
+	/* Delay 3 tasks and check the sorting in the DELAY queue. */
+
 	ROSA_CreateTask(&delay_long, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_5, &task_delay_long);
 	ROSA_CreateTask(&delay_medium, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_6, &task_delay_medium);
 	ROSA_CreateTask(&delay_short, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_4, &task_delay_short);
 	ROSA_CreateTask(&check_state_of_tasks_in_delay_queue, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayRelative_08 = {
+	.id =			"SCM-RELATIVE-08",
+	.description =	"Delay 3 tasks and check the sorting in the DELAY queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_08_main
+};
+
+/** SCM-RELATIVE-09 **/
 
 void delay_for_zero_ticks(void)
 {
@@ -271,14 +382,26 @@ void delay_for_zero_ticks(void)
 	send_fail();
 }
 
-void scm_delayRelative_09(void)
+void scm_delayRelative_09_main (void)
 {
-	send_id("SCM-RELATIVE-09");
+	/* ROSA_DelayRelative with argument zero should wake up task on next tick. */
+
 	ROSA_CreateTask(&delay_and_check_delay_queue_after, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
 
-// Test Cases for ROSA_DelayAbsolute
+Test scm_delayRelative_09 = {
+	.id =			"SCM-RELATIVE-09",
+	.description =	"ROSA DelayRelative with argument zero should wake up task on next tick.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Relative",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayRelative_09_main
+};
+
+/*************** TEST SUITE: Delay Absolute ***************/
+
+/** SCM-ABSOULUTE-01 **/
 
 int is_absolute_delayed = 1;
 
@@ -297,14 +420,25 @@ void check_if_other_is_absolute_delayed(void)
 		send_fail();
 }
 
-void scm_delayAbsolute_01(void)
+void scm_delayAbsolute_01_main(void)
 {
-	send_id("SCM-ABSOLUTE-01");
-	
+	/* ROSA_DelayAbsolute should delay a task for a long time and task should stop working for a short time. */
+
 	ROSA_CreateTask(&delay_absolute_for_long_time_and_set_flag, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(&check_if_other_is_absolute_delayed, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayAbsolute_01 = {
+	.id =			"SCM-ABSOULUTE-01",
+	.description =	"ROSA-DelayAbsolute should delay a task for a long time and task should stop working for a short time.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_01_main
+};
+
+/** SCM-ABSOULUTE-02 **/
 
 void delay_absolute_and_check_for_wake_up(void)
 {
@@ -312,13 +446,24 @@ void delay_absolute_and_check_for_wake_up(void)
 	send_success();
 }
 
-void scm_delayAbsolute_02(void)
+void scm_delayAbsolute_02_main(void)
 {
-	send_id("SCM-ABSOLUTE-02");
-	
+	/* Task calling ROSA_DelayAbsolute should wake up. */
+
 	ROSA_CreateTask(&delay_absolute_and_check_for_wake_up, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayAbsolute_02 = {
+	.id =			"SCM-ABSOULUTE-02",
+	.description =	"Task calling ROSA_DelayAbsolute should wake up.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_02_main
+};
+
+/** SCM-ABSOULUTE-03 **/
 
 TaskHandle task_absolute_delay_myself;
 
@@ -338,14 +483,25 @@ void check_if_absolute_delayed_task_is_in_delay_queue(void)
 	send_success();
 }
 
-void scm_delayAbsolute_03(void)
+void scm_delayAbsolute_03_main(void)
 {
-	send_id("SCM-ABSOLUTE-03");
-	
+	/* Task which calls ROSA_DelayAbsolute should be in DELAY queue. */
+
 	ROSA_CreateTask(&absolute_delay_for_long_time, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, &task_absolute_delay_myself);
 	ROSA_CreateTask(&check_if_absolute_delayed_task_is_in_delay_queue, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayAbsolute_03 = {
+	.id =			"SCM-ABSOULUTE-03",
+	.description =	"Task which calls ROSA-DelayAbsolute should be in DELAY queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_03_main
+};
+
+/** SCM-ABSOULUTE-04 **/
 
 ROSA_TickCount ticks_before_absolute_delay;
 
@@ -364,14 +520,23 @@ void check_absolute_delayed_tasks_wakeup_time(void)
 	send_success();
 }
 
-void scm_delayAbsolute_04(void)
+void scm_delayAbsolute_04_main(void)
 {
-	send_id("SCM-ABSOLUTE-04");
-	
 	ROSA_CreateTask(&write_current_ticks_and_delay_absolute, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(&check_absolute_delayed_tasks_wakeup_time, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayAbsolute_04 = {
+	.id =			"SCM-ABSOULUTE-04",
+	.description =	"Task which calls ROSA-DelayAbsolute should have correct wake up time.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_04_main
+};
+
+/** SCM-ABSOULUTE-05 **/
 
 void delay_absolute_and_check_for_how_long_have_i_been_delayed(void)
 {
@@ -385,13 +550,23 @@ void delay_absolute_and_check_for_how_long_have_i_been_delayed(void)
 	send_fail();
 }
 
-void scm_delayAbsolute_05(void)
+void scm_delayAbsolute_05_main(void)
 {
-	send_id("SCM-ABSOLUTE-05");
-	
+	/* Task which calls ROSA_DelayAbsolute should wake up at correct time. */
 	ROSA_CreateTask(&delay_absolute_and_check_for_how_long_have_i_been_delayed, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayAbsolute_05 = {
+	.id =			"SCM-ABSOULUTE-05",
+	.description =	"Task which calls ROSA-DelayAbsolute should wake up at correct time.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_05_main
+};
+
+/** SCM-ABSOULUTE-06 **/
 
 void delay_absolute_and_check_delay_queue_after(void)
 {
@@ -403,13 +578,23 @@ void delay_absolute_and_check_delay_queue_after(void)
 	send_fail();
 }
 
-void scm_delayAbsolute_06(void)
+void scm_delayAbsolute_06_main(void)
 {
-	send_id("SCM-ABSOLUTE-06");
-	
+	/* When task wakes up, it shouldn't be in DELAY queue. */
 	ROSA_CreateTask(&delay_absolute_and_check_delay_queue_after, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_delayAbsolute_06 = {
+	.id =			"SCM-ABSOULUTE-06",
+	.description =	"When task wakes up, it shouldn't be in DELAY queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_06_main
+};
+
+/** SCM-ABSOULUTE-07 **/
 
 TaskHandle task_absolute_delay_long, task_absolute_delay_medium, task_absolute_delay_short;
 
@@ -449,15 +634,27 @@ void check_if_3_tasks_in_delay_queue(void)
 	send_success();
 }
 
-void scm_delayAbsolute_07(void)
+void scm_delayAbsolute_07_main(void)
 {
-	send_id("SCM-ABSOLUTE-07");
+	/* Delay 3 tasks and check the sorting in the DELAY queue. */
+
 	ROSA_CreateTask(&delay_absolute_medium, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_6, &task_absolute_delay_medium);
 	ROSA_CreateTask(&delay_absolute_long, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_5, &task_absolute_delay_long);
 	ROSA_CreateTask(&delay_absolute_short, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_4, &task_absolute_delay_short);
 	ROSA_CreateTask(&check_if_3_tasks_in_delay_queue, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_Start();	
 }
+
+Test scm_delayAbsolute_07 = {
+	.id =			"SCM-ABSOULUTE-07",
+	.description =	"Delay 3 tasks and check the sorting in the DELAY queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_07_main
+};
+
+/** SCM-ABSOULUTE-08 **/
 
 void delay_absolute_to_past(void)
 {
@@ -472,14 +669,28 @@ void delay_absolute_to_past(void)
 	send_fail();
 }
 
-void scm_delayAbsolute_08(void)
+void scm_delayAbsolute_08_main(void)
 {
-	send_id("SCM-ABSOLUTE-08");
+	/* ROSA_DelayAbsolute with wake up time in past should wake up task after 1 tick. */
+
 	ROSA_CreateTask(&delay_absolute_to_past, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_Start();
 }
 
-// Test Cases for ROSA_EndCycle
+Test scm_delayAbsolute_08 = {
+	.id =			"SCM-ABSOULUTE-08",
+	.description =	"ROSA_DelayAbsolute with wake up time in past should wake up task after 1 tick.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_delayAbsolute_08_main
+};
+
+
+
+/*************** TEST SUITE: End Cycle ***************/
+
+/** SCM-ENDCYCLE-01 **/
 
 int executionAfterEndCycle = 0;
 
@@ -499,13 +710,25 @@ void checkExecutionAfterEndCycle(void)
 	send_success();
 }
 
-void scm_endCycle_01(void)
+void scm_endCycle_01_main(void)
 {
-	send_id("SCM-ENDCYCLE-01");
+	/* Cyclic task with long period calling ROSA_EndCycle should stop working. */
+
 	ROSA_CreateCyclicTask(&cyclicTaskWithLongPeriod, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 50000, (ROSA_TickCount) 50000, NULL);
 	ROSA_CreateTask(&checkExecutionAfterEndCycle, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();	
 }
+
+Test scm_endCycle_01 = {
+	.id =			"SCM-ENDCYCLE-01",
+	.description =	"Cyclic task with long period calling ROSA_EndCycle should stop working.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_01_main
+};
+
+/** SCM-ENDCYCLE-02 **/
 
 void cyclicTaskWithShortPeriodSendingSuccess(void)
 {
@@ -513,12 +736,24 @@ void cyclicTaskWithShortPeriodSendingSuccess(void)
 	send_success();
 }
 
-void scm_endCycle_02(void)
+void scm_endCycle_02_main(void)
 {
-	send_id("SCM-ENDCYCLE-02");
+	/* Cyclic task calling ROSA_EndCycle should wake up. */
+
 	ROSA_CreateCyclicTask(&cyclicTaskWithShortPeriodSendingSuccess, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 10, (ROSA_TickCount) 10, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_02 = {
+	.id =			"SCM-ENDCYCLE-02",
+	.description =	"Cyclic task calling ROSA_EndCycle should wake up.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_02_main
+};
+
+/** SCM-ENDCYCLE-03 **/
 
 TaskHandle cyclicTaskThatCallsEndCycleHandle;
 
@@ -541,13 +776,24 @@ void checkDelayQueue(void)
 	send_success();
 }
 
-void scm_endCycle_03(void)
+void scm_endCycle_03_main(void)
 {
-	send_id("SCM-ENDCYCLE-03");
+	/* Cyclic task which calls ROSA_EndCycle should be in DELAY queue. */
 	ROSA_CreateCyclicTask(&cyclicTaskThatCallsEndCycle, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 50000, (ROSA_TickCount) 5000, &cyclicTaskThatCallsEndCycleHandle);
 	ROSA_CreateTask(&checkDelayQueue, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_03 = {
+	.id =			"SCM-ENDCYCLE-03",
+	.description =	"Cyclic task which calls ROSA_EndCycle should be in DELAY queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_03_main
+};
+
+/** SCM-ENDCYCLE-04 **/
 
 TaskHandle cyclicTaskThatBusyWaitsAndCallsEndCycleHandle;
 
@@ -571,13 +817,25 @@ void checkWakeUpTime(void)
 	send_success();
 }
 
-void scm_endCycle_04(void)
+void scm_endCycle_04_main(void)
 {
-	send_id("SCM-ENDCYCLE-04");
+	/* Cyclic task which calls ROSA_EndCycle should have correct wake up time, according to EC formula, if task didn't miss period. */
+
 	ROSA_CreateCyclicTask(&cyclicTaskThatBusyWaitsAndCallsEndCycle, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 10, (ROSA_TickCount) 10, &cyclicTaskThatBusyWaitsAndCallsEndCycleHandle);
 	ROSA_CreateTask(&checkWakeUpTime, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_04 = {
+	.id =			"SCM-ENDCYCLE-04",
+	.description =	"Cyclic task which calls ROSA_EndCycle should have correct wake up time, according to EC formula, if task didn't miss period.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_04_main
+};
+
+/** SCM-ENDCYCLE-05 **/
 
 TaskHandle cyclicTaskThatMissesItsPeriodHandle;
 int afterDelayAbsolute = 0;
@@ -605,13 +863,25 @@ void checkWakeUpTimeAfterMissedPeriod(void)
 		send_fail();
 }
 
-void scm_endCycle_05(void)
+void scm_endCycle_05_main(void)
 {
-	send_id("SCM-ENDCYCLE-05");
+	/* Cyclic task which calls ROSA_EndCycle should have wake up time at correct time, according to EC formula, if the task misses its period. */
+
 	ROSA_CreateCyclicTask(&cyclicTaskThatMissesItsPeriod, TEST_NAME, 4096, PRIORITY_6, (ROSA_TickCount) 10, (ROSA_TickCount) 10, &cyclicTaskThatMissesItsPeriodHandle);
 	ROSA_CreateTask(&checkWakeUpTimeAfterMissedPeriod, TEST_NAME, 4096, PRIORITY_5, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_05 = {
+	.id =			"SCM-ENDCYCLE-05",
+	.description =	"Cyclic task which calls ROSA_EndCycle should have wake up time at correct time, according to EC formula, if the task misses its period.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_05_main
+};
+
+/** SCM-ENDCYCLE-06 **/
 
 int executedAtLeastOnce = 0;
 
@@ -631,12 +901,23 @@ void cyclicTaskThatDoesntMissPeriod(void)
 	ROSA_EndCycle();
 }
 
-void scm_endCycle_06(void)
+void scm_endCycle_06_main(void)
 {
-	send_id("SCM-ENDCYCLE-06");
+	/* A cyclic task calling EC formula should wake up at the correct time, if it didn't miss period. */
 	ROSA_CreateCyclicTask(&cyclicTaskThatDoesntMissPeriod, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 10, (ROSA_TickCount) 10, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_06 = {
+	.id =			"SCM-ENDCYCLE-06",
+	.description =	"A cyclic task calling EC formula should wake up at the correct time, if it didn't miss period.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_06_main
+};
+
+/** SCM-ENDCYCLE-07 **/
 
 void cyclicTaskThatDoesntMissesPeriod(void)
 {
@@ -654,13 +935,25 @@ void cyclicTaskThatDoesntMissesPeriod(void)
 	ROSA_EndCycle();
 }
 
-void scm_endCycle_07(void)
+void scm_endCycle_07_main(void)
 {
-	send_id("SCM-ENDCYCLE-07");
+	/* A cyclic task calling EC formula should wake up at the correct time, if it misses period. */
 	executedAtLeastOnce = 0;
 	ROSA_CreateCyclicTask(&cyclicTaskThatDoesntMissesPeriod, TEST_NAME, LARGE_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 10, (ROSA_TickCount) 10, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_07 = {
+	.id =			"SCM-ENDCYCLE-07",
+	.description =	"A cyclic task calling EC formula should wake up at the correct time, if it misses period.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_07_main
+};
+
+
+/** SCM-ENDCYCLE-08 **/
 
 void cyclicTaskThatChecksItsNotInDelayQueue(void)
 {
@@ -677,10 +970,20 @@ void cyclicTaskThatChecksItsNotInDelayQueue(void)
 	ROSA_EndCycle();
 }
 
-void scm_endCycle_08(void)
+void scm_endCycle_08_main(void)
 {
-	send_id("SCM-ENDCYCLE-08");
+	/* When cyclic task wakes up, it shouldn't be in the delay queue. */
+
 	executedAtLeastOnce = 0;
 	ROSA_CreateCyclicTask(&cyclicTaskThatChecksItsNotInDelayQueue, TEST_NAME, SMALL_STACK_SIZE, PRIORITY_5, (ROSA_TickCount) 10, (ROSA_TickCount) 10, NULL);
 	ROSA_Start();
 }
+
+Test scm_endCycle_08 = {
+	.id =			"SCM-ENDCYCLE-08",
+	.description =	"When cyclic task wakes up, it shouldn't be in the delay queue.",
+	.plan =			"System Clock Manager",
+	.suite =		"Delay Absolute",
+	.type =			TEST_FUNCTIONAL,
+	.function =		scm_endCycle_08_main
+};
