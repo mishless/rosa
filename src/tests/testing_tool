@@ -59,7 +59,7 @@ title = '<div style=\'display: table; padding-bottom: 15px;\'><div style=\'backg
 testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
 table = ''
 row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div></div>'
-rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2} ticks</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3} seconds</div></div>'
+rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2} ticks</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3} miliseconds</div></div>'
 planHeader = '</div><div style=\'font-size:larger;padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 suiteHeader = '</div><div style=\'padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 
@@ -148,7 +148,7 @@ while 1:
 					continue
 				else:
 					# The board has sent an end transmission character - flush the buffer and print the test case ID
-					print(buffer.tostring().decode('ascii'), end=" ")
+					# print(buffer.tostring().decode('ascii'), end=" ")
 					id = ''
 					description = ''
 					plan = ''
@@ -170,9 +170,9 @@ while 1:
 						elif (keyValueArray[0] == 'type'):
 							type = keyValueArray[1]
 						elif (keyValueArray[0] == 'min'):
-							min = keyValueArray[1]
+							min = int(keyValueArray[1])
 						elif (keyValueArray[0] == 'max'):
-							max = keyValueArray[1]
+							max = int(keyValueArray[1])
 					if (currentTestCase is not None):
 						previousTestCase = currentTestCase
 					currentTestCase = TestCase(id, description, plan, suite, type, min, max)
@@ -189,6 +189,8 @@ while 1:
 					elif (currentTestCase.type == 'p'):
 						if (currentTestCase.id != previousTestCase.id):
 							argumentsCounter = currentTestCase.min
+						else:
+							argumentsCounter = argumentsCounter + 1
 						state = States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION
 						print("State changed to States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION")
 			else:
@@ -211,6 +213,7 @@ while 1:
 			print("State changed to States.REPORT_RESULT")
 		elif (state is States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION):
 			state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
+			print("State changed to States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT")
 			if (currentTestCase.min == -1 and currentTestCase.max == -1):
 				ser.write(str(-1).encode())
 				ser.write(b'\r')
@@ -228,6 +231,7 @@ while 1:
 					print("State changed to States.REPORT_RESULT")
 					state = States.REPORT_RESULT
 					ticks = int(buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r"))
+					print(ticks)
 					# Empty the buffer
 					buffer = array('B', [])
 			elif (value == b'?'):
@@ -240,7 +244,6 @@ while 1:
 		elif (state is States.REPORT_RESULT):
 			if (ticks != -2):
 				if (ticks == -1):
-					print(currentTestCase)
 					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, '-', '-')
 					if (currentTestCaseNumber == totalNumberOfTestCases):
 						state = States.FINISHED
@@ -249,8 +252,8 @@ while 1:
 						state = States.WAITING_FOR_REQUEST
 						print("State changed to States.WAITING_FOR_REQUEST")
 				else:
-					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, ticks, ticks * (1/6000000))
-					if (currentTestCase.min == -1 and currentTestCase.max == -1 and argumentsCounter <= currentTestCase.max):
+					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, ticks, float("{0:.5f}".format(ticks * (1/6000))))
+					if (currentTestCase.min != -1 and currentTestCase.max != -1 and argumentsCounter < currentTestCase.max):
 						print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
 						state = States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST
 					else:
