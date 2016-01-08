@@ -24,17 +24,20 @@
 #define TEST_PERIOD 25
 #define TEST_DEADLINE 20
 
-// ROSA_CreateTask
+const char plan_tm[] =				"Task Manager";
+const char suite_create_task[] =	"Create Task";
 
-void tm_create_01()
+/*************** TEST SUITE: Task Create ***************/
+
+/*** TM-CREATE-01 ***/
+	
+void tm_create_01_main()
 {
 	/*ROSA_CreateTask should allocate and populate the task structure 
 	  correctly and assign it to the provided handle.*/
 	
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("TM-CREATE-01");
 	
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -53,12 +56,20 @@ void tm_create_01()
 	send_success();
 }
 
-void tm_create_02()
+Test tm_create_01 = {
+	.id =			"TM-CREATE-01",
+	.description =	"ROSA_CreateTask should allocate and populate the task structure correctly and assign it to the provided handle.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_01_main};
+
+/*** TM-CREATE-02 ***/
+
+void tm_create_02_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-		
-	send_id("TM-CREATE-02");
 	
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	PriorityQueue ready_queue;
@@ -74,7 +85,17 @@ void tm_create_02()
 	send_success();
 }
 
-void tm_create_03()
+Test tm_create_02 = {
+	.id =			"TM-CREATE-02",
+	.description =	"ROSA_CreateTask should insert the newly created task in the READY queue.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_02_main};
+
+/*** TM-CREATE-03 ***/
+
+void tm_create_03_main()
 {
 	TaskHandle taskHighPriority, taskMediumPriority, taskLowPriority;
 	char task_name[5] = TASK_NAME;
@@ -83,8 +104,6 @@ void tm_create_03()
 	const unsigned int priorityHigh = 5;
 	const unsigned int priorityMedium = 4;
 	const unsigned int priorityLow = 3;
-	
-	send_id("TM-CREATE-03");
 	
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityMedium, &taskMediumPriority);
 	ROSA_CreateTask(TEST_PTR, task_name, SMALL_STACK_SIZE, priorityLow, &taskLowPriority);
@@ -104,6 +123,15 @@ void tm_create_03()
 	send_success();
 }
 
+Test tm_create_03 = {
+	.id =			"TM-CREATE-03",
+	.description =	"Multiple calls to ROSA_CreateTask should populate the READY queue in the correct way with different task priorities.",
+	.plan =			"Task Manager",
+	.suite =		"Create Task",
+	.type =			TEST_FUNCTIONAL,
+	.function =		tm_create_03_main};
+
+/*** TM-CREATE-04 ***/
 void tm_create_04()
 {
 	TaskHandle task1, task2, task3;

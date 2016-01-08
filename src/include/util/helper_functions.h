@@ -27,4 +27,7 @@ int compare_strings(char* str1, char* str2, unsigned int n);
 /*Return the length of the string*/
 unsigned int strlen(char* str);
 
+/*Send to usart, skip writing &avr32...*/
+#define usart_write(str) usartWriteLine(&AVR32_USART0, str);
+
 #endif /* INCFILE1_H_ */

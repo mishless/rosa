@@ -9,9 +9,11 @@
 #ifndef TASK_MANAGER_TESTS_H_
 #define TASK_MANAGER_TESTS_H_
 
-void tm_create_01();
-void tm_create_02();
-void tm_create_03();
+#include "tests.h"
+
+extern Test tm_create_01;
+extern Test tm_create_02;
+extern Test tm_create_03;
 void tm_create_04();
 void tm_create_05();
 void tm_create_06();

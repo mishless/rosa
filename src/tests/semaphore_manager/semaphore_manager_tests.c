@@ -18,9 +18,10 @@
 
 #define TASK_NAME "test"
 #define SMALL_STACK_SIZE 1000
+#define PRIORITY_6 6
 #define PRIORITY_5 5
 #define PRIORITY_4 4
-
+#define BIG_TIMEOUT 100000000
 
 void sm_create_binary_01()
 {

@@ -85,7 +85,7 @@ unsigned int global_i;
 					
 							
 /****** Active test cases *****/
-void (*tests[])(void) = {ALL_TESTS};
+Test *tests[] = {&tm_create_01, &tm_create_02, &tm_create_03};
 	
 int main(void){
 	char c = 0;
@@ -96,15 +96,16 @@ int main(void){
 	/*Set up the system*/
 	disable_wdt();
 	ROSA_init();
-	set_wdt(17);
+	set_wdt(19);
 	
 	/*Start the communication*/
 	while(1)
 	{
+		
 		usartWriteChar(&AVR32_USART0, '?');
-
 		while((c = usartGetChar(&AVR32_USART0)) == 0);
-			
+		
+		
 		/*Does PC want the number of tests?*/
 		if(c == '#')
 		{
@@ -122,7 +123,7 @@ int main(void){
 			test_to_run = atoi(str);
 			
 			/*Run the selected test*/
-			tests[test_to_run]();
+			run_test(*tests[test_to_run]);
 		}
 	}
 
