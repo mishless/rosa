@@ -21,15 +21,38 @@
 #define TIMER1_CMR (*((volatile unsigned int *)(CMR_ADDRESS)))
 #define TIMER1_CCR (*((volatile unsigned int *)(CCR_ADDRESS)))
 
-#define TIMER_INIT() 	register unsigned int software_trigger = 0x5;\
+#define TIMER_DECLARE() register unsigned int software_trigger = 0x5;\
 						register volatile unsigned int* tc_ccr_addr = (volatile unsigned int*)CCR_ADDRESS;\
-						register volatile unsigned int* cv_address = (volatile unsigned int*)CV_ADDRESS;\
-						TIMER1_CMR = 0x00008001;\
+						register volatile unsigned int* cv_address = (volatile unsigned int*)CV_ADDRESS
+						
+#define TIMER_INIT() 	TIMER1_CMR = 0x00008001;\
 						TIMER1_CCR = 0x00000001
 						
 #define TIMER_START() *tc_ccr_addr = software_trigger
 #define TIMER_VALUE() *cv_address
 
+extern Test pt_sc_01;
+extern Test pt_sc_02;
+extern Test pt_sc_03;
+extern Test pt_sc_04;
+extern Test pt_sc_05;
+extern Test pt_sc_06;
+extern Test pt_sc_07;
 extern Test pt_sc_08;
-
+//extern Test pt_sc_09;
+//extern Test pt_sc_10;
+//extern Test pt_sc_11;
+//extern Test pt_sc_12;
+//extern Test pt_sc_13;
+//extern Test pt_sc_14;
+//extern Test pt_sc_15;
+//extern Test pt_sc_16;
+//extern Test pt_sc_17;
+//extern Test pt_sc_18;
+//extern Test pt_sc_19;
+//extern Test pt_sc_20;
+//extern Test pt_sc_21;
+//extern Test pt_sc_22;
+//extern Test pt_sc_23;
+//extern Test pt_sc_24;
 #endif /* PERFORMANCE_TESTS_H_ */
