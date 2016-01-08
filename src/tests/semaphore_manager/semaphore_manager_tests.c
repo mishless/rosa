@@ -42,14 +42,13 @@ TaskHandle taskLowLowPriority;
 
 unsigned int flag = 0;
 
-void sm_create_binary_01()
-{
-	/*ROSA_SemaphoreCreateBinary should allocate and populate the semaphore structure 
-	  correctly and assign it to the provided handle.*/
-	
-	SemaphoreHandle semaphore_handle;
+/*************** TEST SUITE: Semaphore Binary Create ***************/
 
-	send_id("SM-CREATE-BINARY-01");
+/*** SM-CREATE-BINARY-01 ***/
+
+void sm_create_binary_01_main()
+{
+	SemaphoreHandle semaphore_handle;
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
 	
@@ -76,12 +75,20 @@ void sm_create_binary_01()
 	send_success();
 }
 
-void sm_create_binary_02()
+Test sm_create_binary_01 = {
+	.id =			"SM-CREATE-BINARY-01",
+	.description =	"Check if semaphore structure is populated.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+	.function =		sm_create_binary_01_main};
+
+/*** SM-CREATE-BINARY-02 ***/
+
+void sm_create_binary_02_main()
 {	
 	SemaphoreHandle semaphore_handle;
 	Semaphore* semaphore;
-	
-	send_id("SM-CREATE-BINARY-02");
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
 	
@@ -95,11 +102,19 @@ void sm_create_binary_02()
 	send_success();
 }
 
-void sm_create_binary_05()
+Test sm_create_binary_02 = {
+	.id =			"SM-CREATE-BINARY-02",
+	.description =	"Check if blocked queue is allocated.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+	.function =		sm_create_binary_02_main};
+
+/*** SM-CREATE-BINARY-05 ***/
+
+void sm_create_binary_05_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-BINARY-05");
 	
 	int return_code = ROSA_SemaphoreCreateBinary(&semaphore_handle, 5);
 	
@@ -111,12 +126,20 @@ void sm_create_binary_05()
 	send_success();
 }
 
-void sm_create_binary_06()
+Test sm_create_binary_05 = {
+	.id =			"SM-CREATE-BINARY-05",
+	.description =	"Return code from ROSA_SemaphoreCreateBinary should be INVALID_INITIAL_VALUE when 0 or 1 are not used for initial value.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_binary_05_main};
+
+/*** SM-CREATE-BINARY-06 ***/
+
+void sm_create_binary_06_main()
 {
 	SemaphoreHandle semaphore_handle;
 	int i = 0;
-	
-	send_id("SM-CREATE-BINARY-06");
 	
 	for (i = 0; i < MAX_NUMBER_SEMAPHORES; i++)
 	{
@@ -133,11 +156,19 @@ void sm_create_binary_06()
 	send_success();
 }
 
-void sm_create_binary_07()
+Test sm_create_binary_06 = {
+	.id =			"SM-CREATE-BINARY-06",
+	.description =	"Return code from ROSA_SemaphoreCreateBinary should be TOO_MANY_SEMAPHORES when too many semaphores are created, putting 2 as max number of semaphores in the configuration file.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_binary_06_main};
+
+/*** SM-CREATE-BINARY-07 ***/
+
+void sm_create_binary_07_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-BINARY-07");
 	
 	int enough_memory;
 	do
@@ -155,11 +186,19 @@ void sm_create_binary_07()
 	send_success();
 }
 
-void sm_create_binary_08()
+Test sm_create_binary_07 = {
+	.id =			"SM-CREATE-BINARY-07",
+	.description =	"Return code from ROSA_SemaphoreCreateBinary should be NOT_ENOUGH_MEMORY when there is no more memory for allocating the semaphore.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_binary_07_main};
+
+/*** SM-CREATE-BINARY-08 ***/
+
+void sm_create_binary_08_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-BINARY-08");
 	
 	int return_code = ROSA_SemaphoreCreateBinary(&semaphore_handle, SEMAPHORE_FREE);
 	
@@ -171,7 +210,17 @@ void sm_create_binary_08()
 	send_success();
 }
 
-void task_sm_cb_09 ()
+Test sm_create_binary_08 = {
+	.id =			"SM-CREATE-BINARY-08",
+	.description =	"Return code from ROSA_SemaphoreCreateBinary should be SUCCESS if the semaphore is created without problems.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_binary_08_main};
+
+/*** SM-CREATE-BINARY-09 ***/
+
+void task_sm_cb_09()
 {
 	SemaphoreHandle semaphore_handle;
 	
@@ -200,12 +249,10 @@ void task_sm_cb_09 ()
 	send_success();
 }
 
-void sm_create_binary_09()
+void sm_create_binary_09_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-CREATE-BINARY-09");
 	
 	ROSA_CreateTask(task_sm_cb_09, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -213,7 +260,17 @@ void sm_create_binary_09()
 	send_fail();		
 }
 
-void task_sm_cb_10 ()
+Test sm_create_binary_09 = {
+	.id =			"SM-CREATE-BINARY-09",
+	.description =	"Check if semaphore creation from a task populates the semaphore structure.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_binary_09_main};
+
+/*** SM-CREATE-BINARY-10 ***/
+
+void task_sm_cb_10()
 {
 	SemaphoreHandle semaphore_handle;
 	Semaphore* semaphore;
@@ -230,7 +287,7 @@ void task_sm_cb_10 ()
 	send_success();
 }
 
-void sm_create_binary_10()
+void sm_create_binary_10_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
@@ -243,11 +300,23 @@ void sm_create_binary_10()
 	send_fail();
 }
 
-void sm_create_prio_01()
+Test sm_create_binary_10 = {
+	.id =			"SM-CREATE-BINARY-10",
+	.description =	"Create a binary semaphore from task and check blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_binary_10_main};
+
+
+/*************** TEST SUITE: Semaphore Priority Create ***************/
+
+
+/*** SM-CREATE-PRIO-01 ***/
+
+void sm_create_prio_01_main()
 {	
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-PRIO-01");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -279,12 +348,20 @@ void sm_create_prio_01()
 	send_success();
 }
 
-void sm_create_prio_02()
+Test sm_create_prio_01 = {
+	.id =			"SM-CREATE-PRIO-01",
+	.description =	"Check if semaphore structure is populated.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_01_main};
+
+/*** SM-CREATE-PRIO-02 ***/
+
+void sm_create_prio_02_main()
 {	
 	SemaphoreHandle semaphore_handle;
 	Semaphore* semaphore;
-	
-	send_id("SM-CREATE-PRIO-02");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -298,11 +375,19 @@ void sm_create_prio_02()
 	send_success();
 }
 
-void sm_create_prio_05()
+Test sm_create_prio_02 = {
+	.id =			"SM-CREATE-PRIO-02",
+	.description =	"Check if blocked queue is allocated.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_02_main};
+
+/*** SM-CREATE-PRIO-05 ***/
+
+void sm_create_prio_05_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-PRIO-05");
 	
 	int return_code = ROSA_SemaphoreCreatePrio(&semaphore_handle, 5, PRIORITY_5);
 	
@@ -314,12 +399,20 @@ void sm_create_prio_05()
 	send_success();
 }
 
-void sm_create_prio_06()
+Test sm_create_prio_05 = {
+	.id =			"SM-CREATE-PRIO-05",
+	.description =	"Return code from ROSA_SemaphoreCreatePrio should be INVALID_INITIAL_VALUE when 0 or 1 are not used for initial value.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_05_main};
+
+/*** SM-CREATE-PRIO-06 ***/
+
+void sm_create_prio_06_main()
 {
 	SemaphoreHandle semaphore_handle;
 	int i = 0;
-	
-	send_id("SM-CREATE-PRIO-06");
 	
 	for (i = 0; i < MAX_NUMBER_SEMAPHORES; i++)
 	{
@@ -336,11 +429,19 @@ void sm_create_prio_06()
 	send_success();
 }
 
-void sm_create_prio_07()
+Test sm_create_prio_06 = {
+	.id =			"SM-CREATE-PRIO-06",
+	.description =	"Return code from ROSA_SemaphoreCreatePrio should be TOO_MANY_SEMAPHORES when too many semaphores are created.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_06_main};
+
+/*** SM-CREATE-PRIO-07 ***/
+
+void sm_create_prio_07_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-PRIO-07");
 	
 	int enough_memory;
 	do
@@ -358,11 +459,19 @@ void sm_create_prio_07()
 	send_success();
 }
 
-void sm_create_prio_08()
+Test sm_create_prio_07 = {
+	.id =			"SM-CREATE-PRIO-07",
+	.description =	"Return code from ROSA_SemaphoreCreatePrio should be NOT_ENOUGH_MEMORY when there is no more memory for allocating the semaphore.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_07_main};
+
+/*** SM-CREATE-PRIO-08 ***/
+
+void sm_create_prio_08_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-PRIO-08");
 	
 	int return_code = ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, 0);
 	
@@ -374,11 +483,19 @@ void sm_create_prio_08()
 	send_success();
 }
 
-void sm_create_prio_09()
+Test sm_create_prio_08 = {
+	.id =			"SM-CREATE-PRIO-08",
+	.description =	"Return code from ROSA_SemaphoreCreatePrio should be INVALID_PRIORITY if the semaphore is created with priority 0.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_08_main};
+
+/*** SM-CREATE-PRIO-09 ***/
+
+void sm_create_prio_09_main()
 {
 	SemaphoreHandle semaphore_handle;
-	
-	send_id("SM-CREATE-PRIO-09");
 	
 	int return_code = ROSA_SemaphoreCreatePrio(&semaphore_handle, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -390,7 +507,17 @@ void sm_create_prio_09()
 	send_success();
 }
 
-void task_sm_cp_10 ()
+Test sm_create_prio_09 = {
+	.id =			"SM-CREATE-PRIO-09",
+	.description =	"Return code from ROSA_SemaphoreCreatePrio should be SUCCESS if the semaphore is created without problems.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_09_main};
+
+/*** SM-CREATE-PRIO-10 ***/
+
+void task_sm_cp_10()
 {
 	SemaphoreHandle semaphore_handle;
 	
@@ -419,12 +546,10 @@ void task_sm_cp_10 ()
 	send_success();
 }
 
-void sm_create_prio_10()
+void sm_create_prio_10_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-CREATE-PRIO-10");
 	
 	ROSA_CreateTask(task_sm_cp_10, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -432,7 +557,17 @@ void sm_create_prio_10()
 	send_fail();		
 }
 
-void task_sm_cp_11 ()
+Test sm_create_prio_10 = {
+	.id =			"SM-CREATE-PRIO-10",
+	.description =	"Check if semaphore creation from a task populates the semaphore structure.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_10_main};
+
+/*** SM-CREATE-PRIO-11 ***/
+
+void task_sm_cp_11()
 {
 	SemaphoreHandle semaphore_handle;
 	Semaphore* semaphore;
@@ -449,12 +584,10 @@ void task_sm_cp_11 ()
 	send_success();
 }
 
-void sm_create_prio_11()
+void sm_create_prio_11_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-CREATE-PRIO-11");
 	
 	ROSA_CreateTask(task_sm_cp_11, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -462,12 +595,22 @@ void sm_create_prio_11()
 	send_fail();
 }
 
-void sm_create_mix_01()
+Test sm_create_prio_11 = {
+	.id =			"SM-CREATE-PRIO-11",
+	.description =	"Create a priority semaphore from task and check blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Create Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_prio_11_main};
+
+/*************** TEST SUITE: Mixed Semaphore Create ***************/
+
+/*** SM-CREATE-MIX-01 ***/
+
+void sm_create_mix_01_main()
 {
 	SemaphoreHandle semaphore_handle_binary;
 	SemaphoreHandle semaphore_handle_prio;
-	
-	send_id("SM-CREATE-MIX-01");
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle_binary, SEMAPHORE_FREE);
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_prio, SEMAPHORE_FREE, PRIORITY_5);
@@ -520,7 +663,17 @@ void sm_create_mix_01()
 	send_success();
 }
 
-void task_sm_cm_02 ()
+Test sm_create_mix_01 = {
+	.id =			"SM-CREATE-MIX-01",
+	.description =	"Creation of two types of semaphores.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Mixed Create Semaphores",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_mix_01_main};
+
+/*** SM-CREATE-MIX-02 ***/
+
+void task_sm_cm_02()
 {
 	SemaphoreHandle semaphore_handle_binary;
 	SemaphoreHandle semaphore_handle_prio;
@@ -576,12 +729,10 @@ void task_sm_cm_02 ()
 	send_success();
 }
 
-void sm_create_mix_02()
+void sm_create_mix_02_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-CREATE-MIX-02");
 	
 	ROSA_CreateTask(task_sm_cm_02, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -589,7 +740,19 @@ void sm_create_mix_02()
 	send_fail();
 }
 
-void task_sm_d_03 ()
+Test sm_create_mix_02 = {
+	.id =			"SM-CREATE-MIX-02",
+	.description =	"Creation of two types of semaphores from a task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Mixed Create Semaphores",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_create_mix_02_main};
+
+/*************** TEST SUITE: Delete Semaphore ***************/
+
+/*** SM-DELETE-03 ***/
+
+void task_sm_d_03()
 {
 	SemaphoreHandle semaphore_handle;
 	int i = 0;
@@ -610,12 +773,10 @@ void task_sm_d_03 ()
 	send_success();
 }
 
-void sm_delete_03()
+void sm_delete_03_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-DELETE-03");
 	
 	ROSA_CreateTask(task_sm_d_03, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle);
 	
@@ -623,7 +784,17 @@ void sm_delete_03()
 	send_fail();
 }
 
-void sm_delete_04()
+Test sm_delete_03 = {
+	.id =			"SM-DELETE-03",
+	.description =	"Check for memory leaks using stress test.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Delete Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_delete_03_main};
+
+/*** SM-DELETE-04 ***/
+
+void sm_delete_04_main()
 {
 	send_id("SM-DELETE-04");
 	
@@ -637,6 +808,14 @@ void sm_delete_04()
 
 	send_success();	
 }
+
+Test sm_delete_04 = {
+	.id =			"SM-DELETE-04",
+	.description =	"Delete a semaphore and check return code.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Delete Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_delete_04_main};
 
 /*void sm_delete_05()
 {
@@ -653,7 +832,11 @@ void sm_delete_04()
 	send_success();
 }*/
 
-void task_sm_tb_01 ()
+/*************** TEST SUITE: Take Binary Semaphore ***************/
+
+/*** SM-TAKE-BINARY-01 ***/
+
+void task_sm_tb_01()
 {
 	ROSA_SemaphoreTake(semaphore_handle_t, 0);
 	
@@ -665,12 +848,10 @@ void task_sm_tb_01 ()
 	send_fail();
 }
 
-void sm_take_binary_01()
+void sm_take_binary_01_main()
 {
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-01");
 	
 	ROSA_SemaphoreCreateBinary(&semaphore_handle_t, SEMAPHORE_FREE);
 	
@@ -680,7 +861,17 @@ void sm_take_binary_01()
 	send_fail();
 }
 
-void task_sm_tb_02_h ()
+Test sm_take_binary_01 = {
+	.id =			"SM-TAKE-BINARY-01",
+	.description =	"Check if it possible to take a binary semaphore.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+	.function =		sm_take_binary_01_main};
+
+/*** SM-TAKE-BINARY-02 ***/
+
+void task_sm_tb_02_h()
 {
 	if( (ROSA_SemaphoreTake(semaphore_handle_t, TIMEOUT_TIME)) == TIMEOUT )
 	{
@@ -695,13 +886,11 @@ void task_sm_tb_02_l ()
 	send_success();
 }
 
-void sm_take_binary_02()
+void sm_take_binary_02_main()
 {
 	TaskHandle task_handle_high;
 	TaskHandle task_handle_low;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-02");
 	
 	ROSA_CreateTask(task_sm_tb_02_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_handle_high);
 	ROSA_CreateTask(task_sm_tb_02_l, task_name, SMALL_STACK_SIZE, PRIORITY_4, &task_handle_low);
@@ -711,6 +900,16 @@ void sm_take_binary_02()
 	ROSA_StartScheduler();
 	send_fail();
 }
+
+Test sm_take_binary_02 = {
+	.id =			"SM-TAKE-BINARY-02",
+	.description =	"Check if  an occupied binary semaphore can’t be taken.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_02_main};
+
+/*** SM-TAKE-BINARY-03 ***/
 
 void task_sm_tb_03_h ()
 {
@@ -732,11 +931,9 @@ void task_sm_tb_03_l ()
 	send_success();
 }
 
-void sm_take_binary_03()
+void sm_take_binary_03_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-03");
 	
 	ROSA_CreateTask(task_sm_tb_03_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
 	ROSA_CreateTask(task_sm_tb_03_l, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskLowPriority);
@@ -746,6 +943,16 @@ void sm_take_binary_03()
 	ROSA_StartScheduler();
 	send_fail();
 }
+
+Test sm_take_binary_03 = {
+	.id =			"SM-TAKE-BINARY-03",
+	.description =	"Check if a blocked task is in the blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_03_main};
+
+/*** SM-TAKE-BINARY-04 ***/
 
 void task_sm_tb_04_h ()
 {
@@ -762,11 +969,9 @@ void task_sm_tb_04_l ()
 	send_fail();
 }
 
-void sm_take_binary_04()
+void sm_take_binary_04_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-04");
 	
 	ROSA_CreateTask(task_sm_tb_04_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
 	ROSA_CreateTask(task_sm_tb_04_l, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskLowPriority);
@@ -776,6 +981,16 @@ void sm_take_binary_04()
 	ROSA_StartScheduler();
 	send_fail();
 }
+
+Test sm_take_binary_04 = {
+	.id =			"SM-TAKE-BINARY-04",
+	.description =	"Check if after have taken a semaphore, it is still occupied.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_04_main};
+
+/*** SM-TAKE-BINARY-05 ***/
 
 void task_sm_tb_05_h ()
 {
@@ -808,11 +1023,9 @@ void task_sm_tb_05_l ()
 	send_success();
 }
 
-void sm_take_binary_05()
+void sm_take_binary_05_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-05");
 	
 	ROSA_CreateTask(task_sm_tb_05_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
 	ROSA_CreateTask(task_sm_tb_05_m, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskMiddlePriority);
@@ -823,6 +1036,16 @@ void sm_take_binary_05()
 	ROSA_StartScheduler();
 	send_fail();
 }
+
+Test sm_take_binary_05 = {
+	.id =			"SM-TAKE-BINARY-05",
+	.description =	"Check if two tasks that take a semaphore both end up in the blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_05_main};
+
+/*** SM-TAKE-BINARY-06 ***/
 
 void task_sm_tb_06_h ()
 {
@@ -859,11 +1082,9 @@ void task_sm_tb_06_l ()
 	send_success();
 }
 
-void sm_take_binary_06()
+void sm_take_binary_06_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-06");
 	
 	ROSA_CreateTask(task_sm_tb_06_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
 	ROSA_CreateTask(task_sm_tb_06_m, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskMiddlePriority);
@@ -874,6 +1095,16 @@ void sm_take_binary_06()
 	ROSA_StartScheduler();
 	send_fail();
 }
+
+Test sm_take_binary_06 = {
+	.id =			"SM-TAKE-BINARY-06",
+	.description =	"Check if tasks are sorted in blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_06_main};
+
+/*** SM-TAKE-BINARY-07 ***/
 
 void task_sm_tb_07 ()
 {
@@ -889,11 +1120,9 @@ void task_sm_tb_07 ()
 		send_fail();	
 }
 
-void sm_take_binary_07()
+void sm_take_binary_07_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-07");
 	
 	ROSA_CreateTask(task_sm_tb_07, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
 	
@@ -902,6 +1131,14 @@ void sm_take_binary_07()
 	ROSA_StartScheduler();
 	send_fail();
 }
+
+Test sm_take_binary_07 = {
+	.id =			"SM-TAKE-BINARY-07",
+	.description =	"Check if taking a semaphore with timeout 0 doesn’t block the task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_07_main};
 
 /*void task_sm_tb_08_h ()
 {
@@ -946,6 +1183,10 @@ void sm_take_binary_08()
 	send_fail();
 }*/
 
+/*************** TEST SUITE: Take Priority Semaphore ***************/
+
+/*** SM-TAKE-PRIO-01 ***/
+
 void task_sm_tp_01()
 {
 	Semaphore* sem;
@@ -960,13 +1201,9 @@ void task_sm_tp_01()
 		send_fail();
 }
 
-void sm_take_prio_01()
-{
-	/*Check if it possible to take a priority semaphore*/
-	
+void sm_take_prio_01_main()
+{	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-01");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -975,6 +1212,16 @@ void sm_take_prio_01()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_01 = {
+	.id =			"SM-TAKE-PRIO-01",
+	.description =	"Check if it possible to take a priority semaphore.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_01_main};
+
+/*** SM-TAKE-PRIO-02 ***/
 
 void task_sm_tp_02_h()
 {
@@ -988,11 +1235,9 @@ void task_sm_tp_02_l()
 	send_success();
 }
 
-void sm_take_prio_02()
+void sm_take_prio_02_main()
 {	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-02");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -1002,6 +1247,16 @@ void sm_take_prio_02()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_02 = {
+	.id =			"SM-TAKE-PRIO-02",
+	.description =	"Check if  an occupied priority semaphore can’t be taken.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_02_main};
+
+/*** SM-TAKE-PRIO-02 ***/
 
 void task_sm_tp_03_h()
 {
@@ -1031,13 +1286,9 @@ void task_sm_tp_03_l()
 	send_success();
 }
 
-void sm_take_prio_03()
+void sm_take_prio_03_main()
 {
-	/*Check if  an occupied priority semaphore can’t be taken*/
-	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-03");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -1048,6 +1299,16 @@ void sm_take_prio_03()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_03 = {
+	.id =			"SM-TAKE-PRIO-03",
+	.description =	"Check if  a blocked task is in the blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_03_main};
+
+/*** SM-TAKE-PRIO-04 ***/
 
 void task_sm_tp_04_h()
 {
@@ -1067,13 +1328,9 @@ void task_sm_tp_04_l()
 	send_success();
 }
 
-void sm_take_prio_04()
+void sm_take_prio_04_main()
 {
-	/*Check if  an occupied priority semaphore can’t be taken*/
-	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-04");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -1083,6 +1340,16 @@ void sm_take_prio_04()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_04 = {
+	.id =			"SM-TAKE-PRIO-04",
+	.description =	"Check if  an occupied semaphore is still occupied after taking it.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_04_main};
+
+/*** SM-TAKE-PRIO-05 ***/
 
 void task_sm_tp_05_h()
 {
@@ -1122,13 +1389,9 @@ void task_sm_tp_05_ll()
 	send_success();
 }
 
-void sm_take_prio_05()
+void sm_take_prio_05_main()
 {
-	/*Check if  an occupied priority semaphore can’t be taken*/
-	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-05");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -1140,6 +1403,16 @@ void sm_take_prio_05()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_05 = {
+	.id =			"SM-TAKE-PRIO-05",
+	.description =	"Check if two task taking a semaphore both end up in the blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_05_main};
+
+/*** SM-TAKE-PRIO-06 ***/
 
 void task_sm_tp_06_h()
 {
@@ -1182,13 +1455,9 @@ void task_sm_tp_06_ll()
 	send_success();
 }
 
-void sm_take_prio_06()
+void sm_take_prio_06_main()
 {
-	/*Check if  an occupied priority semaphore can’t be taken*/
-	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-06");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -1200,6 +1469,16 @@ void sm_take_prio_06()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_06 = {
+	.id =			"SM-TAKE-PRIO-06",
+	.description =	"Check if tasks are sorted in the blocked queue.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_06_main};
+
+/*** SM-TAKE-PRIO-07 ***/
 
 void task_sm_tp_07_h()
 {
@@ -1222,13 +1501,9 @@ void task_sm_tp_07_l()
 		send_fail();
 }
 
-void sm_take_prio_07()
+void sm_take_prio_07_main()
 {
-	/*Check if  an occupied priority semaphore can’t be taken*/
-	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-07");
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
@@ -1238,6 +1513,14 @@ void sm_take_prio_07()
 	ROSA_Start();
 	send_fail();
 }
+
+Test sm_take_prio_07 = {
+	.id =			"SM-TAKE-PRIO-07",
+	.description =	"Check if  taking a semaphore with timeout 0 doesn’t block the task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_07_main};
 
 /*
 void task_sm_tp_10()
@@ -1445,16 +1728,25 @@ void take_higher_priority_semaphore_and_check_own_priority()
 	}
 }
 
-void sm_take_prio_10()
+void sm_take_prio_10_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-10");
 	
 	ROSA_CreateTask(take_higher_priority_semaphore_and_check_own_priority, task_name, SMALL_STACK_SIZE, PRIORITY_5, &task_checking_own_changed_priority);
 	ROSA_SemaphoreCreatePrio(&semaphore_higher_priority_than_task, SEMAPHORE_FREE, PRIORITY_6);
 	ROSA_StartScheduler();
 }
+
+Test sm_take_prio_10 = {
+	.id =			"SM-TAKE-PRIO-10",
+	.description =	"Check if task with lower priority inherits the priority of the semaphore that is higher than the task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_10_main};
+
+/*** SM-TAKE-PRIO-11 ***/
+
 
 SemaphoreHandle semaphore_lower_priority_than_task;
 TaskHandle task_checking_own_not_changed_priority;
@@ -1472,16 +1764,24 @@ void take_lower_priority_semaphore_and_check_own_priority()
 	}
 }
 
-void sm_take_prio_11()
+void sm_take_prio_11_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-11");
 	
 	ROSA_CreateTask(take_lower_priority_semaphore_and_check_own_priority, task_name, SMALL_STACK_SIZE, PRIORITY_6, &task_checking_own_not_changed_priority);
 	ROSA_SemaphoreCreatePrio(&semaphore_lower_priority_than_task, SEMAPHORE_FREE, PRIORITY_4);
 	ROSA_StartScheduler();
 }
+
+Test sm_take_prio_11 = {
+	.id =			"SM-TAKE-PRIO-11",
+	.description =	"Check if task with higher priority doesn’t inherit the priority of the semaphore that is lower than the task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_11_main};
+
+/*** SM-TAKE-PRIO-12 ***/
 
 SemaphoreHandle semaphore_priority_high_stack_checking, semaphore_priority_medium_stack_checking, semaphore_priority_low_stack_checking;
 TaskHandle task_checking_own_priorities;
@@ -1573,11 +1873,9 @@ void take_a_lot_of_semaphores_and_check_priorities()
 	send_success();
 }
 
-void sm_take_prio_12()
+void sm_take_prio_12_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-12");
 	
 	ROSA_CreateTask(take_a_lot_of_semaphores_and_check_priorities, task_name, SMALL_STACK_SIZE, PRIORITY_4, &task_checking_own_priorities);
 	ROSA_SemaphoreCreatePrio(&semaphore_priority_high_stack_checking, SEMAPHORE_FREE, PRIORITY_6);
@@ -1586,6 +1884,16 @@ void sm_take_prio_12()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_take_prio_12 = {
+	.id =			"SM-TAKE-PRIO-12",
+	.description =	"Check the temporary priority of a task that takes four different semaphores.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_12_main};
+
+/*** SM-TAKE-PRIO-13 ***/
 
 SemaphoreHandle semaphore_delayed_with;
 int did_task_without_semaphore_run = 0;
@@ -1611,11 +1919,9 @@ void delays_with_semaphore()
 	}
 }
 
-void sm_take_prio_13()
+void sm_take_prio_13_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-13");
 	
 	ROSA_CreateTask(delays_without_semaphore, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(delays_with_semaphore, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
@@ -1623,6 +1929,16 @@ void sm_take_prio_13()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_take_prio_13 = {
+	.id =			"SM-TAKE-PRIO-13",
+	.description =	"Higher priority task should not execute if the semaphore with higher priority is taken by a lower priority task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_13_main};
+
+/*** SM-TAKE-PRIO-14 ***/
 
 SemaphoreHandle semaphore_priority_inversion_checking;
 
@@ -1653,11 +1969,9 @@ void low_priority_priority_inversion()
 	ROSA_SemaphoreGive(semaphore_priority_inversion_checking);
 }
 
-void sm_take_prio_14()
+void sm_take_prio_14_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-14");
 	
 	ROSA_CreateTask(high_priority_priority_inversion, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(medium_priority_priority_inversion, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
@@ -1666,6 +1980,16 @@ void sm_take_prio_14()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_take_prio_14 = {
+	.id =			"SM-TAKE-PRIO-14",
+	.description =	"Check that priority inversion doesn’t occur.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_14_main};
+
+/*** SM-TAKE-PRIO-15 ***/
 
 SemaphoreHandle semaphore_deadlock_checking_1, semaphore_deadlock_checking_2;
 
@@ -1688,11 +2012,9 @@ void low_priority_deadlock()
 	BLOCK
 }
 
-void sm_take_prio_15()
+void sm_take_prio_15_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-PRIO-15");
 	
 	ROSA_CreateTask(high_priority_deadlock, task_name, SMALL_STACK_SIZE, 2, NULL);
 	ROSA_CreateTask(low_priority_deadlock, task_name, SMALL_STACK_SIZE, 1, NULL);
@@ -1701,6 +2023,18 @@ void sm_take_prio_15()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_take_prio_15 = {
+	.id =			"SM-TAKE-PRIO-15",
+	.description =	"Check that deadlocks don’t occur.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_prio_15_main};
+
+/*************** TEST SUITE: Give Binary Semaphore ***************/
+
+/*** SM-GIVE-BINARY-01 ***/
 
 SemaphoreHandle give_me_while_i_am_occupied_binary;
 
@@ -1718,17 +2052,25 @@ void give_occupied_binary_semaphore_and_check_its_state()
 	}
 }
 
-void sm_give_binary_01()
+void sm_give_binary_01_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-BINARY-01");
 	
 	ROSA_CreateTask(give_occupied_binary_semaphore_and_check_its_state, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_SemaphoreCreateBinary(&give_me_while_i_am_occupied_binary, SEMAPHORE_OCCUPIED);
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_binary_01 = {
+	.id =			"SM-GIVE-BINARY-01",
+	.description =	"Check if the semaphore state is free after being released (Before the semaphore should be occupied).",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_binary_01_main};
+
+/*** SM-GIVE-BINARY-02 ***/
 
 SemaphoreHandle give_me_while_i_am_free_binary;
 
@@ -1746,17 +2088,25 @@ void give_free_binary_semaphore_and_check_its_state()
 	}
 }
 
-void sm_give_binary_02()
+void sm_give_binary_02_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-BINARY-02");
 	
 	ROSA_CreateTask(give_free_binary_semaphore_and_check_its_state, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_SemaphoreCreateBinary(&give_me_while_i_am_free_binary, SEMAPHORE_FREE);
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_binary_02 = {
+	.id =			"SM-GIVE-BINARY-02",
+	.description =	"Check if the semaphore state is free after being released.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_binary_02_main};
+
+/*** SM-GIVE-BINARY-03 ***/
 
 SemaphoreHandle take_me_and_give_me_binary;
 
@@ -1776,17 +2126,25 @@ void take_and_give_binary_semaphore_and_check_queue_state()
 	}
 }
 
-void sm_give_binary_03()
+void sm_give_binary_03_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-BINARY-03");
 	
 	ROSA_CreateTask(take_and_give_binary_semaphore_and_check_queue_state, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_SemaphoreCreateBinary(&take_me_and_give_me_binary, SEMAPHORE_FREE);
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_binary_03 = {
+	.id =			"SM-GIVE-BINARY-03",
+	.description =	"Semaphore queue and delayed semaphore queue should be empty if a task takes a semaphore and after that it release it.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_binary_03_main};
+
+/*** SM-GIVE-BINARY-04 ***/
 
 SemaphoreHandle taken_and_given_by_one_and_taken_by_other_binary;
 
@@ -1811,11 +2169,9 @@ void take_binary_semaphore_taken_and_released_by_another()
 	}
 }
 
-void sm_give_binary_04()
+void sm_give_binary_04_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-BINARY-04");
 	
 	ROSA_CreateTask(take_and_delay_and_give_and_delay_binary, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(take_binary_semaphore_taken_and_released_by_another, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
@@ -1823,6 +2179,16 @@ void sm_give_binary_04()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_binary_04 = {
+	.id =			"SM-GIVE-BINARY-04",
+	.description =	"A task should be able to obtain a semaphore after it has been released by another task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_binary_04_main};
+
+/*** SM-GIVE-BINARY-05 ***/
 
 SemaphoreHandle wanted_to_be_taked_by_everyone_binary;
 
@@ -1852,11 +2218,9 @@ void release_binary_semaphore()
 	ROSA_SemaphoreGive(wanted_to_be_taked_by_everyone_binary);
 }
 
-void sm_give_binary_05()
+void sm_give_binary_05_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-BINARY-05");
 	
 	ROSA_CreateTask(take_binary_semaphore_with_high_prio, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(take_binary_semaphore_with_medium_prio, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
@@ -1866,6 +2230,18 @@ void sm_give_binary_05()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_binary_05 = {
+	.id =			"SM-GIVE-BINARY-05",
+	.description =	"Check if the correct task is executing after it has been blocked by a semaphore.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_binary_05_main};
+
+/*************** TEST SUITE: Give Priority Semaphore ***************/
+
+/*** SM-GIVE-PRIORITY-01 ***/
 
 SemaphoreHandle give_me_while_i_am_occupied_priority;
 
@@ -1884,17 +2260,25 @@ void give_occupied_priority_semaphore_and_check_its_state()
 	}
 }
 
-void sm_give_priority_01()
+void sm_give_priority_01_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-PRIORITY-01");
 	
 	ROSA_CreateTask(give_occupied_priority_semaphore_and_check_its_state, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_SemaphoreCreatePrio(&give_me_while_i_am_occupied_priority, SEMAPHORE_FREE, PRIORITY_3);
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_priority_01 = {
+	.id =			"SM-GIVE-PRIORITY-01",
+	.description =	"Check if the semaphore state is free after being released (Before the semaphore should be occupied).",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_priority_01_main};
+
+/*** SM-GIVE-PRIORITY-02 ***/
 
 SemaphoreHandle give_me_while_i_am_free_priority;
 
@@ -1912,17 +2296,25 @@ void give_free_priority_semaphore_and_check_its_state()
 	}
 }
 
-void sm_give_priority_02()
+void sm_give_priority_02_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-PRIORITY-02");
 	
 	ROSA_CreateTask(give_free_priority_semaphore_and_check_its_state, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_SemaphoreCreatePrio(&give_me_while_i_am_free_priority, SEMAPHORE_FREE, PRIORITY_3);
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_priority_02 = {
+	.id =			"SM-GIVE-PRIORITY-02",
+	.description =	"Check if the semaphore state is free after being released.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_priority_02_main};
+
+/*** SM-GIVE-PRIORITY-03 ***/
 
 SemaphoreHandle take_me_and_give_me_priority;
 
@@ -1942,17 +2334,25 @@ void take_and_give_priority_semaphore_and_check_queue_state()
 	}
 }
 
-void sm_give_priority_03()
+void sm_give_priority_03_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-PRIORITY-03");
 	
 	ROSA_CreateTask(take_and_give_priority_semaphore_and_check_queue_state, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	ROSA_SemaphoreCreatePrio(&take_me_and_give_me_priority, SEMAPHORE_FREE, PRIORITY_3);
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_priority_03 = {
+	.id =			"SM-GIVE-PRIORITY-03",
+	.description =	"Semaphore queue and delayed semaphore queue should be empty if a task takes a semaphore and after that it release it.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_priority_03_main};
+
+/*** SM-GIVE-PRIORITY-04 ***/
 
 SemaphoreHandle taken_and_given_by_one_and_taken_by_other_priority;
 
@@ -1977,11 +2377,9 @@ void take_priority_semaphore_taken_and_released_by_another()
 	}
 }
 
-void sm_give_priority_04()
+void sm_give_priority_04_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-PRIORITY-04");
 	
 	ROSA_CreateTask(take_and_delay_and_give_and_delay_priority, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(take_priority_semaphore_taken_and_released_by_another, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
@@ -1989,6 +2387,16 @@ void sm_give_priority_04()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_priority_04 = {
+	.id =			"SM-GIVE-PRIORITY-04",
+	.description =	"A task should be able to obtain a semaphore after it has been released by another task.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_priority_04_main};
+
+/*** SM-GIVE-PRIORITY-05 ***/
 
 SemaphoreHandle wanted_to_be_taked_by_everyone_priority;
 
@@ -2020,11 +2428,9 @@ void release_priority_semaphore()
 	ROSA_SemaphoreGive(wanted_to_be_taked_by_everyone_priority);
 }
 
-void sm_give_priority_05()
+void sm_give_priority_05_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-GIVE-PRIORITY-05");
 	
 	ROSA_CreateTask(take_priority_semaphore_with_high_prio, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	ROSA_CreateTask(take_priority_semaphore_with_medium_prio, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
@@ -2034,3 +2440,11 @@ void sm_give_priority_05()
 	
 	ROSA_StartScheduler();
 }
+
+Test sm_give_priority_05 = {
+	.id =			"SM-GIVE-PRIORITY-05",
+	.description =	"Check if the correct task is executing after it has been blocked by a semaphore.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Give Priority Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_give_priority_05_main};
