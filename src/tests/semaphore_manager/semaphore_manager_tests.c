@@ -41,7 +41,6 @@ TaskHandle taskLowPriority;
 TaskHandle taskLowLowPriority;
 
 unsigned int flag = 0;
->>>>>>> Stashed changes
 
 void sm_create_binary_01()
 {

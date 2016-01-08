@@ -70,17 +70,17 @@ unsigned int global_i;
 
 
 /***** Scheduler Tests *****/
-#define SCH_TESTS		s_schedule_01, s_schedule_02, s_schedule_03				
+#define SCH_TESTS		&s_schedule_01, &s_schedule_02, &s_schedule_03				
 
 /***** Semaphore Manager tests *****/
-#define SM_CREATE_BINARY_TESTS sm_create_binary_01, sm_create_binary_02, sm_create_binary_05, sm_create_binary_06, sm_create_binary_07, sm_create_binary_08, sm_create_binary_09, sm_create_binary_10
-#define SM_CREATE_PRIORITY_TESTS sm_create_prio_01, sm_create_prio_02, sm_create_prio_05, sm_create_prio_06, sm_create_prio_07, sm_create_prio_08, sm_create_prio_09, sm_create_prio_10, sm_create_prio_11
-#define SM_CREATE_MIX_TESTS sm_create_mix_01, sm_create_mix_02
-#define SM_DELETE_TESTS sm_delete_03, sm_delete_04
-#define SM_TAKE_BINARY_TESTS sm_take_binary_01, sm_take_binary_02, sm_take_binary_03, sm_take_binary_04, sm_take_binary_05, sm_take_binary_06, sm_take_binary_07
-#define SM_TAKE_PRIORITY_TESTS sm_take_prio_01, sm_take_prio_02, sm_take_prio_03, sm_take_prio_04, sm_take_prio_05, sm_take_prio_06, sm_take_prio_07, sm_take_prio_10, sm_take_prio_11, sm_take_prio_12, sm_take_prio_13, sm_take_prio_14, sm_take_prio_15
-#define SM_GIVE_BINARY_TESTS sm_give_binary_01, sm_give_binary_02, sm_give_binary_03, sm_give_binary_04, sm_give_binary_05
-#define SM_GIVE_PRIORITY_TESTS sm_give_priority_01, sm_give_priority_02, sm_give_priority_03, sm_give_priority_04, sm_give_priority_05
+#define SM_CREATE_BINARY_TESTS &sm_create_binary_01, &sm_create_binary_02, &sm_create_binary_05, &sm_create_binary_06, &sm_create_binary_07, &sm_create_binary_08, &sm_create_binary_09, &sm_create_binary_10
+#define SM_CREATE_PRIORITY_TESTS &sm_create_prio_01, &sm_create_prio_02, &sm_create_prio_05, &sm_create_prio_06, &sm_create_prio_07, &sm_create_prio_08, &sm_create_prio_09, &sm_create_prio_10, &sm_create_prio_11
+#define SM_CREATE_MIX_TESTS &sm_create_mix_01, &sm_create_mix_02
+#define SM_DELETE_TESTS &sm_delete_03, &sm_delete_04
+#define SM_TAKE_BINARY_TESTS &sm_take_binary_01, &sm_take_binary_02, &sm_take_binary_03, &sm_take_binary_04, &sm_take_binary_05, &sm_take_binary_06, &sm_take_binary_07
+#define SM_TAKE_PRIORITY_TESTS &sm_take_prio_01, &sm_take_prio_02, &sm_take_prio_03, &sm_take_prio_04, &sm_take_prio_05, &sm_take_prio_06, &sm_take_prio_07, &sm_take_prio_10, &sm_take_prio_11, &sm_take_prio_12, &sm_take_prio_13, &sm_take_prio_14, &sm_take_prio_15
+#define SM_GIVE_BINARY_TESTS &sm_give_binary_01, &sm_give_binary_02, &sm_give_binary_03, &sm_give_binary_04, &sm_give_binary_05
+#define SM_GIVE_PRIORITY_TESTS &sm_give_priority_01, &sm_give_priority_02, &sm_give_priority_03, &sm_give_priority_04, &sm_give_priority_05
 
 #define SM_TESTS SM_CREATE_BINARY_TESTS, SM_CREATE_PRIORITY_TESTS, SM_CREATE_MIX_TESTS, SM_DELETE_TESTS, SM_TAKE_BINARY_TESTS, SM_TAKE_PRIORITY_TESTS, SM_GIVE_BINARY_TESTS, SM_GIVE_PRIORITY_TESTS
 
@@ -89,7 +89,8 @@ unsigned int global_i;
 					
 							
 /****** Active test cases *****/
-Test *tests[] = {TM_TESTS, SCM_TESTS};
+
+Test *tests[] = {ALL_TESTS};
 	
 int main(void){
 	char c = 0;
