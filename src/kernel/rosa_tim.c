@@ -79,7 +79,7 @@ void timerISR(void)
 			{
 				if(getPriority(peekREADYqueue()) == getPriority(getCRT()))
 				{
-					if(round_robin_counter == ROUND_ROBIN_PERIOD)
+					if(round_robin_counter == (ROUND_ROBIN_PERIOD-1))
 					{
 						putInREADYqueue(getCRT());
 						ROSA_yieldFromISRFixed();

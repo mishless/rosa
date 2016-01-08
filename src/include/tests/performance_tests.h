@@ -39,6 +39,7 @@ extern Test pt_sc_05;
 extern Test pt_sc_06;
 extern Test pt_sc_07;
 extern Test pt_sc_08;
+
 //extern Test pt_sc_09;
 //extern Test pt_sc_10;
 //extern Test pt_sc_11;
@@ -55,4 +56,7 @@ extern Test pt_sc_08;
 //extern Test pt_sc_22;
 //extern Test pt_sc_23;
 //extern Test pt_sc_24;
+
+extern Test dummy_test;
+
 #endif /* PERFORMANCE_TESTS_H_ */

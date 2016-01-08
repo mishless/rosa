@@ -324,3 +324,18 @@ Test pt_sc_08 = {
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_08_main};
+
+void dummy_main(unsigned int param)
+{
+	send_result(param*42);
+}
+
+Test dummy_test = {
+	.id =			"DUMMY-42",
+	.description =	"Testing the Testing tool. Inception. Deep stuff!",
+	.plan =			"Performance",
+	.suite =		"System Calls",
+	.type =			TEST_PERFORMANCE,
+	.start_parameter = "1",
+	.end_parameter = "42",
+.function =		dummy_main};

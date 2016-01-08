@@ -1042,7 +1042,7 @@ void make_clone_and_terminate(void)
 	if (++task_creation_counter == 65)
 		send_success();
 		
-	if (ROSA_CreateTask(&make_clone_and_terminate, "high", SMALL_STACK_SIZE, PRIORITY_5, NULL) != SUCCESS)
+	if (ROSA_CreateTask(&make_clone_and_terminate, "high", 4096, PRIORITY_5, NULL) != SUCCESS)
 		send_fail();
 		
 	ROSA_TerminateTask();
@@ -1050,7 +1050,7 @@ void make_clone_and_terminate(void)
 
 void tm_terminate_03_main()
 {
-	ROSA_CreateTask(&make_clone_and_terminate, "high", SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(&make_clone_and_terminate, "high", 4096, PRIORITY_5, NULL);
 	
 	ROSA_Start();
 	

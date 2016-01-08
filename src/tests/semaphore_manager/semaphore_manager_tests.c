@@ -903,7 +903,7 @@ void sm_take_binary_02_main()
 
 Test sm_take_binary_02 = {
 	.id =			"SM-TAKE-BINARY-02",
-	.description =	"Check if  an occupied binary semaphore can’t be taken.",
+	.description =	"Check if  an occupied binary semaphore can't be taken.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Binary Semaphore",
 	.type =			TEST_FUNCTIONAL,
@@ -1134,7 +1134,7 @@ void sm_take_binary_07_main()
 
 Test sm_take_binary_07 = {
 	.id =			"SM-TAKE-BINARY-07",
-	.description =	"Check if taking a semaphore with timeout 0 doesn’t block the task.",
+	.description =	"Check if taking a semaphore with timeout 0 doesn't block the task.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Binary Semaphore",
 	.type =			TEST_FUNCTIONAL,
@@ -1250,7 +1250,7 @@ void sm_take_prio_02_main()
 
 Test sm_take_prio_02 = {
 	.id =			"SM-TAKE-PRIO-02",
-	.description =	"Check if  an occupied priority semaphore can’t be taken.",
+	.description =	"Check if  an occupied priority semaphore can't be taken.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Priority Semaphore",
 	.type =			TEST_FUNCTIONAL,
@@ -1516,7 +1516,7 @@ void sm_take_prio_07_main()
 
 Test sm_take_prio_07 = {
 	.id =			"SM-TAKE-PRIO-07",
-	.description =	"Check if  taking a semaphore with timeout 0 doesn’t block the task.",
+	.description =	"Check if  taking a semaphore with timeout 0 doesn't block the task.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Priority Semaphore",
 	.type =			TEST_FUNCTIONAL,
@@ -1775,7 +1775,7 @@ void sm_take_prio_11_main()
 
 Test sm_take_prio_11 = {
 	.id =			"SM-TAKE-PRIO-11",
-	.description =	"Check if task with higher priority doesn’t inherit the priority of the semaphore that is lower than the task.",
+	.description =	"Check if task with higher priority doesn't inherit the priority of the semaphore that is lower than the task.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Priority Semaphore",
 	.type =			TEST_FUNCTIONAL,
@@ -1983,7 +1983,7 @@ void sm_take_prio_14_main()
 
 Test sm_take_prio_14 = {
 	.id =			"SM-TAKE-PRIO-14",
-	.description =	"Check that priority inversion doesn’t occur.",
+	.description =	"Check that priority inversion doesn't occur.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Priority Semaphore",
 	.type =			TEST_FUNCTIONAL,
@@ -2026,7 +2026,7 @@ void sm_take_prio_15_main()
 
 Test sm_take_prio_15 = {
 	.id =			"SM-TAKE-PRIO-15",
-	.description =	"Check that deadlocks don’t occur.",
+	.description =	"Check that deadlocks don't occur.",
 	.plan =			"Semaphore Manager",
 	.suite =		"Take Priority Semaphore",
 	.type =			TEST_FUNCTIONAL,

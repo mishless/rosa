@@ -94,10 +94,10 @@ unsigned int global_i;
 #define PERFORMANCE_TESTS &pt_sc_08
 
 /***** All tests *****/
-#define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS
+#define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
 
 /****** Active test cases *****/
-Test *tests[] = {&swedish_test};
+Test *tests[] = {&it_02, &dummy_test};
 	
 int main(void){
 	char c = 0;
@@ -108,7 +108,7 @@ int main(void){
 	/*Set up the system*/
 	disable_wdt();
 	ROSA_init();
-	set_wdt(19);
+	set_wdt(17);
 	
 	/*Start the communication*/
 	while(1)
@@ -138,5 +138,4 @@ int main(void){
 			run_test(*tests[test_to_run]);
 		}
 	}
-
 }

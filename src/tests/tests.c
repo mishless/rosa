@@ -9,17 +9,19 @@
 #include "drivers/my_wdt.h"
 #include "helper_functions.h"
 
+#define SMALL_RESET_TIME 12
+
 void send_fail()
 {
 	usartWriteChar(&AVR32_USART0, FAILURE_CHAR);
-	set_wdt(7);
+	set_wdt(SMALL_RESET_TIME);
 	BLOCK;
 }
 
 void send_success()
 {
 	usartWriteChar(&AVR32_USART0, SUCCESS_CHAR);
-	set_wdt(7);
+	set_wdt(SMALL_RESET_TIME);
 	BLOCK;
 }
 
@@ -29,6 +31,7 @@ void send_result(unsigned int number)
 	num2str(number, str);
 	usart_write(str);
 	usartWriteChar(&AVR32_USART0, 0);
+	set_wdt(SMALL_RESET_TIME);
 	BLOCK;
 }
 
@@ -75,6 +78,12 @@ void run_test(Test test)
 		if(str[0] == '-')
 		{
 			((void (*)())test.function)();
+		}
+		
+		/*If the test uses a parameter, run it with the received parameter*/
+		else
+		{
+			((void (*)(unsigned int))test.function)(atoi(str));
 		}
 	}
 }

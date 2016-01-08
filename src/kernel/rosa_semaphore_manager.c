@@ -164,6 +164,8 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 			interruptEnable();
 			ROSA_yield();
 			interruptDisable();
+			
+			/*TODO: Fix this stuff, it returns TIMEOUT even if the semaphore is posted*/
 			return TIMEOUT;
 		}
 	}
@@ -212,24 +214,28 @@ unsigned int ROSA_SemaphoreGive (SemaphoreHandle handle)
 		if(semaphore->type == BINARY)
 		{
 			semaphore->state = SEMAPHORE_FREE;
-			while (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
+			if (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
 			{
+				/* Put the state to occupied again because another task will be released from the "take" function*/
+				semaphore->state = SEMAPHORE_OCCUPIED;
+				
 				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
+				putInREADYqueue(task);
+				ROSA_yield();
 			}
 		}
 		//Mutex
 		else
 		{
 			semaphore->state = SEMAPHORE_FREE;
-			unsigned int trash = popFromStack(task->temporaryPriority);
+			popFromStack(task->temporaryPriority);
 			while (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
 			{
 				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
+				putInREADYqueue(task);
+				ROSA_yield();				
 			}
 		}
-		
-		putInREADYqueue(task);
-		ROSA_yield();
 	}
 	
 	// Return SUCCESS

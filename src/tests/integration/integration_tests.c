@@ -13,7 +13,7 @@
 #include "rosa_api_call.h"
 
 #define TASK_NAME "intg"
-#define SMALL_STACK_SIZE 1000
+#define SMALL_STACK_SIZE 4096
 
 #define BIG_TIMEOUT 10000000
 
@@ -46,7 +46,9 @@ void tick_getter_2(void)
 void tick_getter_and_tick_checker(void)
 {
 	tick_count_3 = ROSA_TimerTickCount();
-	if (tick_count_1 == ROUND_ROBIN_PERIOD - 1 && tick_count_2 == 2*ROUND_ROBIN_PERIOD - 1 && tick_count_3 == 2*ROUND_ROBIN_PERIOD)
+	if ( (tick_count_1 == (ROUND_ROBIN_PERIOD - 1)) && 
+	     (tick_count_2 == (2*ROUND_ROBIN_PERIOD - 1)) &&
+		 (tick_count_3 == (2*ROUND_ROBIN_PERIOD)) )
 	{
 		send_success();
 	}
@@ -102,8 +104,8 @@ void consumer(void)
 void producer_consumer_checker(void)
 {
 	int i;
-	ROSA_DelayRelative(100);
-	for (i = 0; i < 10; i++)
+	ROSA_DelayRelative(50);
+	for (i = 0; i < 2; i++)
 	{
 		if (something_consumed != 1 || something_produced != 1)
 		{
@@ -124,8 +126,8 @@ void it_02_main()
 	ROSA_CreateTask(consumer, task_name, SMALL_STACK_SIZE, PRIORITY_2, NULL);
 	ROSA_CreateTask(producer_consumer_checker, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	
-	ROSA_SemaphoreCreateBinary(&somethingProduced, SEMAPHORE_FREE);
-	ROSA_SemaphoreCreateBinary(&somethingConsumed, SEMAPHORE_OCCUPIED);
+	ROSA_SemaphoreCreateBinary(&somethingProduced, SEMAPHORE_OCCUPIED);
+	ROSA_SemaphoreCreateBinary(&somethingConsumed, SEMAPHORE_FREE);
 	
 	ROSA_StartScheduler();
 }
