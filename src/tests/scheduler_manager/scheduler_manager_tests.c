@@ -18,6 +18,10 @@
 #define STACK_SIZE 1000
 #define TEST_PRIORITY 6
 
+/*************** TEST SUITE: Scheduler start ***************/
+
+/*** S-SCHEDULER-01 ***/
+
 TaskHandle task_handle_ss1;
 
 void ss1_task()
@@ -28,13 +32,9 @@ void ss1_task()
 		send_fail();
 }
 
-void s_schedule_01()
-{
-	/*ROSA_Start should start scheduler and put a task in currently running state*/
-	
+void s_schedule_01_main()
+{	
 	char task_name[5] = TASK_NAME;
-	
-	send_id("S-SCHEDULE-01");
 	
 	ROSA_CreateTask(ss1_task, task_name, STACK_SIZE, TEST_PRIORITY, &task_handle_ss1);
 
@@ -43,19 +43,25 @@ void s_schedule_01()
 	send_fail();
 }
 
+Test s_schedule_01 = {
+	.id =			"S-SCHEDULE-01",
+	.description =	"ROSA_Start should start scheduler and put task in a currently running state.",
+	.plan =			"Scheduler Manager",
+	.suite =		"Scheduler Start",
+	.type =			TEST_FUNCTIONAL,
+.function =		s_schedule_01_main};
+
+/*** S-SCHEDULER-02 ***/
+
 void ss2_task()
 {
 	send_success();
 }
 
-void s_schedule_02()
+void s_schedule_02_main()
 {
-	/*ROSA_Start should start scheduler and check if the currently running task is newly created*/
-	
 	TaskHandle task_handle;
 	char task_name[5] = TASK_NAME;
-	
-	send_id("S-SCHEDULE-02");
 	
 	ROSA_CreateTask(ss2_task, task_name, STACK_SIZE, TEST_PRIORITY, &task_handle);
 	
@@ -63,6 +69,16 @@ void s_schedule_02()
 	
 	send_fail();
 }
+
+Test s_schedule_02 = {
+	.id =			"S-SCHEDULE-02",
+	.description =	"ROSA_Start should start scheduler and check if the currently running task is newly created.",
+	.plan =			"Scheduler Manager",
+	.suite =		"Scheduler Start",
+	.type =			TEST_FUNCTIONAL,
+.function =		s_schedule_02_main};
+
+/*** S-SCHEDULER-03 ***/
 
 void ss3_low()
 {
@@ -75,14 +91,10 @@ void ss3_high()
 	send_success();
 }
 
-void s_schedule_03()
+void s_schedule_03_main()
 {
-	/*ROSA_Start should start scheduler and check if lower priority task of two created tasks will never execute*/
-	
 	TaskHandle low;
 	TaskHandle high;
-	
-	send_id("S-SCHEDULE-03");
 	
 	ROSA_CreateTask(ss3_low, "low", STACK_SIZE, 4, &low);
 	ROSA_CreateTask(ss3_high, "high", STACK_SIZE, 5, &high);
@@ -91,3 +103,11 @@ void s_schedule_03()
 	
 	send_fail();
 }
+
+Test s_schedule_03 = {
+	.id =			"S-SCHEDULE-03",
+	.description =	"ROSA_Start should start scheduler and check if lower priority task of two created tasks will never execute.",
+	.plan =			"Scheduler Manager",
+	.suite =		"Scheduler Start",
+	.type =			TEST_FUNCTIONAL,
+.function =		s_schedule_03_main};

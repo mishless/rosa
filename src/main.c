@@ -96,7 +96,7 @@ unsigned int global_i;
 							
 /****** Active test cases *****/
 
-Test *tests[] = {ALL_TESTS};
+Test *tests[] = {SCH_TESTS};
 	
 int main(void){
 	char c = 0;
