@@ -17,8 +17,13 @@
 
 #define BIG_TIMEOUT 10000000
 
+#define PRIORITY_1 1
 #define PRIORITY_2 2
 #define PRIORITY_3 3
+#define PRIORITY_4 4
+
+#define PERIOD 800
+#define DEADLINE PERIOD
 
 ROSA_TickCount tick_count_1, tick_count_2, tick_count_3;
 
@@ -132,4 +137,77 @@ Test it_02 = {
 	.suite = "Integration",
 	.type = TEST_FUNCTIONAL,
 	.function = it_02_main,
+};
+
+SemaphoreHandle semaphore_1, semaphore_2;
+
+void task_1(void)
+{
+	while (1)
+	{
+		ROSA_DelayRelative(100);
+		ROSA_SemaphoreTake(semaphore_1, 10);
+		ROSA_DelayRelative(50);
+		ROSA_SemaphoreGive(semaphore_1);
+		ROSA_SemaphoreTake(semaphore_2, 10);
+		ROSA_DelayRelative(50);
+		ROSA_SemaphoreGive(semaphore_2);
+		ROSA_DelayRelative(50);
+	}
+}
+
+void task_2(void)
+{
+	while (1)
+	{
+		ROSA_DelayRelative(50);
+		ROSA_SemaphoreTake(semaphore_2, 10);
+		ROSA_DelayRelative(100);
+		ROSA_SemaphoreGive(semaphore_2);
+		ROSA_DelayRelative(50);
+	}
+}
+
+void task_3(void)
+{
+	while (1)
+	{
+		ROSA_DelayRelative(100);
+	}
+}
+
+void task_4(void)
+{
+	while (1)
+	{
+		ROSA_DelayRelative(50);
+		ROSA_SemaphoreTake(semaphore_1, 10);
+		ROSA_DelayRelative(200);
+		ROSA_SemaphoreGive(semaphore_1);
+		ROSA_DelayRelative(50);
+	}
+}
+
+void swedish_test_main()
+{
+	char task_name[5] = TASK_NAME;
+	
+	ROSA_SemaphoreCreatePrio(&semaphore_1, SEMAPHORE_FREE, PRIORITY_4);
+	ROSA_SemaphoreCreatePrio(&semaphore_2, SEMAPHORE_FREE, PRIORITY_4);
+	
+	ROSA_CreateCyclicTask(task_1, task_name, SMALL_STACK_SIZE, PRIORITY_4, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_2, task_name, SMALL_STACK_SIZE, PRIORITY_3, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_3, task_name, SMALL_STACK_SIZE, PRIORITY_2, PERIOD, DEADLINE, NULL);
+	ROSA_CreateCyclicTask(task_4, task_name, SMALL_STACK_SIZE, PRIORITY_1, PERIOD, DEADLINE, NULL);
+	
+	ROSA_StartScheduler();
+}
+
+Test swedish_test = {
+	.id = "IT-03",
+	.description = "Swedish test.",
+	.plan = "Integration",
+	.suite = "Integration",
+	.type = TEST_FUNCTIONAL,
+	.function = swedish_test_main,
 };

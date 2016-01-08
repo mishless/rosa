@@ -11,5 +11,6 @@
 
 extern Test it_01;
 extern Test it_02;
+extern Test swedish_test;
 
 #endif /* INTEGRATION_TESTS_H_ */

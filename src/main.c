@@ -88,7 +88,7 @@ unsigned int global_i;
 #define INTEGRATION_TESTS &it_01, &it_02
 
 /***** Stress tests *****/
-#define STRESS_TESTS &it_st_01, &it_st_02
+#define STRESS_TESTS &it_st_01, &it_st_02, &swedish_test
 
 /***** All tests *****/
 #define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS
