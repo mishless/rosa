@@ -16,7 +16,9 @@ typedef struct
 	char* plan;
 	char* suite;
 	unsigned int type;
-	void (*function)(void);
+	void* function;
+	char* start_parameter;
+	char* end_parameter;
 } Test;
 
 #include "clock_manager_tests.h"
@@ -25,7 +27,7 @@ typedef struct
 #include "semaphore_manager_tests.h"
 #include "stress_tests.h"
 #include "integration_tests.h"
-
+#include "performance_tests.h"
 #include "drivers/usart.h"
 #include "helper_functions.h"
 
@@ -37,6 +39,7 @@ typedef struct
 
 void send_fail();
 void send_success();
+void send_result(unsigned int number);
 
 void run_test(Test test);
 #endif /* TESTS_H_ */

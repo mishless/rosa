@@ -90,13 +90,15 @@ unsigned int global_i;
 /***** Stress tests *****/
 #define STRESS_TESTS &it_st_01, &it_st_02, &swedish_test
 
+/***** Performance tests *****/
+#define PERFORMANCE_TESTS &pt_sc_08
+
 /***** All tests *****/
 #define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS
 					
 							
 /****** Active test cases *****/
-
-Test *tests[] = {SCH_TESTS};
+Test *tests[] = {&sm_take_prio_13};
 	
 int main(void){
 	char c = 0;

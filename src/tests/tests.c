@@ -23,20 +23,59 @@ void send_success()
 	BLOCK;
 }
 
+void send_result(unsigned int number)
+{
+	char str[15];
+	num2str(number, str);
+	usart_write(str);
+	usartWriteChar(&AVR32_USART0, 0);
+	BLOCK;
+}
+
 void run_test(Test test)
 {
-	usart_write("id=");
-	usart_write(test.id);
-	usart_write("&description=");
-	usart_write(test.description);
-	usart_write("&plan=");
-	usart_write(test.plan);
-	usart_write("&suite=");
-	usart_write(test.suite);
-	usart_write("&type=")
-	usart_write( (test.type == TEST_FUNCTIONAL) ? ("f") : ("p") );
-	usartWriteChar(&AVR32_USART0, 0);
+	char str[50];
 	
-	test.function();
+	if(test.type == TEST_FUNCTIONAL)
+	{
+		usart_write("id=");
+		usart_write(test.id);
+		usart_write("&description=");
+		usart_write(test.description);
+		usart_write("&plan=");
+		usart_write(test.plan);
+		usart_write("&suite=");
+		usart_write(test.suite);
+		usart_write("&type=")
+		usart_write( (test.type == TEST_FUNCTIONAL) ? ("f") : ("p") );
+		usartWriteChar(&AVR32_USART0, 0);
+		(void (*)())test.function();
+	}
+	else if(test.type == TEST_PERFORMANCE)
+	{
+		usart_write("id=");
+		usart_write(test.id);
+		usart_write("&description=");
+		usart_write(test.description);
+		usart_write("&plan=");
+		usart_write(test.plan);
+		usart_write("&suite=");
+		usart_write(test.suite);
+		usart_write("&type=")
+		usart_write( (test.type == TEST_FUNCTIONAL) ? ("f") : ("p") );
+		usart_write("&min=");
+		usart_write(test.start_parameter);
+		usart_write("&max=");
+		usart_write(test.end_parameter);
+		usartWriteChar(&AVR32_USART0, 0);
+		
+		usartGetLine(&AVR32_USART0, str);
+		
+		/*If the test doesn't use a parameter, just run it*/
+		if(str[0] == '-')
+		{
+			test.function();
+		}
+	}
 }
 	
