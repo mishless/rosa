@@ -91,12 +91,13 @@ unsigned int global_i;
 #define STRESS_TESTS &it_st_01, &it_st_02, &swedish_test
 
 /***** Performance tests *****/
-#define PERFORMANCE_TESTS &pt_sc_08
+#define PERFORMANCE_TESTS &pt_sc_01, &pt_sc_02, &pt_sc_03, &pt_sc_04, &pt_sc_05, &pt_sc_06, &pt_sc_07, &pt_sc_08
 
 /***** All tests *****/
 #define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
 
 /****** Active test cases *****/
+
 Test *tests[] = {&it_01};
 
 int main(void){
