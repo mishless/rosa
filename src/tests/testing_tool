@@ -9,17 +9,19 @@ directory = './logs'
 comPort = None
 
 # The total number of test cases
-total_tc_number = 0;
+totalNumberOfTestCases = 0;
 # The currently executing test case
 currentTestCaseNumber = 0
+previousTestCase = None
 currentTestCase = None
-# The state of the currently executing test case
-# 0 means it hasn't reported and 1 that it has reported
-currentTestCaseNumber_state = 0;
 # Array buffer of chars
 buffer = array('B', []);
 #Counter for success
 successCounter = 0
+# Performance tests arguments counter
+argumentsCounter = 0;
+# Result from performance test
+ticks = -2
 
 # Check if the directory to store reports exist and create it if it doesn't
 if not os.path.exists(directory):
@@ -56,7 +58,11 @@ html = '<html style="background-image: url(\'background.png\');color: #353535; f
 title = '<div style=\'display: table; padding-bottom: 15px;\'><div style=\'background-image: url("logo.png");background-size: 40px;height: 40px;background-repeat: no-repeat;display: table-cell;width: 40px;padding-right: 15px;\'></div><div style="font-size:larger;display: table-cell;vertical-align: middle;height: 40px;">ROSA Test Cases Results</div></div>'
 testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
 table = ''
-row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div></div>'
+row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div></div>'
+rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2} ticks</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3} seconds</div></div>'
+planHeader = '</div><div style=\'font-size:larger;padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
+suiteHeader = '</div><div style=\'padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
+
 
 # States INITIALIZE, WAITING_FOR_NUMBER_OF_TEST_CASES, WAITING_FOR_TEST_CASE_INFORMATION, WAITING_FOR_NORMAL_TEST_CASE_RESULT, WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT 
 class States(Enum):
@@ -67,9 +73,11 @@ class States(Enum):
 	WAITING_FOR_TEST_CASE_INFORMATION = 4
 	WAITING_FOR_NORMAL_TEST_CASE_RESULT = 5
 	WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT = 6
-	FINISHED = 7
-	
-TestCase = namedtuple('TestCase', 'id description plan suite type')
+	SENDING_PERFORMANCE_TEST_CASE_INFORMATION = 7
+	ASKING_FOR_THE_SAME_PERFORMANCE_TEST = 8
+	FINISHED = 9
+
+TestCase = namedtuple('TestCase', 'id description plan suite type min max')
 
 state = States.INITIALIZE
 
@@ -77,7 +85,7 @@ while 1:
 	try:
 		if (state is States.FINISHED):
 			successfulTestCasesMsg = successfulTestCasesMsg.format(successCounter)
-			unsuccessfulCounter = (int(total_tc_number)) - successCounter
+			unsuccessfulCounter = (int(totalNumberOfTestCases)) - successCounter
 			unsuccessfulTestCasesMsg = unsuccessfulTestCasesMsg.format(unsuccessfulCounter)
 			html = html.format(title + testInformation, table, successfulTestCasesMsg + unsuccessfulTestCasesMsg)
 			
@@ -104,8 +112,8 @@ while 1:
 				if (len(buffer) == 0):
 					continue
 				# This is the total number of test cases
-				total_tc_number = int(buffer.tostring())
-				numberOfTestCasesMsg = numberOfTestCasesMsg.format(total_tc_number)
+				totalNumberOfTestCases = int(buffer.tostring())
+				numberOfTestCasesMsg = numberOfTestCasesMsg.format(totalNumberOfTestCases)
 				testInformation = testInformation.format(numberOfTestCasesMsg)
 				# Empty the buffer
 				buffer = array('B', [])
@@ -123,6 +131,14 @@ while 1:
 				ser.write(str(currentTestCaseNumber).encode())
 				ser.write(b'\r')
 				currentTestCaseNumber = currentTestCaseNumber + 1
+		elif (state is States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST):
+			if (value == b'?'):
+				# Testing tool answers "Run the current test case." and increments it
+				state = States.WAITING_FOR_TEST_CASE_INFORMATION
+				print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
+				ser.write(b'%');
+				ser.write(str(currentTestCaseNumber-1).encode())
+				ser.write(b'\r')
 		elif (state is States.WAITING_FOR_TEST_CASE_INFORMATION):
 			if (value == b''):
 				continue
@@ -132,12 +148,14 @@ while 1:
 					continue
 				else:
 					# The board has sent an end transmission character - flush the buffer and print the test case ID
-					# print(buffer.tostring().decode('ascii'), end=" ")
+					print(buffer.tostring().decode('ascii'), end=" ")
 					id = ''
 					description = ''
 					plan = ''
 					suite = ''
 					type = ''
+					min = -1
+					max = -1
 					tuplesArray = buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r").split("&")
 					for tuple in tuplesArray:
 						keyValueArray = tuple.split("=")
@@ -151,7 +169,17 @@ while 1:
 							suite = keyValueArray[1]
 						elif (keyValueArray[0] == 'type'):
 							type = keyValueArray[1]
-					currentTestCase = TestCase(id, description, plan, suite, type)
+						elif (keyValueArray[0] == 'min'):
+							min = keyValueArray[1]
+						elif (keyValueArray[0] == 'max'):
+							max = keyValueArray[1]
+					if (currentTestCase is not None):
+						previousTestCase = currentTestCase
+					currentTestCase = TestCase(id, description, plan, suite, type, min, max)
+					if ((previousTestCase is None) or (previousTestCase.plan != currentTestCase.plan)):
+						table = table + planHeader.format('Test Plan: ' + currentTestCase.plan )
+					if ((previousTestCase is None) or (previousTestCase.suite != currentTestCase.suite)):	
+						table = table + suiteHeader.format('Test Suite: ' + currentTestCase.suite)
 					# Empty the buffer
 					buffer = array('B', [])
 					# Check the type and put in correct state
@@ -159,19 +187,19 @@ while 1:
 						state = States.WAITING_FOR_NORMAL_TEST_CASE_RESULT
 						print("State changed to States.WAITING_FOR_NORMAL_TEST_CASE_RESULT")
 					elif (currentTestCase.type == 'p'):
-						state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
-						print("State changed to States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT")
+						if (currentTestCase.id != previousTestCase.id):
+							argumentsCounter = currentTestCase.min
+						state = States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION
+						print("State changed to States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION")
 			else:
 				# Append to the buffer
 				buffer.append(ord(value));
 		elif (state is States.WAITING_FOR_NORMAL_TEST_CASE_RESULT):
 			if (value == b'^'):
-				currentTestCaseNumber_state = 1
 				successCounter += 1
 				currentResult = 'success'
 				print('Success!')
 			elif (value == b'_'):
-				currentTestCaseNumber_state = 1;
 				currentResult = 'failure'
 				print('Failure!')
 			elif (value == b'?'):
@@ -181,6 +209,14 @@ while 1:
 				continue
 			state = States.REPORT_RESULT
 			print("State changed to States.REPORT_RESULT")
+		elif (state is States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION):
+			state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
+			if (currentTestCase.min == -1 and currentTestCase.max == -1):
+				ser.write(str(-1).encode())
+				ser.write(b'\r')
+			elif (argumentsCounter <= currentTestCase.max):
+				ser.write(str(argumentsCounter).encode())
+				ser.write(b'\r')
 		elif (state is States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT):
 			if (value == b''):
 				continue
@@ -189,26 +225,50 @@ while 1:
 				if (len(buffer) == 0):
 					continue
 				else:
-					result = buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r")
+					print("State changed to States.REPORT_RESULT")
+					state = States.REPORT_RESULT
+					ticks = int(buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r"))
 					# Empty the buffer
 					buffer = array('B', [])
-					# Check the type and put in correct state
-					if (currentTestCase.type == 'f'):
-						state = States.WAITING_FOR_NORMAL_TEST_CASE_RESULT
-					elif (currentTestCase.type == 'p'):
-						state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
+			elif (value == b'?'):
+				ticks = -1
+				print("State changed to States.REPORT_RESULT")
+				state = States.REPORT_RESULT
 			else:
 				# Append to the buffer
 				buffer.append(ord(value));
 		elif (state is States.REPORT_RESULT):
-			print("HERE")
-			table = table + row.format(currentResult, currentTestCase.id)
-			if (currentTestCaseNumber == total_tc_number):
-				state = States.FINISHED
-				print("State changed to States.FINISHED")
+			if (ticks != -2):
+				if (ticks == -1):
+					print(currentTestCase)
+					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, '-', '-')
+					if (currentTestCaseNumber == totalNumberOfTestCases):
+						state = States.FINISHED
+						print("State changed to States.FINISHED")
+					else:
+						state = States.WAITING_FOR_REQUEST
+						print("State changed to States.WAITING_FOR_REQUEST")
+				else:
+					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, ticks, ticks * (1/6000000))
+					if (currentTestCase.min == -1 and currentTestCase.max == -1 and argumentsCounter <= currentTestCase.max):
+						print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
+						state = States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST
+					else:
+						if (currentTestCaseNumber == totalNumberOfTestCases):
+							state = States.FINISHED
+							print("State changed to States.FINISHED")
+						else:
+							state = States.WAITING_FOR_REQUEST
+							print("State changed to States.WAITING_FOR_REQUEST")
+				ticks = -2
 			else:
-				state = States.WAITING_FOR_REQUEST
-				print("State changed to States.WAITING_FOR_REQUEST")
+				table = table + row.format(currentResult, currentTestCase.id, currentTestCase.description)
+				if (currentTestCaseNumber == totalNumberOfTestCases):
+					state = States.FINISHED
+					print("State changed to States.FINISHED")
+				else:
+					state = States.WAITING_FOR_REQUEST
+					print("State changed to States.WAITING_FOR_REQUEST")
 	# Catch Ctrl-C
 	except KeyboardInterrupt:
 		print('Testing tool terminated by the user.')
