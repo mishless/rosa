@@ -20,6 +20,8 @@
 #define CV_ADDRESS (TIMER1_ADDRESS + CV_OFFSET)
 #define TIMER1_CMR (*((volatile unsigned int *)(CMR_ADDRESS)))
 #define TIMER1_CCR (*((volatile unsigned int *)(CCR_ADDRESS)))
+#define TIMER1_CV (*((volatile unsigned int *)(CV_ADDRESS)))
+#define SOFTWARE_TRIGGER_VALUE 0x5
 
 #define TIMER_DECLARE() register unsigned int software_trigger = 0x5;\
 						register volatile unsigned int* tc_ccr_addr = (volatile unsigned int*)CCR_ADDRESS;\
@@ -28,8 +30,8 @@
 #define TIMER_INIT() 	TIMER1_CMR = 0x00008001;\
 						TIMER1_CCR = 0x00000001
 						
-#define TIMER_START() *tc_ccr_addr = software_trigger
-#define TIMER_VALUE() *cv_address
+#define TIMER_START() TIMER1_CCR = SOFTWARE_TRIGGER_VALUE;
+#define TIMER_VALUE() TIMER1_CV
 
 extern Test pt_sc_01;
 extern Test pt_sc_02;

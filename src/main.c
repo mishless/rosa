@@ -98,7 +98,7 @@ unsigned int global_i;
 
 /****** Active test cases *****/
 Test *tests[] = {&it_02, &dummy_test};
-	
+
 int main(void){
 	char c = 0;
 	char str[MAX_STR_LEN];
