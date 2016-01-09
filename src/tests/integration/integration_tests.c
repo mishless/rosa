@@ -27,10 +27,14 @@
 
 ROSA_TickCount tick_count_1, tick_count_2, tick_count_3;
 
+unsigned int iteration = 0;
+
 void tick_getter_1(void)
 {
 	while (1)
 	{
+		if(iteration == 0) iteration = 1;
+		else if(iteration == 3) iteration = 4;
 		tick_count_1 = ROSA_TimerTickCount();
 	}
 }
@@ -39,22 +43,41 @@ void tick_getter_2(void)
 {
 	while (1)
 	{
+		if(iteration == 1)
+		{
+			iteration = 2;
+		}
+		if(iteration == 4) 
+		{
+			iteration = 5;
+		}
 		tick_count_2 = ROSA_TimerTickCount();
 	}
 }
 
 void tick_getter_and_tick_checker(void)
 {
-	tick_count_3 = ROSA_TimerTickCount();
-	if ( (tick_count_1 == (ROUND_ROBIN_PERIOD - 1)) && 
-	     (tick_count_2 == (2*ROUND_ROBIN_PERIOD - 1)) &&
-		 (tick_count_3 == (2*ROUND_ROBIN_PERIOD)) )
+	while(1)
 	{
-		send_success();
-	}
-	else
-	{
-		send_fail();
+		tick_count_3 = ROSA_TimerTickCount();
+		
+		if(iteration == 2) iteration = 3;
+		
+		
+		
+		if(iteration == 5)
+		{
+			if ( (tick_count_1 == (4*ROUND_ROBIN_PERIOD - 1)) &&
+			(tick_count_2 == (5*ROUND_ROBIN_PERIOD - 1)) &&
+			(tick_count_3 == (5*ROUND_ROBIN_PERIOD)) )
+			{
+				send_success();
+			}
+			else
+			{
+				send_fail();
+			}
+		}
 	}
 }
 
@@ -104,7 +127,7 @@ void consumer(void)
 void producer_consumer_checker(void)
 {
 	int i;
-	ROSA_DelayRelative(50);
+	ROSA_DelayRelative(10);
 	for (i = 0; i < 2; i++)
 	{
 		if (something_consumed != 1 || something_produced != 1)
@@ -113,7 +136,7 @@ void producer_consumer_checker(void)
 		}
 		something_consumed = 0;
 		something_produced = 0;
-		ROSA_DelayRelative(50);
+		ROSA_DelayRelative(10);
 	}
 	send_success();
 }
@@ -122,8 +145,8 @@ void it_02_main()
 {
 	char task_name[5] = TASK_NAME;
 	
-	ROSA_CreateTask(producer, task_name, SMALL_STACK_SIZE, PRIORITY_2, NULL);
-	ROSA_CreateTask(consumer, task_name, SMALL_STACK_SIZE, PRIORITY_2, NULL);
+	ROSA_CreateTask(producer, "prod", SMALL_STACK_SIZE, PRIORITY_2, NULL);
+	ROSA_CreateTask(consumer, "cons", SMALL_STACK_SIZE, PRIORITY_2, NULL);
 	ROSA_CreateTask(producer_consumer_checker, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	
 	ROSA_SemaphoreCreateBinary(&somethingProduced, SEMAPHORE_OCCUPIED);

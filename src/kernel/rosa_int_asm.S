@@ -301,10 +301,10 @@ contextSaveFromISR:
 	st.w --sp,r0
 	stmts sp,sp
 	ld.w r0,sp++
-
+	
 	//don't ask
-	sub r0, -0x4
-
+	//sub r0, -0x4
+	
 	st.w r12[TCB.SAVEUSP],r0
 
 	mov pc,lr
@@ -325,6 +325,9 @@ contextRestoreFromISR:
 
 	//Restore USP
 	ld.w r0,r12[TCB.SAVEUSP]
+	
+
+
 	st.w --sp,r0
 	ldmts sp,sp
 	ld.w r0,sp++							//USP is in r0
@@ -357,6 +360,10 @@ contextRestoreFromISR:
 	//Restore r7
 	ld.w r0,r12[TCB.SAVEREG.R7]				//This is the r7_user
 	st.w sp[SFINT0_R7_TASK],r0				//Save r7_user to the stack, in order to not have the r7_user destroyed.
+
+	//Restore r6
+	ld.w r0,r12[TCB.SAVEREG.R6]				//This is the r6_user
+	st.w sp[SFINT0_R6_TASK],r0				//Save r6_user to the stack, in order to not have the r6_user destroyed.
 
 	//Restore work registers
 	ld.w r0,r12[TCB.SAVER0]
