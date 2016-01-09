@@ -27,9 +27,9 @@ void ROSA_DelayRelative (ROSA_TickCount tickCount)
 	
 	putInDELAYqueue(task);
 	
-	interruptEnable();
-	
 	ROSA_yield();
+	
+	interruptEnable();
 }
 
 void ROSA_DelayAbsolute (ROSA_TickCount reference, ROSA_TickCount tickCount)
@@ -43,9 +43,9 @@ void ROSA_DelayAbsolute (ROSA_TickCount reference, ROSA_TickCount tickCount)
 	
 	putInDELAYqueue(task);
 	
-	interruptEnable();
-	
 	ROSA_yield();
+	
+	interruptEnable();
 }
 
 ROSA_TickCount ROSA_TimerTickCount (void)
@@ -69,7 +69,7 @@ void ROSA_EndCycle (void)
 	/*This should trigger ROSA_yield*/
 	putInDELAYqueue(task);
 	
-	interruptEnable();
-	
 	ROSA_yield();
+	
+	interruptEnable();
 }

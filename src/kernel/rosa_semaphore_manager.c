@@ -161,9 +161,9 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 		{
 			task->wakeUpTime =  systemTime + timeout;
 			putInBLOCKEDqueue(task, semaphore->SemaphoreBlockedQueue);
-			interruptEnable();
 			ROSA_yield();
-			interruptDisable();
+			
+			interruptEnable();
 			
 			/*TODO: Fix this stuff, it returns TIMEOUT even if the semaphore is posted*/
 			return TIMEOUT;
@@ -189,12 +189,14 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 		{
 			task->wakeUpTime =  systemTime + timeout;
 			putInBLOCKEDqueue(task, semaphore->SemaphoreBlockedQueue);
-			interruptEnable();
 			ROSA_yield();
-			interruptDisable();
+			
+			interruptEnable();
+			
 			return TIMEOUT;
 		}
 	}
+	
 	interruptEnable();
 	
 	// Return SUCCESS
@@ -229,7 +231,7 @@ unsigned int ROSA_SemaphoreGive (SemaphoreHandle handle)
 		{
 			semaphore->state = SEMAPHORE_FREE;
 			popFromStack(task->temporaryPriority);
-			while (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
+			if (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
 			{
 				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
 				putInREADYqueue(task);
@@ -237,6 +239,8 @@ unsigned int ROSA_SemaphoreGive (SemaphoreHandle handle)
 			}
 		}
 	}
+	
+	interruptEnable();
 	
 	// Return SUCCESS
 	return SUCCESS;

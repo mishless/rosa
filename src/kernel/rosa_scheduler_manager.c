@@ -71,13 +71,13 @@ void ROSA_StartScheduler(void)
 
 void scheduler()
 {
-	interruptDisable();
+	//interruptDisable();
 	
 	round_robin_counter = 0;
 	currentlyRunningTask = getFromREADYqueue();
 	EXECTASK = currentlyRunningTask->t;
 	
-	interruptEnable();
+	//interruptEnable();
 }
 
 unsigned int isSchedulerStarted(void)

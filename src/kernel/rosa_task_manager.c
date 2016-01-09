@@ -86,9 +86,6 @@ unsigned int ROSA_CreateTask(void (*functionBody) (void), char *functionNameChAr
 	// Populate the task handle with a pointer to the newly created task
 	*taskHandle = (TaskHandle*)task;
 
-	// Enable interrupts
-	interruptEnable();
-
 	// If the scheduler has been started check if CRT priority is lower than the new task priority and if so yeild
 	if (isSchedulerStarted() == 1)
 	{
@@ -98,6 +95,9 @@ unsigned int ROSA_CreateTask(void (*functionBody) (void), char *functionNameChAr
 			ROSA_yield();
 		}
 	}
+	
+	// Enable interrupts
+	interruptEnable();
 
 	// Return SUCCESS
 	return SUCCESS;
@@ -173,9 +173,6 @@ unsigned int ROSA_CreateCyclicTask(void (*functionBody) (void), char *functionNa
 	// Populate the task handle with a pointer to the newly created task
 	*taskHandle = (TaskHandle*)task;
 
-	// Enable interrupts
-	interruptEnable();
-
 	// If the scheduler has been started check if CRT priority is lower than the new task priority and if so yeild
 	if (isSchedulerStarted() == 1)
 	{
@@ -185,6 +182,9 @@ unsigned int ROSA_CreateCyclicTask(void (*functionBody) (void), char *functionNa
 			ROSA_yield();
 		}
 	}
+	
+	// Enable interrupts
+	interruptEnable();
 
 	// Return SUCCESS
 	return SUCCESS;
@@ -211,16 +211,17 @@ unsigned int ROSA_TerminateTask(void)
 
 	// Decrement the task counter
 	taskCounter--;
-	// Enable interrupts
-	interruptEnable();
 	
 	ROSA_yield();
+	
+	// Enable interrupts
+	interruptEnable();
 
 	// Check if the memory was deallocated successfully
 	if(task != NULL)
 	{
 		return FAILURE;
-	}
+	}	
 
 	return SUCCESS;
 }
