@@ -91,7 +91,7 @@ unsigned int global_i;
 #define STRESS_TESTS &it_st_01, &it_st_02, &swedish_test
 
 /***** Performance tests *****/
-#define PERFORMANCE_TESTS &pt_sc_01, &pt_sc_02, &pt_sc_03, &pt_sc_04, &pt_sc_05, &pt_sc_06, &pt_sc_07, &pt_sc_08
+#define PERFORMANCE_TESTS &pt_sc_01, &pt_sc_02, &pt_sc_03, &pt_sc_04, &pt_sc_05, &pt_sc_06, &pt_sc_07, &pt_sc_08, &pt_sc_09, &pt_sc_10, &pt_sc_11, &pt_sc_12, &pt_sc_13, &pt_sc_14, &pt_sc_15, &pt_sc_16, &pt_sc_17, &pt_sc_18, &pt_sc_19, &pt_sc_20, &pt_sc_21, &pt_sc_22, &pt_sc_23, &pt_sc_24, &pt_sc_25
 
 /***** Context Switch tests *****/
 #define CONTEXT_TESTS &cs_01, &cs_02, &cs_03, &cs_04
@@ -100,9 +100,27 @@ unsigned int global_i;
 #define ALL_TESTS	TM_TESTS, CONTEXT_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
 
 /****** Active test cases *****/
-Test *tests[] = {ALL_TESTS};
+Test *tests[] = {PERFORMANCE_TESTS};
 
-int main(void){
+void t1_try()
+{
+	unsigned int x = 0;
+	while(1)
+	{
+		x = get_max_stack(getCRT());
+	}
+}
+
+void try(void)
+{
+	TaskHandle t1;
+	ROSA_CreateTask(t1_try, "t1", 10, 5, &t1);
+	fill_stack(t1);
+	ROSA_Start();
+}
+
+int main(void)
+{
 	char c = 0;
 	char str[MAX_STR_LEN];
 	unsigned int test_to_run = -1;
@@ -111,7 +129,6 @@ int main(void){
 	/*Set up the system*/
 	disable_wdt();
 	ROSA_init();
-	//run_test_manual(it_st_01);
 	set_wdt(17);
 	
 	/*Start the communication*/

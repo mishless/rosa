@@ -1363,13 +1363,11 @@ void task_sm_tp_05_m()
 
 void task_sm_tp_05_l()
 {
-	ledOn(61);
 	ROSA_SemaphoreTake(semaphore_handle_t, MAX_TIMEOUT);
 }
 
 void task_sm_tp_05_ll()
 {
-	ledOn(62);
 	Semaphore* semaphore = (Semaphore*) semaphore_handle_t;
 	BlockedPriorityQueue* blocked_queue;
 	blocked_queue = (BlockedPriorityQueue*)semaphore->SemaphoreBlockedQueue;

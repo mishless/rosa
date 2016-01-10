@@ -10,6 +10,7 @@
 #include "helper_functions.h"
 
 #define SMALL_RESET_TIME 12
+#define STACK_PATTERN 0x55555555
 
 void send_fail()
 {
@@ -94,5 +95,34 @@ void run_test(Test test)
 
 void run_test_manual(Test test)
 {
-	((void (*)())test.function)();
+	if (test.type == TEST_FUNCTIONAL)
+	{
+		((void (*)())test.function)();
+	}
+	else 
+	{
+		((void (*)())test.function)(0);
+	}
+}
+
+unsigned int fill_stack(TaskHandle task)
+{
+	unsigned int i;
+	
+	int* stack = ((Task*)task)->t->dataarea - ((Task*)task)->t->datasize;
+	
+	for(i = 0; i < ((Task*)task)->t->datasize; i++)
+	{
+		stack[i] = STACK_PATTERN;
+	}
+}
+unsigned int get_max_stack(TaskHandle task)
+{
+	unsigned int i = 0;
+	
+	int* stack = ((Task*)task)->t->dataarea - ((Task*)task)->t->datasize;
+	
+	while(stack[i] == STACK_PATTERN) i++;
+	
+	return ((Task*)task)->t->datasize - i;
 }

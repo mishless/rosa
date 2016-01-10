@@ -26,6 +26,8 @@ unsigned int taskCounter = 0;
 */
 unsigned int ROSA_CreateTask(void (*functionBody) (void), char *functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, TaskHandle *taskHandle)
 {
+	unsigned int i;
+	
 	//Disable interrupts
 	interruptDisable();
 
@@ -43,13 +45,18 @@ unsigned int ROSA_CreateTask(void (*functionBody) (void), char *functionNameChAr
 		return NOT_ENOUGH_MEMORY;
 	}
 
-	int *stack = malloc(maxStackSize);
+	int *stack = malloc(sizeof(int)*maxStackSize);
 	// Check if memory was successfully allocated for the maximum size of the stack
 	if (stack == NULL)
 	{
 		return NOT_ENOUGH_MEMORY;
 	}
-
+	
+	/*TESTING IN PROGRESS*/
+	/*END OF TESTING IN PROGRESS*/
+	
+	
+	
 	// Allocate memory for stack structure that holds temporary priorities
 	task->temporaryPriority = createStack(MAX_NUMBER_SEMAPHORES);
 	// Check if memory was successfully allocated for stack structure

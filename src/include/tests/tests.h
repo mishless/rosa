@@ -31,6 +31,8 @@ typedef struct
 #include "context_switch_tests.h"
 #include "drivers/usart.h"
 #include "helper_functions.h"
+#include "rosa_config.h"
+#include "rosa_api_call.h"
 
 #define SUCCESS_CHAR '^'
 #define FAILURE_CHAR '_'
@@ -47,4 +49,8 @@ void send_result(unsigned int number);
 
 void run_test(Test test);
 void run_test_manual(Test test);
+
+unsigned int fill_stack(TaskHandle task);
+unsigned int get_max_stack(TaskHandle task);
+
 #endif /* TESTS_H_ */
