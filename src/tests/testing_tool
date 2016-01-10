@@ -55,7 +55,7 @@ unsuccessfulTestCasesMsg = '<div style=\'padding-top:5px;color:red\'>Unsuccessfu
 currentResult = ''
 currentId = ''
 
-html = '<html style="background-image: url(\'background.png\');color: #353535; font-family:\'Verdana\';"><head><script type="text/javascript" src="loader.js"></script></head><title>ROSA Test Cases Results</title><body><div style=\'padding:40px\'><div>{0}</div><div style=\'display:table;\'>{1}</div><div>{2}</div></div><body></html>'
+html = '<html style="background-image: url(\'background.png\');color: #353535; font-family:\'Verdana\';"><head><script type="text/javascript" src="loader.js"></script><script type="text/javascript">google.charts.load("current", {{"packages":["corechart"]}});</script></head><title>ROSA Test Cases Results</title><body><div style=\'padding:40px\'><div>{0}</div><div style=\'display:table;\'>{1}</div><div>{2}</div></div><body></html>'
 title = '<div style=\'display: table; padding-bottom: 15px;\'><div style=\'background-image: url("logo.png");background-size: 40px;height: 40px;background-repeat: no-repeat;display: table-cell;width: 40px;padding-right: 15px;\'></div><div style="font-size:larger;display: table-cell;vertical-align: middle;height: 40px;">ROSA Test Cases Results</div></div>'
 testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
 table = ''
@@ -65,7 +65,6 @@ planHeader = '</div><div style=\'font-size:larger;padding-bottom:15px;padding-to
 suiteHeader = '</div><div style=\'padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 
 plot = """</div><script type='text/javascript'>
-      google.charts.load('current', {{'packages':['corechart']}});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {{
         var data = google.visualization.arrayToDataTable([
@@ -127,7 +126,7 @@ while 1:
 				# Testing tool answers "Give me the number of test cases."
 				print('Give me the number of test cases.')
 				state = States.WAITING_FOR_NUMBER_OF_TEST_CASES
-				print("State changed to States.WAITING_FOR_NUMBER_OF_TEST_CASES")
+				# print("State changed to States.WAITING_FOR_NUMBER_OF_TEST_CASES")
 				ser.write(b'#');
 		elif (state is States.WAITING_FOR_NUMBER_OF_TEST_CASES):
 			if (value == b''):
@@ -143,16 +142,16 @@ while 1:
 				# Empty the buffer
 				buffer = array('B', [])
 				state = States.WAITING_FOR_REQUEST
-				print("State changed to States.WAITING_FOR_REQUEST")
+				# print("State changed to States.WAITING_FOR_REQUEST")
 			else:
 				# Append to the buffer
 				buffer.append(ord(value))
 		elif (state is States.WAITING_FOR_REQUEST):
 			if (value == b'?'):
-				print(value)
+				# print(value)
 				# Testing tool answers "Run the current test case." and increments it
 				state = States.WAITING_FOR_TEST_CASE_INFORMATION
-				print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
+				# print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
 				ser.write(b'%');
 				ser.write(str(currentTestCaseNumber).encode())
 				ser.write(b'\r')
@@ -161,7 +160,7 @@ while 1:
 			if (value == b'?'):
 				# Testing tool answers "Run the current test case." and increments it
 				state = States.WAITING_FOR_TEST_CASE_INFORMATION
-				print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
+				# print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
 				ser.write(b'%');
 				ser.write(str(currentTestCaseNumber-1).encode())
 				ser.write(b'\r')
@@ -211,15 +210,15 @@ while 1:
 					# Check the type and put in correct state
 					if (currentTestCase.type == 'f'):
 						state = States.WAITING_FOR_NORMAL_TEST_CASE_RESULT
-						print("State changed to States.WAITING_FOR_NORMAL_TEST_CASE_RESULT")
+						# print("State changed to States.WAITING_FOR_NORMAL_TEST_CASE_RESULT")
 					elif (currentTestCase.type == 'p'):
-						if (currentTestCase.id != previousTestCase.id):
+						if (previousTestCase is not None and currentTestCase.id != previousTestCase.id):
 							argumentsCounter = currentTestCase.min
 							plotArrays += "['Microseconds', 'Tasks']"
 						else:
 							argumentsCounter = argumentsCounter + 1
 						state = States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION
-						print("State changed to States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION")
+						# print("State changed to States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION")
 			else:
 				# Append to the buffer
 				buffer.append(ord(value));
@@ -239,10 +238,10 @@ while 1:
 			else:
 				continue
 			state = States.REPORT_RESULT
-			print("State changed to States.REPORT_RESULT")
+			# print("State changed to States.REPORT_RESULT")
 		elif (state is States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION):
 			state = States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT
-			print("State changed to States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT")
+			# print("State changed to States.WAITING_FOR_PERFORMANCE_TEST_CASE_RESULT")
 			if (currentTestCase.min == -1 and currentTestCase.max == -1):
 				ser.write(str(-1).encode())
 				ser.write(b'\r')
@@ -257,8 +256,9 @@ while 1:
 				if (len(buffer) == 0):
 					continue
 				else:
-					print("State changed to States.REPORT_RESULT")
+					# print("State changed to States.REPORT_RESULT")
 					state = States.REPORT_RESULT
+					# print(buffer);
 					ticks = int(buffer[3:].tostring().decode('ascii').strip().strip("\n").strip("\r"))
 					print(ticks)
 					# Empty the buffer
@@ -276,33 +276,34 @@ while 1:
 					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, '-', '-')
 					if (currentTestCaseNumber == totalNumberOfTestCases):
 						state = States.FINISHED
-						print("State changed to States.FINISHED")
+						# print("State changed to States.FINISHED")
 					else:
 						state = States.WAITING_FOR_REQUEST
-						print("State changed to States.WAITING_FOR_REQUEST")
+						# print("State changed to States.WAITING_FOR_REQUEST")
 				else:
 					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, ticks, float("{0:.5f}".format(ticks * (1/6000))))
 					plotArrays += ",[" + str(argumentsCounter) + ", " + '{0:.5f}'.format(ticks * (1/6)) + "]"
 					if (currentTestCase.min != -1 and currentTestCase.max != -1 and argumentsCounter < currentTestCase.max):
-						print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
+						# print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
 						state = States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST
 					else:
 						table += plot.format(plotArrays, currentTestCase.id, 'Tasks')
 						if (currentTestCaseNumber == totalNumberOfTestCases):
 							state = States.FINISHED
-							print("State changed to States.FINISHED")
+							# print("State changed to States.FINISHED")
 						else:
 							state = States.WAITING_FOR_REQUEST
-							print("State changed to States.WAITING_FOR_REQUEST")
+							# print("State changed to States.WAITING_FOR_REQUEST")
 				ticks = -2
 			else:
+				print(currentTestCase.id)
 				table = table + row.format(currentResult, currentTestCase.id, currentTestCase.description)
 				if (currentTestCaseNumber == totalNumberOfTestCases):
 					state = States.FINISHED
-					print("State changed to States.FINISHED")
+					# print("State changed to States.FINISHED")
 				else:
 					state = States.WAITING_FOR_REQUEST
-					print("State changed to States.WAITING_FOR_REQUEST")
+					# print("State changed to States.WAITING_FOR_REQUEST")
 	# Catch Ctrl-C
 	except KeyboardInterrupt:
 		print('Testing tool terminated by the user.')
