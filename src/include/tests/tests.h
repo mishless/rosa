@@ -28,6 +28,7 @@ typedef struct
 #include "stress_tests.h"
 #include "integration_tests.h"
 #include "performance_tests.h"
+#include "context_switch_tests.h"
 #include "drivers/usart.h"
 #include "helper_functions.h"
 
@@ -37,9 +38,13 @@ typedef struct
 #define TEST_FUNCTIONAL 0
 #define TEST_PERFORMANCE 1
 
+#define SMALL_STACK_SIZE 8192
+#define SUPER_SMALL_STACK_SIZE 2048
+
 void send_fail();
 void send_success();
 void send_result(unsigned int number);
 
 void run_test(Test test);
+void run_test_manual(Test test);
 #endif /* TESTS_H_ */

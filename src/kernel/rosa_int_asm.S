@@ -364,7 +364,7 @@ contextRestoreFromISR:
 	//Restore r6
 	ld.w r0,r12[TCB.SAVEREG.R6]				//This is the r6_user
 	st.w sp[SFINT0_R6_TASK],r0				//Save r6_user to the stack, in order to not have the r6_user destroyed.
-
+	
 	//Restore work registers
 	ld.w r0,r12[TCB.SAVER0]
 

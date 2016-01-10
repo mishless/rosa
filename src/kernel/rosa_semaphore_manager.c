@@ -189,6 +189,7 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 		{
 			task->wakeUpTime =  systemTime + timeout;
 			putInBLOCKEDqueue(task, semaphore->SemaphoreBlockedQueue);
+			
 			ROSA_yield();
 			
 			interruptEnable();
@@ -233,9 +234,19 @@ unsigned int ROSA_SemaphoreGive (SemaphoreHandle handle)
 			popFromStack(task->temporaryPriority);
 			if (!(isEmptyBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)))
 			{
+				/* Put the state to occupied again because another task will be released from the "take" function*/
+				semaphore->state = SEMAPHORE_OCCUPIED;
+				
 				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
 				putInREADYqueue(task);
 				ROSA_yield();				
+			}
+			
+			/*Maybe a task in READY queue has higher priority than our priority now*/
+			else if(getPriority(peekREADYqueue()) > getPriority(getCRT()))
+			{
+				putInREADYqueue(getCRT());
+				ROSA_yield();
 			}
 		}
 	}

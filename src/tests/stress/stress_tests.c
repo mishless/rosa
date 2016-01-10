@@ -13,7 +13,7 @@
 #include "rosa_api_call.h"
 
 #define TASK_NAME "strs"
-#define SMALL_STACK_SIZE 1000
+#define STACK_SIZE 1000
 
 #define BIG_TIMEOUT 10000000
 
@@ -23,7 +23,7 @@
 int semaphores_taken = 0;
 int semaphore_last_reserved = 0;
 
-SemaphoreHandle bunch_of_semaphores[42];
+SemaphoreHandle bunch_of_semaphores[MAX_NUMBER_TASKS];
 
 void semaphore_taker_and_incrementer(void)
 {
@@ -34,7 +34,7 @@ void semaphore_taker_and_incrementer(void)
 		ROSA_SemaphoreTake(bunch_of_semaphores[my_semaphore], BIG_TIMEOUT);
 		semaphores_taken++;
 		ROSA_SemaphoreGive(bunch_of_semaphores[my_semaphore]);
-		if (semaphores_taken > 1000)
+		if (semaphores_taken > 100)
 		{
 			send_success();
 		}
@@ -48,7 +48,7 @@ void it_st_01_main()
 	
 	for (i = 0; i < MAX_NUMBER_TASKS; i++)
 	{
-		ROSA_CreateTask(semaphore_taker_and_incrementer, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
+		ROSA_CreateTask(semaphore_taker_and_incrementer, task_name, STACK_SIZE, PRIORITY_3, NULL);
 	}
 	ROSA_SemaphoreCreateBinary(&bunch_of_semaphores[0], SEMAPHORE_FREE);
 	for (i = 1; i < MAX_NUMBER_TASKS; i++)
@@ -70,10 +70,10 @@ Test it_st_01 = {
 
 SemaphoreHandle tortured_forever[MAX_NUMBER_SEMAPHORES];
 
-void semaphore_god(void)
+void it_st_02_main()
 {
 	int i, j;
-	for (i = 0; i < 1000; i++)
+	for (i = 0; i < 500; i++)
 	{
 		for (j = 0; j < MAX_NUMBER_SEMAPHORES; j++)
 		{
@@ -85,14 +85,6 @@ void semaphore_god(void)
 		}
 	}
 	send_success();
-}
-
-void it_st_02_main()
-{
-	char task_name[5] = TASK_NAME;
-	
-	ROSA_CreateTask(semaphore_god, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
-	ROSA_StartScheduler();
 }
 
 Test it_st_02 = {

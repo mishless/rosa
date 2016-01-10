@@ -16,7 +16,6 @@
 #include "priority_queue.h"
 
 #define TEST_NAME "test"
-#define SMALL_STACK_SIZE 1024
 #define LARGE_STACK_SIZE 2048
 
 #define PRIORITY_6 6

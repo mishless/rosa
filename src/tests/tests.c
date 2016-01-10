@@ -35,9 +35,13 @@ void send_result(unsigned int number)
 	BLOCK;
 }
 
+void test_sp();
+
 void run_test(Test test)
 {
 	char str[50];
+	
+	//asm("pushm LR\nmov LR, SP\nnop\nnop\npopm LR");
 	
 	if(test.type == TEST_FUNCTIONAL)
 	{
@@ -87,4 +91,8 @@ void run_test(Test test)
 		}
 	}
 }
-	
+
+void run_test_manual(Test test)
+{
+	((void (*)())test.function)();
+}

@@ -15,7 +15,7 @@
 
 #define TEST_PTR (void*) 42
 #define TASK_NAME "test"
-#define STACK_SIZE 1000
+#define STACK_SIZE SMALL_STACK_SIZE
 #define TEST_PRIORITY 6
 
 /*************** TEST SUITE: Scheduler start ***************/

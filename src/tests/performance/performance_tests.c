@@ -17,7 +17,6 @@
 #include "performance_tests.h"
 
 #define TASK_NAME "test"
-#define SMALL_STACK_SIZE 1000
 #define PRIORITY_5 5
 #define PRIORITY_4 4
 #define PRIORITY_3 3

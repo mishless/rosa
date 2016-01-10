@@ -13,7 +13,6 @@
 #include "rosa_api_call.h"
 
 #define TASK_NAME "intg"
-#define SMALL_STACK_SIZE 4096
 
 #define BIG_TIMEOUT 10000000
 

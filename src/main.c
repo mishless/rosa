@@ -93,12 +93,14 @@ unsigned int global_i;
 /***** Performance tests *****/
 #define PERFORMANCE_TESTS &pt_sc_01, &pt_sc_02, &pt_sc_03, &pt_sc_04, &pt_sc_05, &pt_sc_06, &pt_sc_07, &pt_sc_08
 
+/***** Context Switch tests *****/
+#define CONTEXT_TESTS &cs_01, &cs_02, &cs_03, &cs_04
+
 /***** All tests *****/
-#define ALL_TESTS	TM_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
+#define ALL_TESTS	TM_TESTS, CONTEXT_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
 
 /****** Active test cases *****/
-
-Test *tests[] = {&it_01};
+Test *tests[] = {ALL_TESTS};
 
 int main(void){
 	char c = 0;
@@ -109,9 +111,7 @@ int main(void){
 	/*Set up the system*/
 	disable_wdt();
 	ROSA_init();
-	
-	((void (*)())it_01.function)();
-	
+	//run_test_manual(it_st_01);
 	set_wdt(17);
 	
 	/*Start the communication*/

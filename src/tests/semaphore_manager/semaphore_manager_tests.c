@@ -18,7 +18,6 @@
 
 #define BIG_TIMEOUT 100000000
 #define TASK_NAME			"test"
-#define SMALL_STACK_SIZE	4000
 #define PRIORITY_6			6
 #define PRIORITY_5			5
 #define PRIORITY_4			4
@@ -1364,17 +1363,19 @@ void task_sm_tp_05_m()
 
 void task_sm_tp_05_l()
 {
+	ledOn(61);
 	ROSA_SemaphoreTake(semaphore_handle_t, MAX_TIMEOUT);
 }
 
 void task_sm_tp_05_ll()
 {
+	ledOn(62);
 	Semaphore* semaphore = (Semaphore*) semaphore_handle_t;
 	BlockedPriorityQueue* blocked_queue;
 	blocked_queue = (BlockedPriorityQueue*)semaphore->SemaphoreBlockedQueue;
 	
 	if(blocked_queue->size != 2)
-	send_fail();
+		send_fail();
 	
 	if ((blocked_queue->data[0]->task) != (Task*) taskMiddlePriority)
 	{
@@ -1393,12 +1394,12 @@ void sm_take_prio_05_main()
 {
 	char task_name[5] = TASK_NAME;
 	
-	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
+	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_6);
 	
-	ROSA_CreateTask(task_sm_tp_05_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
-	ROSA_CreateTask(task_sm_tp_05_m, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskMiddlePriority);
-	ROSA_CreateTask(task_sm_tp_05_l, task_name, SMALL_STACK_SIZE, PRIORITY_3, &taskLowPriority);
-	ROSA_CreateTask(task_sm_tp_05_ll, task_name, SMALL_STACK_SIZE, PRIORITY_2, &taskLowLowPriority);
+	ROSA_CreateTask(task_sm_tp_05_h, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_6, &taskHighPriority);
+	ROSA_CreateTask(task_sm_tp_05_m, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_5, &taskMiddlePriority);
+	ROSA_CreateTask(task_sm_tp_05_l, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_4, &taskLowPriority);
+	ROSA_CreateTask(task_sm_tp_05_ll, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_3, &taskLowLowPriority);
 	
 	ROSA_Start();
 	send_fail();
@@ -1461,10 +1462,10 @@ void sm_take_prio_06_main()
 	
 	ROSA_SemaphoreCreatePrio(&semaphore_handle_t, SEMAPHORE_FREE, PRIORITY_5);
 	
-	ROSA_CreateTask(task_sm_tp_06_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
-	ROSA_CreateTask(task_sm_tp_06_m, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskMiddlePriority);
-	ROSA_CreateTask(task_sm_tp_06_l, task_name, SMALL_STACK_SIZE, PRIORITY_3, &taskLowPriority);
-	ROSA_CreateTask(task_sm_tp_06_ll, task_name, SMALL_STACK_SIZE, PRIORITY_2, &taskLowLowPriority);
+	ROSA_CreateTask(task_sm_tp_06_h, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
+	ROSA_CreateTask(task_sm_tp_06_m, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_4, &taskMiddlePriority);
+	ROSA_CreateTask(task_sm_tp_06_l, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_3, &taskLowPriority);
+	ROSA_CreateTask(task_sm_tp_06_ll, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_2, &taskLowLowPriority);
 	
 	ROSA_Start();
 	send_fail();
@@ -2222,10 +2223,10 @@ void sm_give_binary_05_main()
 {
 	char task_name[5] = TASK_NAME;
 	
-	ROSA_CreateTask(take_binary_semaphore_with_high_prio, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
-	ROSA_CreateTask(take_binary_semaphore_with_medium_prio, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
-	ROSA_CreateTask(take_binary_semaphore_with_low_prio, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
-	ROSA_CreateTask(release_binary_semaphore, task_name, SMALL_STACK_SIZE, PRIORITY_2, NULL);
+	ROSA_CreateTask(take_binary_semaphore_with_high_prio, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(take_binary_semaphore_with_medium_prio, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+	ROSA_CreateTask(take_binary_semaphore_with_low_prio, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_3, NULL);
+	ROSA_CreateTask(release_binary_semaphore, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_2, NULL);
 	ROSA_SemaphoreCreateBinary(&wanted_to_be_taked_by_everyone_binary, SEMAPHORE_OCCUPIED);
 	
 	ROSA_StartScheduler();
@@ -2432,10 +2433,10 @@ void sm_give_priority_05_main()
 {
 	char task_name[5] = TASK_NAME;
 	
-	ROSA_CreateTask(take_priority_semaphore_with_high_prio, task_name, SMALL_STACK_SIZE, PRIORITY_5, NULL);
-	ROSA_CreateTask(take_priority_semaphore_with_medium_prio, task_name, SMALL_STACK_SIZE, PRIORITY_4, NULL);
-	ROSA_CreateTask(take_priority_semaphore_with_low_prio, task_name, SMALL_STACK_SIZE, PRIORITY_3, NULL);
-	ROSA_CreateTask(release_priority_semaphore, task_name, SMALL_STACK_SIZE, PRIORITY_2, NULL);
+	ROSA_CreateTask(take_priority_semaphore_with_high_prio, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(take_priority_semaphore_with_medium_prio, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+	ROSA_CreateTask(take_priority_semaphore_with_low_prio, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_3, NULL);
+	ROSA_CreateTask(release_priority_semaphore, task_name, SUPER_SMALL_STACK_SIZE, PRIORITY_2, NULL);
 	ROSA_SemaphoreCreatePrio(&wanted_to_be_taked_by_everyone_priority, SEMAPHORE_FREE, PRIORITY_5);
 	
 	ROSA_StartScheduler();

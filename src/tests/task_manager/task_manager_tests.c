@@ -17,7 +17,6 @@
 
 #define TEST_PTR (void*) 42
 #define TASK_NAME "test"
-#define SMALL_STACK_SIZE 1000
 #define PRIORITY_5 5
 #define PRIORITY_4 4
 
