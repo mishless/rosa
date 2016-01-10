@@ -60,7 +60,7 @@ title = '<div style=\'display: table; padding-bottom: 15px;\'><div style=\'backg
 testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
 table = ''
 row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div></div>'
-rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2} ticks</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3} miliseconds</div></div>'
+rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3} ticks</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{4} miliseconds</div></div>'
 planHeader = '</div><div style=\'font-size:larger;padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 suiteHeader = '</div><div style=\'padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 
@@ -265,7 +265,7 @@ while 1:
 					buffer = array('B', [])
 			elif (value == b'?'):
 				ticks = -1
-				print("State changed to States.REPORT_RESULT")
+				# print("State changed to States.REPORT_RESULT")
 				state = States.REPORT_RESULT
 			else:
 				# Append to the buffer
@@ -273,7 +273,7 @@ while 1:
 		elif (state is States.REPORT_RESULT):
 			if (ticks != -2):
 				if (ticks == -1):
-					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, '-', '-')
+					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, '-', '-', '-')
 					if (currentTestCaseNumber == totalNumberOfTestCases):
 						state = States.FINISHED
 						# print("State changed to States.FINISHED")
@@ -281,13 +281,15 @@ while 1:
 						state = States.WAITING_FOR_REQUEST
 						# print("State changed to States.WAITING_FOR_REQUEST")
 				else:
-					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, ticks, float("{0:.5f}".format(ticks * (1/6000))))
-					plotArrays += ",[" + str(argumentsCounter) + ", " + '{0:.5f}'.format(ticks * (1/6)) + "]"
+					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, argumentsCounter ,ticks, float("{0:.5f}".format(ticks * (1/6000))))
 					if (currentTestCase.min != -1 and currentTestCase.max != -1 and argumentsCounter < currentTestCase.max):
-						# print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
+						plotArrays += ",[" + str(argumentsCounter) + ", " + '{0:.5f}'.format(ticks * (1/6)) + "]"
+						print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
 						state = States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST
 					else:
-						table += plot.format(plotArrays, currentTestCase.id, 'Tasks')
+						if (currentTestCase.min != -1 and currentTestCase.max != -1):
+							table += plot.format(plotArrays, currentTestCase.id, 'Tasks')
+						plotArrays = ''
 						if (currentTestCaseNumber == totalNumberOfTestCases):
 							state = States.FINISHED
 							# print("State changed to States.FINISHED")
