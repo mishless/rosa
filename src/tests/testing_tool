@@ -148,7 +148,6 @@ while 1:
 				buffer.append(ord(value))
 		elif (state is States.WAITING_FOR_REQUEST):
 			if (value == b'?'):
-				# print(value)
 				# Testing tool answers "Run the current test case." and increments it
 				state = States.WAITING_FOR_TEST_CASE_INFORMATION
 				# print("State changed to States.WAITING_FOR_TEST_CASE_INFORMATION")
@@ -211,10 +210,18 @@ while 1:
 					if (currentTestCase.type == 'f'):
 						state = States.WAITING_FOR_NORMAL_TEST_CASE_RESULT
 						# print("State changed to States.WAITING_FOR_NORMAL_TEST_CASE_RESULT")
-					elif (currentTestCase.type == 'p'):
-						if (previousTestCase is not None and currentTestCase.id != previousTestCase.id):
+					elif (currentTestCase.type == 'sp'):
+						if (previousTestCase is None or (previousTestCase is not None and currentTestCase.id != previousTestCase.id)):
 							argumentsCounter = currentTestCase.min
 							plotArrays += "['Microseconds', 'Tasks']"
+						else:
+							argumentsCounter = argumentsCounter + 1
+						state = States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION
+						# print("State changed to States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION")
+					elif (currentTestCase.type == 'mp'):
+						if (previousTestCase is None or (previousTestCase is not None and currentTestCase.id != previousTestCase.id)):
+							argumentsCounter = currentTestCase.min
+							plotArrays += "['Bytes', 'Tasks']"
 						else:
 							argumentsCounter = argumentsCounter + 1
 						state = States.SENDING_PERFORMANCE_TEST_CASE_INFORMATION
@@ -281,14 +288,23 @@ while 1:
 						state = States.WAITING_FOR_REQUEST
 						# print("State changed to States.WAITING_FOR_REQUEST")
 				else:
-					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, argumentsCounter ,ticks, float("{0:.5f}".format(ticks * (1/6000))))
+					plotValue = 0
+					plotName = ''
+					if (currentTestCase.type == 'sp'):
+						table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, argumentsCounter, str(ticks) + ' ticks', "{0:.5f}".format(ticks * (1/6000)) + ' miliseconds')
+						plotValue = float("{0:.5f}".format(ticks * (1/6000)))
+						plotName = '-SPEED-TEST'
+					elif (currentTestCase.type == 'mp'):
+						table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, argumentsCounter, str(ticks) + ' q', str(ticks*4) + ' bytes')
+						plotValue = ticks * 4
+						plotName = '-MEMORY-TEST'
 					if (currentTestCase.min != -1 and currentTestCase.max != -1 and argumentsCounter < currentTestCase.max):
-						plotArrays += ",[" + str(argumentsCounter) + ", " + '{0:.5f}'.format(ticks * (1/6)) + "]"
-						print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
+						plotArrays += ",[" + str(argumentsCounter) + ", " + str(plotValue) + "]"
+						# print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
 						state = States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST
 					else:
 						if (currentTestCase.min != -1 and currentTestCase.max != -1):
-							table += plot.format(plotArrays, currentTestCase.id, 'Tasks')
+							table += plot.format(plotArrays, currentTestCase.id + plotName, 'Tasks')
 						plotArrays = ''
 						if (currentTestCaseNumber == totalNumberOfTestCases):
 							state = States.FINISHED
