@@ -136,7 +136,7 @@ void task_pt_sc_04()
 	TIMER_START();
 	ticksBefore = TIMER_VALUE();
 
-	ROSA_CreateTask(TEST_PTR, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_3, NULL);
+	ROSA_CreateTask(TEST_PTR, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
 
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -149,7 +149,7 @@ void pt_sc_04_main(unsigned int maximum_tasks)
 	{
 		ROSA_CreateTask(TEST_PTR, "low", 0, PRIORITY_3, NULL);
 	}
-	ROSA_CreateTask(task_pt_sc_04, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+	ROSA_CreateTask(task_pt_sc_04, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
 	ROSA_Start();
 }
