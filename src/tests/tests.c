@@ -127,7 +127,7 @@ void run_test_manual(Test test)
 	}
 	else 
 	{
-		((void (*)())test.function)(0);
+		((void (*)())test.function)();
 	}
 }
 
@@ -151,6 +151,15 @@ unsigned int get_max_stack(TaskHandle task)
 	while((stack[i] == STACK_PATTERN) && (i < ((Task*)task)->t->datasize)) i++;
 	
 	return ((Task*)task)->t->datasize - i;
+}
+
+unsigned int TestStack_ROSA_CreateTask(void (*functionBody) (void), char * functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, TaskHandle *taskHandle)
+{
+	unsigned int res;
+	
+	res = ROSA_CreateTask(functionBody, functionNameChArr, maxStackSize, taskPriority, taskHandle);
+	fill_stack(*taskHandle);
+	return res;
 }
 
 unsigned int TestStack_ROSA_CreateCyclicTask(void (*functionBody) (void), char * functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, ROSA_TickCount taskPeriod, ROSA_TickCount taskDeadline, TaskHandle *taskHandle)

@@ -101,7 +101,7 @@ unsigned int global_i;
 #define ALL_TESTS	TM_TESTS, CONTEXT_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
 
 /****** Active test cases *****/
-Test *tests[] = {MEMORY_TESTS};
+Test *tests[] = {&pt_mt_sc_01};
 
 void t1_try()
 {
@@ -130,6 +130,7 @@ int main(void)
 	/*Set up the system*/
 	disable_wdt();
 	ROSA_init();
+	run_test_manual(pt_mt_sc_01);
 	set_wdt(17);
 	
 	/*Start the communication*/

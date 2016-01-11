@@ -43,7 +43,7 @@ typedef struct
 #define TEST_MEMORY_PERFORMANCE 2
 
 #define SMALL_STACK_SIZE 2048
-#define SUPER_SMALL_STACK_SIZE 1024
+#define SUPER_SMALL_STACK_SIZE 2048
 
 void send_fail();
 void send_success();
@@ -54,8 +54,6 @@ void run_test_manual(Test test);
 
 void fill_stack(TaskHandle task);
 unsigned int get_max_stack(TaskHandle task);
-#define TestStack_ROSA_CreateTask(functionBody ,functionNameChArr,maxStackSize,taskPriority, taskHandle) ROSA_CreateTask((functionBody), (functionNameChArr), (maxStackSize), (taskPriority), (taskHandle));\
-																																											fill_stack(*(taskHandle))
-
+unsigned int TestStack_ROSA_CreateTask(void (*functionBody) (void), char * functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, TaskHandle *taskHandle);
 unsigned int TestStack_ROSA_CreateCyclicTask(void (*functionBody) (void), char * functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, ROSA_TickCount taskPeriod, ROSA_TickCount taskDeadline, TaskHandle *taskHandle);
 #endif /* TESTS_H_ */
