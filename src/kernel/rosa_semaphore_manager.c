@@ -10,6 +10,7 @@
 unsigned int semaphore_counter = 0;
 unsigned int semaphore_id = 0;
 extern ROSA_TickCount systemTime;
+Task* unblockedTask = NULL;
 
 int SM_BLOCKEDcomparator(BlockedPriorityQueueElement *firstElement, BlockedPriorityQueueElement *secondElement)
 {
@@ -153,7 +154,7 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 	Semaphore* semaphore = (Semaphore*) handle;
 	Task* task = getCRT();	
 	//Binary semaphore
-	if(semaphore->type == BINARY)
+	if (semaphore->type == BINARY)
 	{
 		if (semaphore->state == SEMAPHORE_FREE)
 			semaphore->state = SEMAPHORE_OCCUPIED;
@@ -165,8 +166,12 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 			
 			interruptEnable();
 			
-			/*TODO: Fix this stuff, it returns TIMEOUT even if the semaphore is posted*/
-			return TIMEOUT;
+			if (task == unblockedTask)
+			{
+				return SUCCESS;
+			} else {
+				return TIMEOUT;
+			}
 		}
 	}
 	//Mutex
@@ -221,7 +226,7 @@ unsigned int ROSA_SemaphoreGive (SemaphoreHandle handle)
 			{
 				/* Put the state to occupied again because another task will be released from the "take" function*/
 				semaphore->state = SEMAPHORE_OCCUPIED;
-				
+				unblockedTask = peekBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task;
 				putInREADYqueue(dequeueBlockedPriorityQueue(semaphore->SemaphoreBlockedQueue)->task);
 				putInREADYqueue(task);
 				ROSA_yield();

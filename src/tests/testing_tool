@@ -72,11 +72,12 @@ plot = """</div><script type='text/javascript'>
         ]);
 
         var options = {{
+		  colors: ['{3}'],
 		  backgroundColor: '#F5F5F5',
 		  legend: {{position: 'none'}},
           title: '{1}',
           hAxis: {{title: '{2}',  titleTextStyle: {{color: '{3}'}}}},
-          vAxis: {{title: '{4}', minValue: 0}}
+          vAxis: {{title: '{4}', minValue: 0, titleTextStyle: {{color: '{3}'}}}}
         }};
 
         var chart = new google.visualization.AreaChart(document.getElementById('{1}'));

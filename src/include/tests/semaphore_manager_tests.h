@@ -50,7 +50,7 @@ extern Test sm_take_binary_04;
 extern Test sm_take_binary_05;
 extern Test sm_take_binary_06;
 extern Test sm_take_binary_07;
-//extern Test sm_take_binary_08;
+extern Test sm_take_binary_08;
 //extern Test sm_take_binary_09;
 
 extern Test sm_take_prio_01;

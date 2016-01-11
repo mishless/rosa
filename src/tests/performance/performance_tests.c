@@ -136,7 +136,7 @@ void task_pt_sc_04()
 	TIMER_START();
 	ticksBefore = TIMER_VALUE();
 
-	ROSA_CreateTask(TEST_PTR, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(TEST_PTR, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_3, NULL);
 
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -161,7 +161,7 @@ Test pt_sc_04 = {
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "2",
-	.end_parameter = "10",
+	.end_parameter = "42",
 .function =		pt_sc_04_main};
 
 

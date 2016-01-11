@@ -263,7 +263,7 @@ void tm_create_09_main()
 
 Test tm_create_09 = {
 	.id =			"TM-CREATE-09",
-	.description =	"Return code from ROSA_CreateTask should be NOT_ENOUGH_MEMORY when the system is out of memory.",
+	.description =	"Return code from ROSA_CreateTask should be TOO_MANY_TASKS when the system is out of memory.",
 	.plan =			"Task Manager",
 	.suite =		"Create Task",
 	.type =			TEST_FUNCTIONAL,

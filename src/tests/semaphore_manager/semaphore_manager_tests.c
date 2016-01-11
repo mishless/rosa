@@ -1139,48 +1139,44 @@ Test sm_take_binary_07 = {
 	.type =			TEST_FUNCTIONAL,
 .function =		sm_take_binary_07_main};
 
-/*void task_sm_tb_08_h ()
+SemaphoreHandle semaphore_handle_01;
+
+void task_sm_tb_08_h ()
 {
-	ROSA_TickCount ticks;
-	ROSA_DelayAbsolute(0, TIMEOUT_TIME);
 	ROSA_SemaphoreTake(semaphore_handle_01, 0);
-	
-	ticks = ROSA_TimerTickCount();
-	
-	if (ticks == 100)
-	send_success();
-	else
-	send_fail();
+	ROSA_DelayRelative(20);
+	busy_wait(30);
+	ROSA_SemaphoreGive(semaphore_handle_01);
 }
 
 void task_sm_tb_08_l ()
 {
-	ROSA_TickCount ticks;
-	ROSA_DelayAbsolute(0, 100);
-	ROSA_SemaphoreTake(semaphore_handle_01, 0);
-	
-	ticks = ROSA_TimerTickCount();
-	
-	if (ticks == 100)
-	send_success();
-	else
-	send_fail();
+	unsigned int result = ROSA_SemaphoreTake(semaphore_handle_01, 100);
+	if (result == SUCCESS) {
+		send_success();	
+	} else {
+		send_fail();
+	}
 }
 
-void sm_take_binary_08()
+void sm_take_binary_08_main()
 {
 	char task_name[5] = TASK_NAME;
-	
-	send_id("SM-TAKE-BINARY-08");
-	
 	ROSA_CreateTask(task_sm_tb_08_h, task_name, SMALL_STACK_SIZE, PRIORITY_5, &taskHighPriority);
 	ROSA_CreateTask(task_sm_tb_08_l, task_name, SMALL_STACK_SIZE, PRIORITY_4, &taskLowPriority);
 	
-	ROSA_SemaphoreCreateBinary(&semaphore_handle_01, SEMAPHORE_OCCUPIED);
+	ROSA_SemaphoreCreateBinary(&semaphore_handle_01, SEMAPHORE_FREE);
 	
 	ROSA_StartScheduler();
-	send_fail();
-}*/
+}
+
+Test sm_take_binary_08 = {
+	.id =			"SM-TAKE-BINARY-08",
+	.description =	"Take a semaphore that was blocked and released during timeout.",
+	.plan =			"Semaphore Manager",
+	.suite =		"Take Binary Semaphore",
+	.type =			TEST_FUNCTIONAL,
+.function =		sm_take_binary_08_main};
 
 /*************** TEST SUITE: Take Priority Semaphore ***************/
 
