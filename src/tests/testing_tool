@@ -60,7 +60,7 @@ title = '<div style=\'display: table; padding-bottom: 15px;\'><div style=\'backg
 testInformation = '<div style=\'padding-bottom:10px;\'>{0}</div>'
 table = ''
 row = '<div style=\'display: table-row;\'><div style=\'background-image: url("{0}.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div></div>'
-rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3} ticks</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{4} miliseconds</div></div>'
+rowPerformance = '<div style=\'display: table-row;\'><div style=\'background-image: url("success.png");background-repeat:no-repeat;background-size:13px;display:table-cell;background-position:center;width:30px;\'></div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;\'>{0}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{1}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{2}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{3}</div><div style=\'display: table-cell;height: 25px;vertical-align: middle;font-size: smaller;padding-left:20px;\'>{4}</div></div>'
 planHeader = '</div><div style=\'font-size:larger;padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 suiteHeader = '</div><div style=\'padding-bottom:15px;padding-top:15px;\'>{0}</div><div style=\'display:table;\'>'
 
@@ -75,8 +75,8 @@ plot = """</div><script type='text/javascript'>
 		  backgroundColor: '#F5F5F5',
 		  legend: {{position: 'none'}},
           title: '{1}',
-          hAxis: {{title: '{2}',  titleTextStyle: {{color: '#333'}}}},
-          vAxis: {{title: 'Microseconds', minValue: 0}}
+          hAxis: {{title: '{2}',  titleTextStyle: {{color: '{3}'}}}},
+          vAxis: {{title: '{4}', minValue: 0}}
         }};
 
         var chart = new google.visualization.AreaChart(document.getElementById('{1}'));
@@ -172,7 +172,6 @@ while 1:
 					continue
 				else:
 					# The board has sent an end transmission character - flush the buffer and print the test case ID
-					# print(buffer.tostring().decode('ascii'), end=" ")
 					id = ''
 					description = ''
 					plan = ''
@@ -272,12 +271,15 @@ while 1:
 					buffer = array('B', [])
 			elif (value == b'?'):
 				ticks = -1
+				# Empty the buffer
+				buffer = array('B', [])
 				# print("State changed to States.REPORT_RESULT")
 				state = States.REPORT_RESULT
 			else:
 				# Append to the buffer
 				buffer.append(ord(value));
 		elif (state is States.REPORT_RESULT):
+			print(currentTestCase.id)
 			if (ticks != -2):
 				if (ticks == -1):
 					table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, '-', '-', '-')
@@ -290,21 +292,27 @@ while 1:
 				else:
 					plotValue = 0
 					plotName = ''
+					plotColor = ''
+					yAxis = ''
 					if (currentTestCase.type == 'sp'):
 						table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, argumentsCounter, str(ticks) + ' ticks', "{0:.5f}".format(ticks * (1/6000)) + ' miliseconds')
 						plotValue = float("{0:.5f}".format(ticks * (1/6000)))
 						plotName = '-SPEED-TEST'
+						plotColor = '#3EA99F'
+						yAxis = 'Microseconds'
 					elif (currentTestCase.type == 'mp'):
 						table = table + rowPerformance.format(currentTestCase.id, currentTestCase.description, argumentsCounter, str(ticks) + ' q', str(ticks*4) + ' bytes')
 						plotValue = ticks * 4
 						plotName = '-MEMORY-TEST'
+						plotColor = '#F75D59'
+						yAxis = 'Bytes'
 					if (currentTestCase.min != -1 and currentTestCase.max != -1 and argumentsCounter < currentTestCase.max):
 						plotArrays += ",[" + str(argumentsCounter) + ", " + str(plotValue) + "]"
 						# print("State changed to States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST")
 						state = States.ASKING_FOR_THE_SAME_PERFORMANCE_TEST
 					else:
 						if (currentTestCase.min != -1 and currentTestCase.max != -1):
-							table += plot.format(plotArrays, currentTestCase.id + plotName, 'Tasks')
+							table += plot.format(plotArrays, currentTestCase.id + plotName, 'Tasks', plotColor, yAxis)
 						plotArrays = ''
 						if (currentTestCaseNumber == totalNumberOfTestCases):
 							state = States.FINISHED
@@ -314,7 +322,6 @@ while 1:
 							# print("State changed to States.WAITING_FOR_REQUEST")
 				ticks = -2
 			else:
-				print(currentTestCase.id)
 				table = table + row.format(currentResult, currentTestCase.id, currentTestCase.description)
 				if (currentTestCaseNumber == totalNumberOfTestCases):
 					state = States.FINISHED
