@@ -131,6 +131,12 @@ void run_test_manual(Test test)
 	}
 }
 
+void run_test_manual_param(Test test, unsigned int number)
+{
+	((void (*)(unsigned int))test.function)(number);
+}
+
+
 void fill_stack(TaskHandle task)
 {
 	unsigned int i;
