@@ -59,6 +59,4 @@ extern Test pt_sc_23;
 extern Test pt_sc_24;
 extern Test pt_sc_25;
 
-extern Test dummy_test;
-
 #endif /* PERFORMANCE_TESTS_H_ */

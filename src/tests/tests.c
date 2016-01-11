@@ -54,12 +54,25 @@ void run_test(Test test)
 		usart_write(test.plan);
 		usart_write("&suite=");
 		usart_write(test.suite);
-		usart_write("&type=")
-		usart_write( (test.type == TEST_FUNCTIONAL) ? ("f") : ("p") );
+		usart_write("&type=");
+		
+		if(test.type == TEST_FUNCTIONAL)
+		{
+			usart_write("f");
+		}
+		else if(test.type == TEST_SPEED_PERFORMANCE)
+		{
+			usart_write("sp");
+		}
+		else if(test.type == TEST_MEMORY_PERFORMANCE)
+		{
+			usart_write("mp");
+		}
+			
 		usartWriteChar(&AVR32_USART0, 0);
 		((void (*)())test.function)();
 	}
-	else if(test.type == TEST_PERFORMANCE)
+	else
 	{
 		usart_write("id=");
 		usart_write(test.id);
@@ -69,8 +82,21 @@ void run_test(Test test)
 		usart_write(test.plan);
 		usart_write("&suite=");
 		usart_write(test.suite);
-		usart_write("&type=")
-		usart_write( (test.type == TEST_FUNCTIONAL) ? ("f") : ("p") );
+		usart_write("&type=");
+		
+		if(test.type == TEST_FUNCTIONAL)
+		{
+			usart_write("f");
+		}
+		else if(test.type == TEST_SPEED_PERFORMANCE)
+		{
+			usart_write("sp");
+		}
+		else if(test.type == TEST_MEMORY_PERFORMANCE)
+		{
+			usart_write("mp");
+		}
+		
 		usart_write("&min=");
 		usart_write(test.start_parameter);
 		usart_write("&max=");
@@ -105,7 +131,7 @@ void run_test_manual(Test test)
 	}
 }
 
-unsigned int fill_stack(TaskHandle task)
+void fill_stack(TaskHandle task)
 {
 	unsigned int i;
 	
@@ -122,7 +148,16 @@ unsigned int get_max_stack(TaskHandle task)
 	
 	int* stack = ((Task*)task)->t->dataarea - ((Task*)task)->t->datasize;
 	
-	while(stack[i] == STACK_PATTERN) i++;
+	while((stack[i] == STACK_PATTERN) && (i < ((Task*)task)->t->datasize)) i++;
 	
 	return ((Task*)task)->t->datasize - i;
+}
+
+unsigned int TestStack_ROSA_CreateCyclicTask(void (*functionBody) (void), char * functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, ROSA_TickCount taskPeriod, ROSA_TickCount taskDeadline, TaskHandle *taskHandle)
+{
+	unsigned int res;
+	
+	res = ROSA_CreateCyclicTask(functionBody, functionNameChArr, maxStackSize, taskPriority, taskPeriod, taskDeadline, taskHandle);
+	fill_stack(*taskHandle);
+	return res;
 }

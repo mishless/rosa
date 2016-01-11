@@ -15,7 +15,7 @@
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
+    <avrtool>com.atmel.avrdbg.tool.avrdragon</avrtool>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -37,8 +37,7 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtoolinterface>
-    </avrtoolinterface>
+    <avrtoolinterface>JTAG</avrtoolinterface>
     <com_atmel_avrdbg_tool_avrdragon>
       <ToolOptions>
         <InterfaceProperties>
@@ -210,6 +209,9 @@
     <Compile Include="src\include\tests\integration_tests.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\include\tests\memory_tests.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\include\tests\performance_tests.h">
       <SubType>compile</SubType>
     </Compile>
@@ -274,6 +276,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tests\kernel\struct\priority_queue_test.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\tests\performance\memory_tests.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tests\performance\performance_tests.c">

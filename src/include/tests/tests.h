@@ -28,6 +28,7 @@ typedef struct
 #include "stress_tests.h"
 #include "integration_tests.h"
 #include "performance_tests.h"
+#include "memory_tests.h"
 #include "context_switch_tests.h"
 #include "drivers/usart.h"
 #include "helper_functions.h"
@@ -38,10 +39,11 @@ typedef struct
 #define FAILURE_CHAR '_'
 
 #define TEST_FUNCTIONAL 0
-#define TEST_PERFORMANCE 1
+#define TEST_SPEED_PERFORMANCE 1
+#define TEST_MEMORY_PERFORMANCE 2
 
-#define SMALL_STACK_SIZE 8192
-#define SUPER_SMALL_STACK_SIZE 2048
+#define SMALL_STACK_SIZE 2048
+#define SUPER_SMALL_STACK_SIZE 1024
 
 void send_fail();
 void send_success();
@@ -50,7 +52,10 @@ void send_result(unsigned int number);
 void run_test(Test test);
 void run_test_manual(Test test);
 
-unsigned int fill_stack(TaskHandle task);
+void fill_stack(TaskHandle task);
 unsigned int get_max_stack(TaskHandle task);
+#define TestStack_ROSA_CreateTask(functionBody ,functionNameChArr,maxStackSize,taskPriority, taskHandle) ROSA_CreateTask((functionBody), (functionNameChArr), (maxStackSize), (taskPriority), (taskHandle));\
+																																											fill_stack(*(taskHandle))
 
+unsigned int TestStack_ROSA_CreateCyclicTask(void (*functionBody) (void), char * functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, ROSA_TickCount taskPeriod, ROSA_TickCount taskDeadline, TaskHandle *taskHandle);
 #endif /* TESTS_H_ */

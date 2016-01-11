@@ -26,7 +26,6 @@ unsigned int taskCounter = 0;
 */
 unsigned int ROSA_CreateTask(void (*functionBody) (void), char *functionNameChArr, unsigned int maxStackSize, unsigned int taskPriority, TaskHandle *taskHandle)
 {
-	unsigned int i;
 	
 	//Disable interrupts
 	interruptDisable();

@@ -78,7 +78,7 @@ unsigned int global_i;
 #define SM_CREATE_MIX_TESTS &sm_create_mix_01, &sm_create_mix_02
 #define SM_DELETE_TESTS &sm_delete_03, &sm_delete_04
 #define SM_TAKE_BINARY_TESTS &sm_take_binary_01, &sm_take_binary_02, &sm_take_binary_03, &sm_take_binary_04, &sm_take_binary_05, &sm_take_binary_06, &sm_take_binary_07
-#define SM_TAKE_PRIORITY_TESTS &sm_take_prio_01, &sm_take_prio_02, &sm_take_prio_03, &sm_take_prio_04, &sm_take_prio_05, &sm_take_prio_06, &sm_take_prio_07, &sm_take_prio_10, &sm_take_prio_11, &sm_take_prio_12, &sm_take_prio_13, &sm_take_prio_14, &sm_take_prio_15
+#define SM_TAKE_PRIORITY_TESTS &sm_take_prio_01, &sm_take_prio_02, &sm_take_prio_03, &sm_take_prio_04, &sm_take_prio_05, &sm_take_prio_06, &sm_take_prio_07, &sm_take_prio_10, &sm_take_prio_11, &sm_take_prio_12, /*&sm_take_prio_13,*/ &sm_take_prio_14, &sm_take_prio_15
 #define SM_GIVE_BINARY_TESTS &sm_give_binary_01, &sm_give_binary_02, &sm_give_binary_03, &sm_give_binary_04, &sm_give_binary_05
 #define SM_GIVE_PRIORITY_TESTS &sm_give_priority_01, &sm_give_priority_02, &sm_give_priority_03, &sm_give_priority_04, &sm_give_priority_05
 
@@ -88,11 +88,12 @@ unsigned int global_i;
 #define INTEGRATION_TESTS &it_01, &it_02
 
 /***** Stress tests *****/
-#define STRESS_TESTS &it_st_01, &it_st_02, &swedish_test
+#define STRESS_TESTS &it_st_01, &it_st_02/*, &swedish_test*/
 
 /***** Performance tests *****/
 #define PERFORMANCE_TESTS &pt_sc_01, &pt_sc_02, &pt_sc_03, &pt_sc_04, &pt_sc_05, &pt_sc_06, &pt_sc_07, &pt_sc_08, &pt_sc_09, &pt_sc_10, &pt_sc_11, &pt_sc_12, &pt_sc_13, &pt_sc_14, &pt_sc_15, &pt_sc_16, &pt_sc_17, &pt_sc_18, &pt_sc_19, &pt_sc_20, &pt_sc_21, &pt_sc_22, &pt_sc_23, &pt_sc_24, &pt_sc_25
 
+#define MEMORY_TESTS &pt_mt_sc_01, &pt_mt_sc_03, &pt_mt_sc_04, &pt_mt_sc_05, &pt_mt_sc_06, &pt_mt_sc_07, &pt_mt_sc_08, &pt_mt_sc_09, &pt_mt_sc_10, &pt_mt_sc_11, &pt_mt_sc_12, &pt_mt_sc_13, &pt_mt_sc_14, &pt_mt_sc_15, &pt_mt_sc_16, &pt_mt_sc_17, &pt_mt_sc_18, &pt_mt_sc_20, &pt_mt_sc_21, &pt_mt_sc_22, &pt_mt_sc_23, &pt_mt_sc_24
 /***** Context Switch tests *****/
 #define CONTEXT_TESTS &cs_01, &cs_02, &cs_03, &cs_04
 
@@ -100,7 +101,7 @@ unsigned int global_i;
 #define ALL_TESTS	TM_TESTS, CONTEXT_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
 
 /****** Active test cases *****/
-Test *tests[] = {PERFORMANCE_TESTS};
+Test *tests[] = {MEMORY_TESTS};
 
 void t1_try()
 {

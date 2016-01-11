@@ -53,7 +53,7 @@ Test pt_sc_01 = {
 	.description =	"Create a task before the scheduler has started.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_01_main};
@@ -83,7 +83,7 @@ Test pt_sc_02 = {
 	.description =	"Create a cyclic task before the scheduler has started.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_02_main};
@@ -121,7 +121,7 @@ Test pt_sc_03 = {
 	.description =	"Create a task when the ready queue is empty and the scheduler has started.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_03_main};
@@ -162,7 +162,7 @@ Test pt_sc_04 = {
 	.description =	"Create a task after the ready queue has only one free slot  .",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "2",
 	.end_parameter = "10",
 .function =		pt_sc_04_main};
@@ -202,7 +202,7 @@ Test pt_sc_05 = {
 	.description =	"Create a cyclic task when the ready queue is empty and the scheduler has started.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_05_main};
@@ -244,13 +244,15 @@ Test pt_sc_06 = {
 	.description =	"Create a cyclic task after the ready queue has only one free slot.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "2",
 	.end_parameter = "10",
 .function =		pt_sc_06_main};
 
 /*** PT-SC-07 ***/
 
+TaskHandle task_handle_7;
+	
 void task_pt_sc_07_high()
 {
 	TIMER_INIT();
@@ -269,10 +271,9 @@ void task_pt_sc_07_low()
 
 void pt_sc_07_main()
 {
-	TaskHandle task_handle;
 	TaskHandle task_handle2;
 	
-	ROSA_CreateTask(task_pt_sc_07_low, "task", SUPER_SMALL_STACK_SIZE, PRIORITY_4, &task_handle);
+	ROSA_CreateTask(task_pt_sc_07_low, "task", SUPER_SMALL_STACK_SIZE, PRIORITY_4, &task_handle_7);
 	ROSA_CreateTask(task_pt_sc_07_high, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle2);
 	
 	ROSA_Start();
@@ -283,7 +284,7 @@ Test pt_sc_07 = {
 	.description =	"Terminate currently running task and switch to a new task.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_07_main};
@@ -316,27 +317,14 @@ Test pt_sc_08 = {
 	.description =	"Get current ticks from a task. This is fixed time.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_08_main};
 
-void dummy_main(unsigned int param)
-{
-	send_result(param*42);
-}
-
-Test dummy_test = {
-	.id =			"DUMMY-42",
-	.description =	"Testing the Testing tool. Inception. Deep stuff!",
-	.plan =			"Performance",
-	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
-	.start_parameter = "1",
-	.end_parameter = "10",
-.function =		dummy_main};
-
 /*** PT-SC-09 ***/
+
+TaskHandle task_handle_9;
 
 void task_pt_sc_09_low(void)
 {
@@ -356,7 +344,7 @@ void task_pt_sc_09_high(void)
 void pt_sc_09_main(void)
 {
 	ROSA_CreateTask(task_pt_sc_09_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
-	ROSA_CreateTask(task_pt_sc_09_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(task_pt_sc_09_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_9);
 
 	ROSA_StartScheduler();
 }
@@ -366,12 +354,14 @@ Test pt_sc_09 = {
 	.description =	"Measure time for executing absolute delay and switch to the next highest priority task when the delay queue is empty.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_09_main};
 
 /*** PT-SC-10 ***/
+
+TaskHandle task_handle_10;
 
 void task_pt_sc_10_high(void)
 {
@@ -389,7 +379,7 @@ void task_pt_sc_10_medium(void)
 
 void task_pt_sc_10_low(void)
 {
-	ROSA_CreateTask(task_pt_sc_10_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(task_pt_sc_10_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_10);
 	
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -413,12 +403,13 @@ Test pt_sc_10 = {
 	.description =	"Measure time for executing absolute delay and switch to the next highest priority task when the delay queue has only one free slot and all tasks' wake up time is after the newly delayed one.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
 	.end_parameter = "10",
 .function =		pt_sc_10_main};
 
 /*** PT-SC-11 ***/
+TaskHandle task_handle_11;
 
 void task_pt_sc_11_low(void)
 {
@@ -438,7 +429,7 @@ void task_pt_sc_11_high(void)
 void pt_sc_11_main(void)
 {
 	ROSA_CreateTask(task_pt_sc_11_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
-	ROSA_CreateTask(task_pt_sc_11_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(task_pt_sc_11_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_11);
 
 	ROSA_StartScheduler();
 }
@@ -448,12 +439,13 @@ Test pt_sc_11 = {
 	.description =	"Measure time for executing relative delay and switch to the next highest priority task when the delay queue is empty.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_11_main};
 
 /*** PT-SC-12 ***/
+TaskHandle task_handle_12;
 
 void task_pt_sc_12_high(void)
 {
@@ -471,7 +463,7 @@ void task_pt_sc_12_medium(void)
 
 void task_pt_sc_12_low(void)
 {
-	ROSA_CreateTask(task_pt_sc_12_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(task_pt_sc_12_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_12);
 	
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -495,12 +487,14 @@ Test pt_sc_12 = {
 	.description =	"Measure time for executing relative delay and switch to the next highest priority task when the delay queue has only one free slot and all tasks wake up time is after the newly delayed one.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
 	.end_parameter = "10",
 .function =		pt_sc_12_main};
 
 /*** PT-SC-13 ***/
+
+TaskHandle task_handle_13;
 
 void task_pt_sc_13_low(void)
 {
@@ -520,7 +514,7 @@ void task_pt_sc_13_high(void)
 void pt_sc_13_main(void)
 {
 	ROSA_CreateTask(task_pt_sc_13_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
-	ROSA_CreateCyclicTask(task_pt_sc_13_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, 30, 30, NULL);
+	ROSA_CreateCyclicTask(task_pt_sc_13_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, 30, 30, &task_handle_13);
 
 	ROSA_StartScheduler();
 }
@@ -530,12 +524,13 @@ Test pt_sc_13 = {
 	.description =	"Measure time for executing end cycle and switch to the next highest priority task when the delay queue is empty.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_13_main};
 
 /*** PT-SC-14 ***/
+TaskHandle task_handle_14;
 
 void task_pt_sc_14_high(void)
 {
@@ -553,7 +548,7 @@ void task_pt_sc_14_medium(void)
 
 void task_pt_sc_14_low(void)
 {
-	ROSA_CreateCyclicTask(task_pt_sc_14_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, 30, 30, NULL);
+	ROSA_CreateCyclicTask(task_pt_sc_14_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, 30, 30, &task_handle_14);
 	
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -577,12 +572,14 @@ Test pt_sc_14 = {
 	.description =	"Measure time for executing end cycle and switch to the next highest priority task when the delay queue has only one free slot and all tasks' wake up time is after the newly delayed one.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
 	.end_parameter = "10",
 .function =		pt_sc_14_main};
 
 /*** PT-SC-15 ***/
+
+TaskHandle task_handle_15;
 
 void task_pt_sc_15_high(void)
 {
@@ -601,7 +598,7 @@ void task_pt_sc_15_low(void)
 
 void pt_sc_15_main(void)
 {
-	ROSA_CreateTask(task_pt_sc_15_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+	ROSA_CreateTask(task_pt_sc_15_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, &task_handle_15);
 	
 	ROSA_StartScheduler();
 }
@@ -611,7 +608,7 @@ Test pt_sc_15 = {
 	.description =	"Creating new higher priority task and switch to it after the scheduler has been started.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_15_main};
@@ -637,7 +634,7 @@ Test pt_sc_16 = {
 	.description =	"Create a semaphore.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_16_main};
@@ -670,7 +667,7 @@ Test pt_sc_17 = {
 	.description =	"Create a semaphore from a task.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_17_main};
@@ -700,7 +697,7 @@ Test pt_sc_18 = {
 	.description =	"Delete a semaphore.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_18_main};
@@ -736,7 +733,7 @@ Test pt_sc_19 = {
 	.description =	"Delete a semaphore from a currently running task.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_19_main};
@@ -772,7 +769,7 @@ Test pt_sc_20 = {
 	.description =	"Take a free binary semaphore from a task.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_20_main};
@@ -780,6 +777,7 @@ Test pt_sc_20 = {
 /*** PT-SC-21 ***/
 
 SemaphoreHandle sem_21;
+TaskHandle task_handle_21;
 
 void task_pt_sc_21_low(void)
 {
@@ -800,7 +798,7 @@ void task_pt_sc_21_medium(void)
 	ROSA_SemaphoreTake(sem_21, 0);
 	ROSA_DelayRelative(200);
 	
-	ROSA_CreateTask(task_pt_sc_21_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(task_pt_sc_21_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_21);
 
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -826,7 +824,7 @@ Test pt_sc_21 = {
 	.description =	"Take an occupied binary semaphore from a task that is blocking maximum amount of tasks minus one with lower priority and longer wakeUpTimes.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
 	.end_parameter = "10",
 .function =		pt_sc_21_main};
@@ -862,7 +860,7 @@ Test pt_sc_22 = {
 	.description =	"Give an occupied binary semaphore from a task.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_22_main};
@@ -870,6 +868,7 @@ Test pt_sc_22 = {
 /*** PT-SC-23 ***/
 
 SemaphoreHandle sem_23;
+TaskHandle task_handle_23;
 
 void task_pt_sc_23_high(void)
 {
@@ -893,7 +892,7 @@ void pt_sc_23_main(void)
 	ROSA_SemaphoreCreateBinary(&sem_23, SEMAPHORE_OCCUPIED);
 	
 	ROSA_CreateTask(task_pt_sc_23_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
-	ROSA_CreateTask(task_pt_sc_23_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+	ROSA_CreateTask(task_pt_sc_23_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, &task_handle_23);
 	
 	ROSA_StartScheduler();
 }
@@ -903,7 +902,7 @@ Test pt_sc_23 = {
 	.description =	"Give an occupied binary semaphore from a task and switch to the task that was blocked by it.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_23_main};
@@ -911,6 +910,7 @@ Test pt_sc_23 = {
 /*** PT-SC-24 ***/
 
 SemaphoreHandle sem_24;
+TaskHandle task_handle_24;
 
 void task_pt_sc_24_low(void)
 {
@@ -938,7 +938,7 @@ void pt_sc_24_main(unsigned int number_of_low_prio_tasks)
 	int i;
 	
 	ROSA_SemaphoreCreateBinary(&sem_24, SEMAPHORE_OCCUPIED);
-	ROSA_CreateTask(task_pt_sc_24_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
+	ROSA_CreateTask(task_pt_sc_24_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_24);
 	
 	for (i = 0; i < number_of_low_prio_tasks; i++)
 	{
@@ -953,7 +953,7 @@ Test pt_sc_24 = {
 	.description =	"Give an occupied binary semaphore from a task and switch to the task that was blocked by it when maximum number of tasks were blocked with the same priority.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "1",
 	.end_parameter = "10",
 .function =		pt_sc_24_main};
@@ -982,7 +982,7 @@ Test pt_sc_25 = {
 	.description =	"Start scheduler.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
-	.type =			TEST_PERFORMANCE,
+	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =		pt_sc_25_main};
