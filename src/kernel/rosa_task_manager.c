@@ -132,7 +132,7 @@ unsigned int ROSA_CreateCyclicTask(void (*functionBody) (void), char *functionNa
 		return NOT_ENOUGH_MEMORY;
 	}
 
-	int *stack = malloc(maxStackSize);
+	int *stack = malloc(maxStackSize*sizeof(int));
 	// Check if memory was successfully allocated for the maximum size of the stack
 	if (stack == NULL)
 	{

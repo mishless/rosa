@@ -43,7 +43,7 @@ typedef struct
 #define TEST_MEMORY_PERFORMANCE 2
 
 #define SMALL_STACK_SIZE 2048
-#define SUPER_SMALL_STACK_SIZE 2048
+#define SUPER_SMALL_STACK_SIZE 512
 
 void send_fail();
 void send_success();

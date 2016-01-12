@@ -34,14 +34,10 @@ void ROSA_DelayRelative (ROSA_TickCount tickCount)
 
 void ROSA_DelayAbsolute (ROSA_TickCount reference, ROSA_TickCount tickCount)
 {
-	Task* task;
-	
 	interruptDisable();
+	getCRT()->wakeUpTime = reference + tickCount;
 	
-	task = getCRT();
-	task->wakeUpTime = reference + tickCount;
-	
-	putInDELAYqueue(task);
+	putInDELAYqueue(getCRT());
 	
 	ROSA_yield();
 	
@@ -55,19 +51,13 @@ ROSA_TickCount ROSA_TimerTickCount (void)
 
 void ROSA_EndCycle (void)
 {
-	ROSA_TickCount time;
-	Task* task;
-	
 	interruptDisable();
 	
-	task = getCRT();
-	time = systemTime;
-	
 	/*EC formula*/
-	task->wakeUpTime = task->period * (time/task->period + 1);
+	getCRT()->wakeUpTime = getCRT()->period * (systemTime/getCRT()->period + 1);
 	
 	/*This should trigger ROSA_yield*/
-	putInDELAYqueue(task);
+	putInDELAYqueue(getCRT());
 	
 	ROSA_yield();
 	
