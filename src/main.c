@@ -98,10 +98,10 @@ unsigned int global_i;
 #define CONTEXT_TESTS &cs_01, &cs_02, &cs_03, &cs_04
 
 /***** All tests *****/
-#define ALL_TESTS	TM_TESTS, CONTEXT_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS
+#define ALL_TESTS	TM_TESTS, CONTEXT_TESTS, SCM_TESTS, SCH_TESTS, SM_TESTS, INTEGRATION_TESTS, STRESS_TESTS, PERFORMANCE_TESTS, MEMORY_TESTS
 
 /****** Active test cases *****/
-Test *tests[] = {MEMORY_TESTS};
+Test *tests[] = {ALL_TESTS};
 
 void t1_try()
 {

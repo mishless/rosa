@@ -46,12 +46,12 @@ void it_st_01_main()
 	int i;
 	char task_name[5] = TASK_NAME;
 	
-	for (i = 0; i < MAX_NUMBER_TASKS; i++)
+	for (i = 0; i < MAX_NUMBER_TASKS - 1; i++)
 	{
 		ROSA_CreateTask(semaphore_taker_and_incrementer, task_name, STACK_SIZE, PRIORITY_3, NULL);
 	}
 	ROSA_SemaphoreCreateBinary(&bunch_of_semaphores[0], SEMAPHORE_FREE);
-	for (i = 1; i < MAX_NUMBER_TASKS; i++)
+	for (i = 1; i < MAX_NUMBER_TASKS - 1; i++)
 	{
 		ROSA_SemaphoreCreateBinary(&bunch_of_semaphores[i], SEMAPHORE_OCCUPIED);
 	}

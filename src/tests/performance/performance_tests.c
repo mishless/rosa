@@ -17,6 +17,7 @@
 #include "performance_tests.h"
 
 #define TASK_NAME "test"
+#define PRIORITY_6 6
 #define PRIORITY_5 5
 #define PRIORITY_4 4
 #define PRIORITY_3 3
@@ -156,15 +157,13 @@ void pt_sc_04_main(unsigned int maximum_tasks)
 
 Test pt_sc_04 = {
 	.id =			"PT-SC-04",
-	.description =	"Create a task after the ready queue has only one free slot  .",
+	.description =	"Create a task after the ready queue has only one free slot.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "2",
 	.end_parameter = "42",
 .function =		pt_sc_04_main};
-
-
 
 /*** PT-SC-05 ***/
 
@@ -204,46 +203,42 @@ Test pt_sc_05 = {
 	.end_parameter = "-1",
 .function =		pt_sc_05_main};
 
-
 /*** PT-SC-06 ***/
 
 void task_pt_sc_06()
 {
-	TaskHandle task_handle2;
-	
 	unsigned int ticksBefore, ticksAfter;
 
 	TIMER_INIT();
 	TIMER_START();
 	ticksBefore = TIMER_VALUE();
 
-	ROSA_CreateCyclicTask(TEST_PTR, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_4,TEST_PERIOD, TEST_DEADLINE, &task_handle2);
+	ROSA_CreateCyclicTask(TEST_PTR, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_4, TEST_PERIOD, TEST_DEADLINE, NULL);
 
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
-
 }
 
 void pt_sc_06_main(unsigned int maximum_tasks)
 {
-	TaskHandle task_handle;
 	int i;
-	for (i = 0; i < (maximum_tasks-1) ; i++)
+	for (i = 0; i < (maximum_tasks-2) ; i++)
 	{
-		ROSA_CreateCyclicTask(task_pt_sc_06, "task", SUPER_SMALL_STACK_SIZE, PRIORITY_5, TEST_PERIOD, TEST_DEADLINE, &task_handle);
+		ROSA_CreateTask(TEST_PTR, "low", 0, PRIORITY_3, NULL);
 	}
+	ROSA_CreateTask(task_pt_sc_06, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
 	ROSA_Start();
 }
 
 Test pt_sc_06 = {
 	.id =			"PT-SC-06",
-	.description =	"Create a cyclic task after the ready queue has only one free slot.",
+	.description =	"Create a cyclic task after there are N tasks in the ready queue.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "2",
-	.end_parameter = "10",
+	.end_parameter = "42",
 .function =		pt_sc_06_main};
 
 /*** PT-SC-07 ***/
@@ -311,7 +306,7 @@ void pt_sc_08_main()
 
 Test pt_sc_08 = {
 	.id =			"PT-SC-08",
-	.description =	"Get current ticks from a task. This is fixed time.",
+	.description =	"Get current ticks from a task.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
@@ -376,7 +371,7 @@ void task_pt_sc_10_medium(void)
 
 void task_pt_sc_10_low(void)
 {
-	ROSA_CreateTask(task_pt_sc_10_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_10);
+	ROSA_CreateTask(task_pt_sc_10_high, "high", SMALL_STACK_SIZE, PRIORITY_5, &task_handle_10);
 	
 	ticksAfter = TIMER_VALUE();
 	send_result(ticksAfter - ticksBefore);
@@ -385,11 +380,11 @@ void task_pt_sc_10_low(void)
 void pt_sc_10_main(unsigned int number_of_medium_prio_tasks)
 {
 	int i;
-	ROSA_CreateTask(task_pt_sc_10_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_3, NULL);
+	ROSA_CreateTask(task_pt_sc_10_low, "low", SMALL_STACK_SIZE, PRIORITY_3, NULL);
 	
-	for (i = 0; i < number_of_medium_prio_tasks; i++)
+	for (i = 0; i < number_of_medium_prio_tasks-2; i++)
 	{
-		ROSA_CreateTask(task_pt_sc_10_medium, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+		ROSA_CreateTask(task_pt_sc_10_medium, "med", 100, PRIORITY_4, NULL);
 	}
 	
 	ROSA_StartScheduler();
@@ -397,12 +392,12 @@ void pt_sc_10_main(unsigned int number_of_medium_prio_tasks)
 
 Test pt_sc_10 = {
 	.id =			"PT-SC-10",
-	.description =	"Measure time for executing absolute delay and switch to the next highest priority task when the delay queue has only one free slot and all tasks' wake up time is after the newly delayed one.",
+	.description =	"Measure time for executing absolute delay and switch to the next highest priority task when N tasks are in delay queue has only one free slot and longer delay time.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
-	.start_parameter = "0",
-	.end_parameter = "10",
+	.start_parameter = "2",
+	.end_parameter = "42",
 .function =		pt_sc_10_main};
 
 /*** PT-SC-11 ***/
@@ -473,7 +468,7 @@ void pt_sc_12_main(unsigned int number_of_medium_prio_tasks)
 	
 	for (i = 0; i < number_of_medium_prio_tasks; i++)
 	{
-		ROSA_CreateTask(task_pt_sc_12_medium, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+		ROSA_CreateTask(task_pt_sc_12_medium, "med", 100, PRIORITY_4, NULL);
 	}
 	
 	ROSA_StartScheduler();
@@ -481,12 +476,12 @@ void pt_sc_12_main(unsigned int number_of_medium_prio_tasks)
 
 Test pt_sc_12 = {
 	.id =			"PT-SC-12",
-	.description =	"Measure time for executing relative delay and switch to the next highest priority task when the delay queue has only one free slot and all tasks wake up time is after the newly delayed one.",
+	.description =	"Measure time for executing relative delay and switch to the next highest priority task when N tasks are in delay queue with longer delay time.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
-	.end_parameter = "10",
+	.end_parameter = "40",
 .function =		pt_sc_12_main};
 
 /*** PT-SC-13 ***/
@@ -558,7 +553,7 @@ void pt_sc_14_main(unsigned int number_of_medium_prio_tasks)
 	
 	for (i = 0; i < number_of_medium_prio_tasks; i++)
 	{
-		ROSA_CreateTask(task_pt_sc_14_medium, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+		ROSA_CreateTask(task_pt_sc_14_medium, "med", 100, PRIORITY_4, NULL);
 	}
 	
 	ROSA_StartScheduler();
@@ -566,12 +561,12 @@ void pt_sc_14_main(unsigned int number_of_medium_prio_tasks)
 
 Test pt_sc_14 = {
 	.id =			"PT-SC-14",
-	.description =	"Measure time for executing end cycle and switch to the next highest priority task when the delay queue has only one free slot and all tasks' wake up time is after the newly delayed one.",
+	.description =	"Measure time for executing end cycle and switch to the next highest priority task when N tasks are in delay queue with longer delay time.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
-	.end_parameter = "10",
+	.end_parameter = "40",
 .function =		pt_sc_14_main};
 
 /*** PT-SC-15 ***/
@@ -810,7 +805,7 @@ void pt_sc_21_main(unsigned int number_of_low_prio_tasks)
 	
 	for (i = 0; i < number_of_low_prio_tasks; i++)
 	{
-		ROSA_CreateTask(task_pt_sc_21_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_3, NULL);
+		ROSA_CreateTask(task_pt_sc_21_low, "low", 100, PRIORITY_3, NULL);
 	}
 	
 	ROSA_StartScheduler();
@@ -818,12 +813,12 @@ void pt_sc_21_main(unsigned int number_of_low_prio_tasks)
 
 Test pt_sc_21 = {
 	.id =			"PT-SC-21",
-	.description =	"Take an occupied binary semaphore from a task that is blocking maximum amount of tasks minus one with lower priority and longer wakeUpTimes.",
+	.description =	"Take an occupied binary semaphore from a task that is blocking maximum N tasks with lower priorities and longer wake-up times.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
-	.end_parameter = "10",
+	.end_parameter = "40",
 .function =		pt_sc_21_main};
 
 /*** PT-SC-22 ***/
@@ -912,12 +907,9 @@ TaskHandle task_handle_24;
 void task_pt_sc_24_low(void)
 {
 	ROSA_SemaphoreTake(sem_24, 10000);
-
-	ticksAfter = TIMER_VALUE();
-	send_result(ticksAfter - ticksBefore);
 }
 
-void task_pt_sc_24_high(void)
+void task_pt_sc_24_med(void)
 {
 	ROSA_DelayRelative(50);
 	
@@ -926,8 +918,14 @@ void task_pt_sc_24_high(void)
 	ticksBefore = TIMER_VALUE();
 	
 	ROSA_SemaphoreGive(sem_24);
-	
-	ROSA_DelayRelative(50);
+}
+
+void task_pt_sc_24_high(void)
+{
+	ROSA_SemaphoreTake(sem_24, 10000);
+
+	ticksAfter = TIMER_VALUE();
+	send_result(ticksAfter - ticksBefore);
 }
 
 void pt_sc_24_main(unsigned int number_of_low_prio_tasks)
@@ -935,11 +933,12 @@ void pt_sc_24_main(unsigned int number_of_low_prio_tasks)
 	int i;
 	
 	ROSA_SemaphoreCreateBinary(&sem_24, SEMAPHORE_OCCUPIED);
-	ROSA_CreateTask(task_pt_sc_24_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_24);
+	ROSA_CreateTask(task_pt_sc_24_high, "high", SUPER_SMALL_STACK_SIZE, PRIORITY_6, &task_handle_24);
+	ROSA_CreateTask(task_pt_sc_24_med, "med", SUPER_SMALL_STACK_SIZE, PRIORITY_5, NULL);
 	
 	for (i = 0; i < number_of_low_prio_tasks; i++)
 	{
-		ROSA_CreateTask(task_pt_sc_24_low, "low", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+		ROSA_CreateTask(task_pt_sc_24_low, "low", 80, PRIORITY_4, NULL);
 	}
 	
 	ROSA_StartScheduler();
@@ -947,12 +946,12 @@ void pt_sc_24_main(unsigned int number_of_low_prio_tasks)
 
 Test pt_sc_24 = {
 	.id =			"PT-SC-24",
-	.description =	"Give an occupied binary semaphore from a task and switch to the task that was blocked by it when maximum number of tasks were blocked with the same priority.",
+	.description =	"Give an occupied binary semaphore from a task and switch to the task that was blocked by it when N tasks are blocked with the same priority.",
 	.plan =			"Performance",
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
-	.start_parameter = "1",
-	.end_parameter = "10",
+	.start_parameter = "0",
+	.end_parameter = "39",
 .function =		pt_sc_24_main};
 
 /*** PT-SC-25 ***/
