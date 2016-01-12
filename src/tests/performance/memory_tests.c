@@ -149,7 +149,7 @@ Test pt_mt_sc_04 = {
 
 /*** PT-MT-SC-05 ***/
 
-TaskHandle task_handle_5;
+/*TaskHandle task_handle_5;
 
 void task_pt_mt_sc_05_high()
 {
@@ -164,7 +164,7 @@ void task_pt_mt_sc_05_low()
 
 void pt_mt_sc_05_main()
 {
-	TestStack_ROSA_CreateTask(task_pt_mt_sc_05_low, "task", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
+	ROSA_CreateTask(task_pt_mt_sc_05_low, "task", SUPER_SMALL_STACK_SIZE, PRIORITY_4, NULL);
 	TestStack_ROSA_CreateTask(task_pt_mt_sc_05_high, TASK_NAME, SUPER_SMALL_STACK_SIZE, PRIORITY_5, &task_handle_5);
 	ROSA_Start();
 }
@@ -178,7 +178,7 @@ Test pt_mt_sc_05 = {
 	.start_parameter = "-1",
 	.end_parameter = "-1",
 .function =        pt_mt_sc_05_main};
-
+*/
 
 
 
