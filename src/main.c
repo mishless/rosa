@@ -130,6 +130,7 @@ int main(void)
 	/*Set up the system*/
 	disable_wdt();
 	ROSA_init();
+//	run_test_manual(it_st_01);
 	set_wdt(17);
 	
 	/*Start the communication*/

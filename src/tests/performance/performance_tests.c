@@ -481,7 +481,7 @@ Test pt_sc_12 = {
 	.suite =		"System Calls",
 	.type =			TEST_SPEED_PERFORMANCE,
 	.start_parameter = "0",
-	.end_parameter = "40",
+	.end_parameter = "39",
 .function =		pt_sc_12_main};
 
 /*** PT-SC-13 ***/
