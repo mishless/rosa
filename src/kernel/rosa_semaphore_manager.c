@@ -168,6 +168,7 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 			
 			if (task == unblockedTask)
 			{
+				unblockedTask = NULL;
 				return SUCCESS;
 			} else {
 				return TIMEOUT;
