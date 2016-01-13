@@ -200,7 +200,13 @@ unsigned int ROSA_SemaphoreTake (SemaphoreHandle handle, ROSA_TickCount timeout)
 			
 			interruptEnable();
 			
-			return TIMEOUT;
+			if (task == unblockedTask)
+			{
+				unblockedTask = NULL;
+				return SUCCESS;
+				} else {
+				return TIMEOUT;
+			}
 		}
 	}
 	
